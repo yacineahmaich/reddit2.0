@@ -1,6 +1,6 @@
 import { Flex } from "@chakra-ui/react";
 import AuthButtons from "./RightContent/AuthButtons";
-import AuthModal from "../modal/auth/AuthModal";
+import AuthModal from "../Modal/Auth/AuthModal";
 
 type RightContentProps = {
   // user:
