@@ -7,4 +7,4 @@ export const FIREBASE_ERRORS: { [key: string]: string } = {
 };
 
 export const getFirebaseError = (firebaseErrorMessage: string) =>
-  FIREBASE_ERRORS[firebaseErrorMessage];
+  FIREBASE_ERRORS[firebaseErrorMessage] ?? "Something went wrong ! try again";
