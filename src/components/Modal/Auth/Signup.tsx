@@ -1,4 +1,9 @@
+import { authModalState } from "@/atoms/authModalAtom";
+import { auth } from "@/firebase/client";
+import { getFirebaseError } from "@/firebase/errors";
+import { WarningIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
   FormControl,
@@ -6,11 +11,9 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import { useForm } from "react-hook-form";
-
-import { authModalState } from "@/atoms/authModalAtom";
-import { WarningIcon } from "@chakra-ui/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import { signupSchema } from "./schemas";
 
@@ -22,6 +25,9 @@ type SignupValues = {
 
 const Signup: React.FC = () => {
   const setAuthModal = useSetRecoilState(authModalState);
+
+  const [signup, user, loading, signupError] =
+    useCreateUserWithEmailAndPassword(auth);
 
   const {
     register,
@@ -35,13 +41,28 @@ const Signup: React.FC = () => {
     resolver: zodResolver(signupSchema),
   });
 
-  function onSubmit(values: SignupValues) {
-    console.log(values);
+  function onSubmit({ email, password }: SignupValues) {
+    signup(email, password);
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
       <Flex direction="column" gap={2}>
+        {signupError && (
+          <Box
+            fontSize="10pt"
+            display="flex"
+            alignItems="center"
+            gap={3}
+            color="red.400"
+            fontWeight={700}
+            mb={3}
+          >
+            <WarningIcon fontSize="11pt" />
+            <Text>{getFirebaseError(signupError.message)}</Text>
+          </Box>
+        )}
+
         <FormControl isInvalid={!!errors.email?.message}>
           <Input
             type="email"
@@ -120,7 +141,7 @@ const Signup: React.FC = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <Button type="submit" height="36px">
+        <Button type="submit" height="36px" isLoading={loading}>
           Sign Up
         </Button>
         <Flex fontSize="10pt">

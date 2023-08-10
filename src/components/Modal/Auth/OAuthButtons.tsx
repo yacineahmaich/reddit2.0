@@ -1,3 +1,4 @@
+import { auth } from "@/firebase/client";
 import {
   AbsoluteCenter,
   Box,
@@ -7,12 +8,19 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
+import {
+  useSignInWithGithub,
+  useSignInWithGoogle,
+} from "react-firebase-hooks/auth";
 
 const OAuthButtons: React.FC = () => {
+  const [signInWithGoogle] = useSignInWithGoogle(auth);
+  const [signInWithGithub] = useSignInWithGithub(auth);
+
   return (
     <>
       <Flex direction="column" gap={2} mb={4}>
-        <Button variant="oauth">
+        <Button variant="oauth" onClick={() => signInWithGoogle()}>
           <Image
             src="/images/googlelogo.png"
             alt="Google"
@@ -22,7 +30,16 @@ const OAuthButtons: React.FC = () => {
           />
           <Text>Continue with Google</Text>
         </Button>
-        <Button variant="oauth">Continue with Other provider</Button>
+        <Button variant="oauth" onClick={() => signInWithGithub()}>
+          <Image
+            src="/images/githublogo.png"
+            alt="Google"
+            width="20px"
+            height="20px"
+            mr={4}
+          />
+          <Text>Continue with Github</Text>
+        </Button>
       </Flex>
 
       <Box position="relative" width="100%" padding="10px 0">

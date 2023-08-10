@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   Input,
   Text,
+  Box,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
@@ -13,6 +14,9 @@ import { WarningIcon } from "@chakra-ui/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSetRecoilState } from "recoil";
 import { loginSchema } from "./schemas";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/client";
+import { getFirebaseError } from "@/firebase/errors";
 
 type LoginValues = {
   email: string;
@@ -21,6 +25,9 @@ type LoginValues = {
 
 const Login: React.FC = () => {
   const setAuthModal = useSetRecoilState(authModalState);
+
+  const [login, user, loading, loginError] =
+    useSignInWithEmailAndPassword(auth);
 
   const {
     register,
@@ -34,13 +41,28 @@ const Login: React.FC = () => {
     resolver: zodResolver(loginSchema),
   });
 
-  function onSubmit(values: LoginValues) {
-    console.log(values);
+  function onSubmit({ email, password }: LoginValues) {
+    login(email, password);
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
       <Flex direction="column" gap={2}>
+        {loginError && (
+          <Box
+            fontSize="10pt"
+            display="flex"
+            alignItems="center"
+            gap={3}
+            color="red.400"
+            fontWeight={700}
+            mb={3}
+          >
+            <WarningIcon fontSize="11pt" />
+            <Text>{getFirebaseError(loginError.message)}</Text>
+          </Box>
+        )}
+
         <FormControl isInvalid={!!errors.email?.message}>
           <Input
             type="email"
@@ -93,7 +115,7 @@ const Login: React.FC = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <Button type="submit" height="36px">
+        <Button type="submit" height="36px" isLoading={loading}>
           Log In
         </Button>
         <Flex fontSize="9pt">
