@@ -144,7 +144,7 @@ const Signup: React.FC = () => {
         <Button type="submit" height="36px" isLoading={loading}>
           Sign Up
         </Button>
-        <Flex fontSize="10pt">
+        <Flex fontSize="10pt" justify="center">
           <Text>Already a redditor?</Text>
           <Text
             ml={1}
