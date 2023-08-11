@@ -16,7 +16,7 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import { signupSchema } from "./schemas";
-import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { transformUser } from "@/firebase/helpers";
 
 type SignupValues = {
@@ -48,7 +48,10 @@ const Signup: React.FC = () => {
     if (!data) return;
 
     // safe created user in firestore collection
-    await addDoc(collection(firestore, "users"), transformUser(data.user));
+    const user = transformUser(data.user);
+    const userDocRef = doc(firestore, "users", user.uid);
+
+    await setDoc(userDocRef, user);
   }
 
   return (
