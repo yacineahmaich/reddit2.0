@@ -1,5 +1,5 @@
 import { authModalState } from "@/atoms/authModalAtom";
-import { auth } from "@/firebase/client";
+import { auth, firestore } from "@/firebase/client";
 import { getFirebaseError } from "@/firebase/errors";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
@@ -16,6 +16,8 @@ import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import { signupSchema } from "./schemas";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
+import { transformUser } from "@/firebase/helpers";
 
 type SignupValues = {
   email: string;
@@ -41,8 +43,12 @@ const Signup: React.FC = () => {
     resolver: zodResolver(signupSchema),
   });
 
-  function onSubmit({ email, password }: SignupValues) {
-    signup(email, password);
+  async function onSubmit({ email, password }: SignupValues) {
+    const data = await signup(email, password);
+    if (!data) return;
+
+    // safe created user in firestore collection
+    await addDoc(collection(firestore, "users"), transformUser(data.user));
   }
 
   return (
