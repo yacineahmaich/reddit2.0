@@ -1,6 +1,7 @@
 import { Community } from "@/atoms/communitiesAtom";
-import NotFound from "@/components/Community/CommunityNotFound";
+import CommunityNotFound from "@/components/Community/CommunityNotFound";
 import Header from "@/components/Community/Header";
+import PageContent from "@/components/Layout/PageContent";
 import { firestore } from "@/firebase/client";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext } from "next";
@@ -13,11 +14,19 @@ type CommunityPageProps = {
 const CommunityPage: React.FC<CommunityPageProps> = ({ community }) => {
   console.log(community);
 
-  if (!community) return <NotFound />;
+  if (!community) return <CommunityNotFound />;
 
   return (
     <>
       <Header community={community} />
+      <PageContent>
+        <>
+          <div>LEFT LEFT LEFT</div>
+        </>
+        <>
+          <div>RIGHT RIGHT RIGHT</div>
+        </>
+      </PageContent>
     </>
   );
 };
