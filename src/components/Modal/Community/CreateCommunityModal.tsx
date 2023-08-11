@@ -1,3 +1,4 @@
+import { CommunityPrivacyType } from "@/atoms/communitiesAtom";
 import { auth, firestore } from "@/firebase/client";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
@@ -20,13 +21,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import {
-  doc,
-  getDoc,
-  runTransaction,
-  serverTimestamp,
-  setDoc,
-} from "firebase/firestore";
+import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
@@ -37,15 +32,14 @@ type CreateCommunityModalProps = {
   onClose: () => void;
 };
 
-type CommunityType = "public" | "restricted" | "private";
-
 const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   open,
   onClose,
 }) => {
   const [user] = useAuthState(auth);
   const [communityName, setCommunityName] = useState("");
-  const [communityType, setCommunityType] = useState<CommunityType>("public");
+  const [communityType, setCommunityType] =
+    useState<CommunityPrivacyType>("public");
   const [error, setError] = useState("");
   const [isCreateing, setIsCreating] = useState(false);
 
@@ -59,7 +53,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   }
 
   function handleCommunityTypeChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setCommunityType(e.target.name as CommunityType);
+    setCommunityType(e.target.name as CommunityPrivacyType);
   }
 
   async function handleCreatCommunity() {
