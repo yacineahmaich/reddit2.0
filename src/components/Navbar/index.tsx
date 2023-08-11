@@ -1,22 +1,20 @@
-import { Flex, Image } from "@chakra-ui/react";
-import Search from "./Search";
+import { auth } from "@/firebase/client";
+import { Flex } from "@chakra-ui/react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import CommunitiesDropdown from "./CommunitiesDropdown";
+import Logo from "./Logo";
 import RightContent from "./RightContent";
+import Search from "./Search";
 
 const Navbar = () => {
+  const [user] = useAuthState(auth);
+
   return (
-    <Flex bg="white" height="44px" padding="6px 12px">
-      <Flex alignItems="center">
-        <Image src="/images/redditFace.svg" alt="reddit logo" height="30px" />
-        <Image
-          src="/images/redditText.svg"
-          alt="reddit logo"
-          height="46px"
-          display={{ base: "none", md: "block" }}
-        />
-      </Flex>
-      {/* <Directory /> */}
-      <Search />
-      <RightContent />
+    <Flex bg="white" height="44px" padding="6px 12px" justify="space-between">
+      <Logo />
+      {user && <CommunitiesDropdown />}
+      <Search user={user} />
+      <RightContent user={user} />
     </Flex>
   );
 };

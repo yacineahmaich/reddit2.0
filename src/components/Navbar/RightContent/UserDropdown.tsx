@@ -13,8 +13,7 @@ import React from "react";
 
 import { authModalState } from "@/atoms/authModalAtom";
 import { auth } from "@/firebase/client";
-import { signOut } from "firebase/auth";
-import { useAuthState } from "react-firebase-hooks/auth";
+import { User, signOut } from "firebase/auth";
 import { BsPerson } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { FaRedditSquare } from "react-icons/fa";
@@ -22,8 +21,11 @@ import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useSetRecoilState } from "recoil";
 
-const UserDropdown: React.FC = () => {
-  const [user] = useAuthState(auth);
+type UserDropdownProps = {
+  user?: User | null;
+};
+
+const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
   const setAuthModal = useSetRecoilState(authModalState);
 
   return (
@@ -48,6 +50,7 @@ const UserDropdown: React.FC = () => {
                   align="flex-start"
                   display={{ base: "none", md: "flex" }}
                   fontSize="8pt"
+                  shrink={0}
                 >
                   <Text fontWeight={700}>
                     {user.displayName || user.email?.split("@")[0]}
