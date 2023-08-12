@@ -11,3 +11,20 @@ export type Community = {
   createdAt?: Timestamp;
   imageURL?: string;
 };
+
+export type CommunitySnippet = {
+  communityId: string;
+  isModeratot?: boolean;
+  imageURL?: string;
+};
+
+export type CommunityState = {
+  mySnippts: CommunitySnippet[];
+};
+
+export const communityState = atom<CommunityState>({
+  key: "communityState",
+  default: {
+    mySnippts: [],
+  },
+});

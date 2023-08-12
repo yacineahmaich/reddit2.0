@@ -19,7 +19,8 @@ import { CgProfile } from "react-icons/cg";
 import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
-import { useSetRecoilState } from "recoil";
+import { useResetRecoilState, useSetRecoilState } from "recoil";
+import { communityState } from "@/atoms/communitiesAtom";
 
 type UserDropdownProps = {
   user?: User | null;
@@ -27,7 +28,12 @@ type UserDropdownProps = {
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
   const setAuthModal = useSetRecoilState(authModalState);
+  const resetCommunityState = useResetRecoilState(communityState);
 
+  const handleSignOut = async () => {
+    await signOut(auth);
+    resetCommunityState();
+  };
   return (
     <Menu>
       <MenuButton
@@ -91,7 +97,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
               fontSize="10pt"
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
-              onClick={() => signOut(auth)}
+              onClick={handleSignOut}
             >
               <Flex align="center" gap={3}>
                 <Icon as={MdOutlineLogout} fontSize={20} />
