@@ -6,6 +6,7 @@ import { firestore } from "@/firebase/client";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
+import CreatePostLink from "../../../components/Community/CreatePostLink";
 
 type CommunityPageProps = {
   community: Community;
@@ -21,7 +22,7 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ community }) => {
       <Header community={community} />
       <PageContent>
         <>
-          <div>LEFT LEFT LEFT</div>
+          <CreatePostLink />
         </>
         <>
           <div>RIGHT RIGHT RIGHT</div>
