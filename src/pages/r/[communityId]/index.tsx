@@ -13,8 +13,6 @@ type CommunityPageProps = {
 };
 
 const CommunityPage: React.FC<CommunityPageProps> = ({ community }) => {
-  console.log(community);
-
   if (!community) return <CommunityNotFound />;
 
   return (
@@ -34,12 +32,12 @@ const CommunityPage: React.FC<CommunityPageProps> = ({ community }) => {
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   try {
-    const communityName = context.query?.communityName;
+    const communityId = context.query?.communityId;
 
     const communityDocRef = doc(
       firestore,
       "communities",
-      communityName as string
+      communityId as string
     );
 
     const communityDoc = await getDoc(communityDocRef);

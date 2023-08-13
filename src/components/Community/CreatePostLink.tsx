@@ -22,8 +22,8 @@ const CreatePostLink: React.FC<CreatePostProps> = () => {
       return;
     }
 
-    const { communityName } = router.query;
-    if (communityName) {
+    const { communityId } = router.query;
+    if (communityId) {
       router.push(`${router.asPath}/submit`);
       return;
     }
