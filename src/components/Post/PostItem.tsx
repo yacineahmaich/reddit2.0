@@ -32,7 +32,7 @@ type PostItemProps = {
   userIsCreator?: boolean;
   userVoteValue?: number;
   onVotePost: () => void;
-  onDeletePost: () => void;
+  onDeletePost: (post: Post) => Promise<boolean>;
   onSelectPost: () => void;
 };
 
@@ -46,6 +46,25 @@ const PostItem: React.FC<PostItemProps> = ({
 }) => {
   const [user] = useAuthState(auth);
   const [imageIsLoading, setImageIsLoading] = useState(true);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState(null);
+
+  async function handleDelete() {
+    try {
+      setIsDeleting(true);
+      setError(null);
+      const success = await onDeletePost(post);
+      if (!success) {
+        throw new Error("failed to delete post");
+      }
+
+      console.log("Post was successfully deleted");
+    } catch (error: any) {
+      setError(error.message);
+    } finally {
+      setIsDeleting(false);
+    }
+  }
 
   return (
     <Flex
@@ -161,6 +180,8 @@ const PostItem: React.FC<PostItemProps> = ({
               fontWeight={400}
               variant="ghost"
               borderRadius={4}
+              onClick={handleDelete}
+              isLoading={isDeleting}
             >
               Delete
             </Button>

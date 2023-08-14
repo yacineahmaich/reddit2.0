@@ -31,12 +31,19 @@ const PostsFeed: React.FC<PostsFeedProps> = ({ community }) => {
 
       const postDocs = await getDocs(postsQuery);
 
-      const posts = postDocs.docs.map((doc) => doc.data() as Post);
+      const posts = postDocs.docs.map(
+        (doc) =>
+          ({
+            id: doc.id,
+            ...doc.data(),
+          } as Post)
+      );
 
       setPostState((state) => ({
         ...state,
         allPosts: posts,
       }));
+      console.log(posts);
 
       try {
       } catch (error) {
