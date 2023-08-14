@@ -86,10 +86,9 @@ const TextInputs: React.FC = () => {
         await updateDoc(postDocRef, {
           imageURL: imageDownloadURL,
         });
-
-        resetCreatePostState();
-        router.back();
       }
+      router.back();
+      resetCreatePostState();
     } catch (error) {
       setError("something went wrong! Please try again");
     } finally {
