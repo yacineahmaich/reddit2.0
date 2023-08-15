@@ -1,18 +1,27 @@
-import { Community } from "@/atoms/communitiesAtom";
-import { useCommunityData } from "@/hooks/useCommunityData";
-import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
+import { useCommunity } from "@/features/communities/useCommunity";
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Image,
+  Text,
+  SkeletonCircle,
+  Skeleton,
+} from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
 import { FaReddit } from "react-icons/fa";
 
-type HeaderProps = {
-  community: Community;
-};
+const Header: React.FC = () => {
+  const router = useRouter();
+  const { community, isLoading } = useCommunity(router.query.id as string);
 
-const Header: React.FC<HeaderProps> = ({ community }) => {
-  const { joinOrLeaveCommunity, isJoinedCommunity, isLoading } =
-    useCommunityData();
+  // const { joinOrLeaveCommunity, isJoinedCommunity, isLoading } =
+  //   useCommunityData();
 
-  const isJoined = isJoinedCommunity(community.id);
+  // const isJoined = isJoinedCommunity(community.id);
+  const isJoined = true;
 
   return (
     <Flex direction="column" width="100%" height="146px">
@@ -26,40 +35,51 @@ const Header: React.FC<HeaderProps> = ({ community }) => {
             border="4px solid white"
             borderRadius="full"
           >
-            {community.imageURL ? (
-              <Image
-                src={community.imageURL}
-                borderRadius="full"
-                w="full"
-                h="full"
-                objectFit="cover"
-                alt={community.id}
-              />
-            ) : (
-              <Icon
-                as={FaReddit}
-                w="full"
-                h="full"
-                borderRadius="full"
-                color="blue.500"
-              />
-            )}
+            <SkeletonCircle w="full" h="full" isLoaded={!!community}>
+              {community?.imageURL ? (
+                <Image
+                  src={community?.imageURL}
+                  borderRadius="full"
+                  w="full"
+                  h="full"
+                  objectFit="cover"
+                  alt={community?.id}
+                />
+              ) : (
+                <Icon
+                  as={FaReddit}
+                  w="full"
+                  h="full"
+                  borderRadius="full"
+                  color="blue.500"
+                />
+              )}
+            </SkeletonCircle>
           </Box>
           <Flex p="10px 16px">
             <Flex direction="column" mr={6}>
-              <Text fontWeight={800} fontSize="16pt">
-                {community.id}
-              </Text>
-              <Text fontWeight={800} fontSize="10pt" color="gray.400">
-                r/{community.id}
-              </Text>
+              {isLoading ? (
+                <>
+                  <Skeleton height={3} w={20} my={2} />
+                  <Skeleton height={2} w={16} />
+                </>
+              ) : (
+                <>
+                  <Text fontWeight={800} fontSize="16pt">
+                    {community?.id}
+                  </Text>
+                  <Text fontWeight={800} fontSize="10pt" color="gray.400">
+                    r/{community?.id}
+                  </Text>
+                </>
+              )}
             </Flex>
             <Button
               variant={isJoined ? "outline" : "solid"}
               height="30px"
               px={6}
               isLoading={isLoading}
-              onClick={() => joinOrLeaveCommunity(community, isJoined)}
+              onClick={() => null}
             >
               {isJoined ? "joined" : "join"}
             </Button>

@@ -1,5 +1,5 @@
 import { createPostState } from "@/atoms/createPostAtom";
-import { auth, firestore, storage } from "@/firebase/client";
+import { auth } from "@/firebase/client";
 import {
   Button,
   Flex,
@@ -12,14 +12,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Timestamp,
-  addDoc,
-  collection,
-  serverTimestamp,
-  updateDoc,
-} from "firebase/firestore";
-import React, { useEffect, useState } from "react";
+import { Timestamp, serverTimestamp } from "firebase/firestore";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { postSchema } from "./schema";
@@ -27,7 +21,8 @@ import { WarningIcon } from "@chakra-ui/icons";
 import { Post } from "@/atoms/postsAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
-import { getDownloadURL, ref, uploadString } from "firebase/storage";
+import { useCreatePost } from "@/features/posts/useCreatePost";
+import { useCommunity } from "@/features/communities/useCommunity";
 
 type CreatePostValues = {
   title: string;
@@ -36,19 +31,21 @@ type CreatePostValues = {
 
 const TextInputs: React.FC = () => {
   const router = useRouter();
+  const { community, isLoading: isCommunityLoading } = useCommunity(
+    router.query.id as string
+  );
+  const { createPost, isLoading, isError } = useCreatePost();
+
   const [user] = useAuthState(auth);
+  const resetCreatePostState = useResetRecoilState(createPostState);
   const [{ title, body, image }, setCreatePostState] =
     useRecoilState(createPostState);
-  const resetCreatePostState = useResetRecoilState(createPostState);
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState("");
 
   const {
     register,
     handleSubmit,
-    getValues,
     formState: { errors },
+    watch,
   } = useForm<CreatePostValues>({
     defaultValues: {
       title,
@@ -57,61 +54,49 @@ const TextInputs: React.FC = () => {
     resolver: zodResolver(postSchema),
   });
 
-  async function onSubmit(values: CreatePostValues) {
-    if (!user) return;
-
-    try {
-      setIsLoading(true);
-      // create post
-      const newPost: Post = {
-        communityId: router.query.communityId as string,
-        creatorId: user?.uid,
-        creatorDisplayName:
-          user.displayName || (user.email!.split("@").at(0) as string),
-        title: values.title,
-        body: values.body,
-        createdAt: serverTimestamp() as Timestamp,
-        numOfComments: 0,
-        voteStatus: 0,
-      };
-
-      const postDocRef = await addDoc(collection(firestore, "posts"), newPost);
-
-      if (image) {
-        const imageRef = ref(storage, `/posts/${postDocRef.id}/image`);
-        await uploadString(imageRef, image, "data_url");
-
-        const imageDownloadURL = await getDownloadURL(imageRef);
-
-        await updateDoc(postDocRef, {
-          imageURL: imageDownloadURL,
-        });
-      }
-      router.back();
-      resetCreatePostState();
-    } catch (error) {
-      setError("something went wrong! Please try again");
-    } finally {
-      setIsLoading(false);
-    }
-  }
+  const enteredTitle = watch("title");
+  const enteredBody = watch("body");
 
   useEffect(() => {
-    // save inputs state in the atom when navigating away
-    return () => {
-      const { title, body } = getValues();
+    setCreatePostState((state) => ({
+      ...state,
+      title: enteredTitle,
+      body: enteredBody,
+    }));
+  }, [enteredTitle, enteredBody, setCreatePostState]);
 
-      setCreatePostState((state) => ({
-        ...state,
-        title,
-        body,
-      }));
+  async function onSubmit(values: CreatePostValues) {
+    if (!user || !community) return;
+
+    const post: Post = {
+      communityId: community.id,
+      creatorId: user.uid,
+      creatorDisplayName:
+        user.displayName || (user.email!.split("@").at(0) as string),
+      title: values.title,
+      body: values.body,
+      createdAt: serverTimestamp() as Timestamp,
+      numOfComments: 0,
+      voteStatus: 0,
     };
-  }, [getValues, setCreatePostState]);
+
+    createPost(
+      {
+        post,
+        image,
+      },
+      {
+        // reset createPost atom state when create post successed
+        onSuccess: () => {
+          resetCreatePostState();
+        },
+      }
+    );
+  }
 
   return (
     <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-      {error && (
+      {isError && (
         <Box
           fontSize="10pt"
           display="flex"
@@ -122,11 +107,14 @@ const TextInputs: React.FC = () => {
           mb={3}
         >
           <WarningIcon fontSize="11pt" />
-          <Text>{error}</Text>
+          <Text>something went wrong! Please try again</Text>
         </Box>
       )}
       <Stack spacing={3}>
-        <FormControl isInvalid={!!errors.title?.message}>
+        <FormControl
+          isInvalid={!!errors.title?.message}
+          isDisabled={isCommunityLoading}
+        >
           <Input
             placeholder="Title"
             fontSize="10pt"
@@ -158,14 +146,24 @@ const TextInputs: React.FC = () => {
           }}
           height="100px"
           {...register("body")}
+          isDisabled={isCommunityLoading}
         />
-        <Flex justify="end">
+        <Flex justify="end" gap={3}>
+          <Button
+            variant="outline"
+            height="34x"
+            padding="8px 30px"
+            onClick={() => router.back()}
+            disabled={isLoading}
+          >
+            Cancel
+          </Button>
           <Button
             type="submit"
             height="34x"
             padding="8px 30px"
             onClick={() => null}
-            disabled={false}
+            isDisabled={isLoading || isCommunityLoading}
             isLoading={isLoading}
           >
             Post

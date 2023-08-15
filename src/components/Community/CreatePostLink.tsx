@@ -1,4 +1,5 @@
 import { authModalState } from "@/atoms/authModalAtom";
+import { useCommunity } from "@/features/communities/useCommunity";
 import { auth } from "@/firebase/client";
 import { Flex, Icon, Input } from "@chakra-ui/react";
 import { useRouter } from "next/router";
@@ -13,21 +14,19 @@ type CreatePostProps = {};
 
 const CreatePostLink: React.FC<CreatePostProps> = () => {
   const router = useRouter();
+  const { community, isLoading } = useCommunity(router.query.id as string);
+
   const [user] = useAuthState(auth);
   const setAuthModal = useSetRecoilState(authModalState);
-  const onClick = () => {
+
+  const onNavigateToSubmitPage = () => {
     // Could check for user to open auth modal before redirecting to submit
     if (!user) {
       setAuthModal({ open: true, view: "login" });
-      return;
-    }
-
-    const { communityId } = router.query;
-    if (communityId) {
+    } else {
+      // Open directory menu to select community to post to
       router.push(`${router.asPath}/submit`);
-      return;
     }
-    // Open directory menu to select community to post to
   };
   return (
     <Flex
@@ -62,7 +61,11 @@ const CreatePostLink: React.FC<CreatePostProps> = () => {
         height="36px"
         borderRadius={4}
         mr={4}
-        onClick={onClick}
+        onClick={onNavigateToSubmitPage}
+        disabled={isLoading || !community}
+        _disabled={{
+          cursor: "auto",
+        }}
       />
       <Icon
         as={IoImageOutline}
@@ -70,15 +73,8 @@ const CreatePostLink: React.FC<CreatePostProps> = () => {
         mr={4}
         color="gray.400"
         cursor="pointer"
-        onClick={onClick}
       />
-      <Icon
-        as={BsLink45Deg}
-        fontSize={24}
-        color="gray.400"
-        cursor="pointer"
-        onClick={onClick}
-      />
+      <Icon as={BsLink45Deg} fontSize={24} color="gray.400" cursor="pointer" />
     </Flex>
   );
 };

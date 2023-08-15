@@ -32,8 +32,7 @@ type PostItemProps = {
   post: Post;
   userIsCreator?: boolean;
   userVoteValue?: number;
-  onVotePost: () => void;
-  onDeletePost: (post: Post) => Promise<boolean>;
+  onVotePost: (post: Post, value: number) => void;
   onSelectPost: () => void;
 };
 
@@ -43,33 +42,11 @@ const PostItem: React.FC<PostItemProps> = ({
   userVoteValue,
   onVotePost,
   onSelectPost,
-  onDeletePost,
 }) => {
   const [user] = useAuthState(auth);
   const [imageIsLoading, setImageIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
   const toast = useToast();
-
-  async function handleDelete() {
-    try {
-      setIsDeleting(true);
-      const success = await onDeletePost(post);
-      if (!success) {
-        throw new Error("failed to delete post");
-      }
-
-      console.log("Post was successfully deleted");
-    } catch (error: any) {
-      toast({
-        title: "Action failed.",
-        description: "Something went wrong! Could not delete post.",
-        isClosable: true,
-        status: "error",
-      });
-    } finally {
-      setIsDeleting(false);
-    }
-  }
 
   return (
     <Flex
@@ -175,7 +152,7 @@ const PostItem: React.FC<PostItemProps> = ({
           >
             Save
           </Button>
-          {user?.uid === post.creatorId && (
+          {/* {user?.uid === post.creatorId && (
             <Button
               leftIcon={<DeleteIcon />}
               size="sm"
@@ -190,7 +167,7 @@ const PostItem: React.FC<PostItemProps> = ({
             >
               Delete
             </Button>
-          )}
+          )} */}
         </HStack>
       </Flex>
     </Flex>

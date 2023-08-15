@@ -1,10 +1,7 @@
 import { theme } from "@/chakra/theme";
 import Layout from "@/components/Layout/Layout";
-import {
-  ChakraProvider,
-  ToastOptions,
-  ToastProviderProps,
-} from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ChakraProvider, ToastProviderProps } from "@chakra-ui/react";
 import type { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
 
@@ -15,14 +12,24 @@ const toastOptions: ToastProviderProps = {
   },
 };
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    mutations: {
+      retry: false,
+    },
+  },
+});
+
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <RecoilRoot>
-      <ChakraProvider theme={theme} toastOptions={toastOptions}>
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </ChakraProvider>
-    </RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <RecoilRoot>
+        <ChakraProvider theme={theme} toastOptions={toastOptions}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </ChakraProvider>
+      </RecoilRoot>
+    </QueryClientProvider>
   );
 }
