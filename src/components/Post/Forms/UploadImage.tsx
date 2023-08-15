@@ -1,28 +1,20 @@
 import { createPostState } from "@/atoms/createPostAtom";
+import { useSelectFile } from "@/hooks/useSelectFile";
 import { Button, Flex, HStack, Image } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useRecoilState } from "recoil";
 
 const UploadImage: React.FC = () => {
   const [{ image }, setCreatePostState] = useRecoilState(createPostState);
+
+  const { handleSelectFile } = useSelectFile((image) =>
+    setCreatePostState((state) => ({
+      ...state,
+      image,
+    }))
+  );
+
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  function handleSelectImage(e: React.ChangeEvent<HTMLInputElement>) {
-    const reader = new FileReader();
-    const selectedImage = e.target.files?.[0];
-
-    if (!selectedImage) return;
-
-    reader.readAsDataURL(selectedImage);
-    reader.onload = (e) => {
-      if (!e.target?.result) return;
-
-      setCreatePostState((state) => ({
-        ...state,
-        image: e.target?.result as string,
-      }));
-    };
-  }
 
   function handleGoBackToPost() {
     setCreatePostState((state) => ({
@@ -79,7 +71,7 @@ const UploadImage: React.FC = () => {
             type="file"
             hidden
             id="image"
-            onChange={handleSelectImage}
+            onChange={handleSelectFile}
           />
         </Flex>
       )}

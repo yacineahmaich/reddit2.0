@@ -1,31 +1,54 @@
-import { Community } from "@/atoms/communitiesAtom";
+import { Community, communityState } from "@/atoms/communitiesAtom";
 import CommunityNotFound from "@/components/Community/CommunityNotFound";
 import Header from "@/components/Community/Header";
 import PageContent from "@/components/Layout/PageContent";
 import { firestore } from "@/firebase/client";
 import { doc, getDoc } from "firebase/firestore";
 import { GetServerSidePropsContext } from "next";
-import React from "react";
+import React, { useEffect } from "react";
 import CreatePostLink from "../../../components/Community/CreatePostLink";
-import PostsFeed from "@/components/Post/PostsFeed";
+import CommunityPosts from "@/components/Post/CommunityPosts";
+import { Flex, Box, Text, Divider, Button, IconButton } from "@chakra-ui/react";
+import { PhoneIcon } from "@chakra-ui/icons";
+import moment from "moment";
+import { HiDotsCircleHorizontal } from "react-icons/hi";
+import { BsThreeDots } from "react-icons/bs";
+import AboutCommunity from "@/components/Community/AboutCommunity";
+import { useSetRecoilState } from "recoil";
 
 type CommunityPageProps = {
   community: Community;
 };
 
 const CommunityPage: React.FC<CommunityPageProps> = ({ community }) => {
-  if (!community) return <CommunityNotFound />;
+  const setCommunityState = useSetRecoilState(communityState);
 
+  console.log(community);
+
+  useEffect(() => {
+    setCommunityState((state) => ({
+      ...state,
+      currentCommunity: community,
+    }));
+
+    () =>
+      setCommunityState((state) => ({
+        ...state,
+        currentCommunity: undefined,
+      }));
+  }, [community, setCommunityState]);
+
+  if (!community) return <CommunityNotFound />;
   return (
     <>
       <Header community={community} />
       <PageContent>
         <>
           <CreatePostLink />
-          <PostsFeed community={community} />
+          <CommunityPosts community={community} />
         </>
         <>
-          <div>RIGHT RIGHT RIGHT</div>
+          <AboutCommunity community={community} />
         </>
       </PageContent>
     </>
@@ -48,14 +71,15 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
       ...communityDoc.data(),
     };
 
-    // if (!community)
-    //   return {
-    //     notFound: true,
-    //   };
+    if (!community)
+      return {
+        notFound: true,
+      };
 
     return {
       props: {
-        community: communityDoc.exists() && community,
+        community:
+          communityDoc.exists() && JSON.parse(JSON.stringify(community)),
       },
     };
   } catch (error) {

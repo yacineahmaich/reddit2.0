@@ -9,6 +9,7 @@ import {
   HStack,
   Icon,
   Skeleton,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -47,12 +48,11 @@ const PostItem: React.FC<PostItemProps> = ({
   const [user] = useAuthState(auth);
   const [imageIsLoading, setImageIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState(null);
+  const toast = useToast();
 
   async function handleDelete() {
     try {
       setIsDeleting(true);
-      setError(null);
       const success = await onDeletePost(post);
       if (!success) {
         throw new Error("failed to delete post");
@@ -60,7 +60,12 @@ const PostItem: React.FC<PostItemProps> = ({
 
       console.log("Post was successfully deleted");
     } catch (error: any) {
-      setError(error.message);
+      toast({
+        title: "Action failed.",
+        description: "Something went wrong! Could not delete post.",
+        isClosable: true,
+        status: "error",
+      });
     } finally {
       setIsDeleting(false);
     }

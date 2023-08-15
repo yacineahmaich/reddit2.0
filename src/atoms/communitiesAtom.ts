@@ -20,6 +20,7 @@ export type CommunitySnippet = {
 
 export type CommunityState = {
   mySnippts: CommunitySnippet[];
+  currentCommunity?: Community;
 };
 
 export const communityState = atom<CommunityState>({

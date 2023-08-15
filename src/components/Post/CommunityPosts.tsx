@@ -9,11 +9,11 @@ import { query, collection, where, orderBy, getDocs } from "firebase/firestore";
 import { Stack } from "@chakra-ui/react";
 import PostSkeleton from "./PostSkeleton";
 
-type PostsFeedProps = {
+type CommunityPostsProps = {
   community: Community;
 };
 
-const PostsFeed: React.FC<PostsFeedProps> = ({ community }) => {
+const CommunityPosts: React.FC<CommunityPostsProps> = ({ community }) => {
   const [user] = useAuthState(auth);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -78,4 +78,4 @@ const PostsFeed: React.FC<PostsFeedProps> = ({ community }) => {
     </>
   );
 };
-export default PostsFeed;
+export default CommunityPosts;

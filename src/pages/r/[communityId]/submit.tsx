@@ -1,10 +1,14 @@
+import { communityState } from "@/atoms/communitiesAtom";
 import PageContent from "@/components/Layout/PageContent";
 import NewPostForm from "@/components/Post/NewPostForm";
 import { Box, Text } from "@chakra-ui/react";
+import { useRecoilValue } from "recoil";
 
 type SubmitPostPageProps = {};
 
 const SubmitPostPage: React.FC<SubmitPostPageProps> = () => {
+  const communityStateValue = useRecoilValue(communityState);
+  console.log(communityStateValue);
   return (
     <PageContent>
       <>
