@@ -8,6 +8,7 @@ import {
   Text,
   Box,
 } from "@chakra-ui/react";
+import Link from "next/link";
 import React from "react";
 import { FaReddit } from "react-icons/fa";
 
@@ -18,18 +19,22 @@ type FollowingCommunitiesProps = {
 const FollowingCommunities: React.FC<FollowingCommunitiesProps> = ({
   communitySnippets,
 }) => {
-  console.log(communitySnippets);
+  const followingCommunities = communitySnippets?.filter(
+    (snippet) => !snippet.isModerator
+  );
+
+  if (followingCommunities.length === 0) return null;
+
   return (
     <MenuGroup title="FOLLOWING" color="gray.400">
-      {communitySnippets
-        ?.filter((snippet) => !snippet.isModerator)
-        .map((snippet) => (
-          <MenuItem
-            key={snippet.communityId}
-            width="100%"
-            fontSize="10pt"
-            _hover={{ bg: "gray.100" }}
-          >
+      {followingCommunities.map((snippet) => (
+        <MenuItem
+          key={snippet.communityId}
+          width="100%"
+          fontSize="10pt"
+          _hover={{ bg: "gray.100" }}
+        >
+          <Link href={`/r/${snippet.communityId}`}>
             <Flex fontSize="11pt" align="center" gap={2}>
               <Box w={9} h={9}>
                 {snippet?.imageURL ? (
@@ -53,8 +58,9 @@ const FollowingCommunities: React.FC<FollowingCommunitiesProps> = ({
               </Box>
               <Text>r/{snippet.communityId}</Text>
             </Flex>
-          </MenuItem>
-        ))}
+          </Link>
+        </MenuItem>
+      ))}
     </MenuGroup>
   );
 };

@@ -1,4 +1,9 @@
+import { authModalState } from "@/atoms/authModalAtom";
 import { useCommunity } from "@/features/communities/useCommunity";
+import { useJoinLeaveCommunity } from "@/features/communities/useJoinLeaveCommunity";
+import { CommunitySnippet } from "@/features/user/types";
+import { useUserSnippets } from "@/features/user/useUserSnippets";
+import { auth } from "@/firebase/client";
 import {
   Box,
   Button,
@@ -11,17 +16,48 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { FaReddit } from "react-icons/fa";
+import { useSetRecoilState } from "recoil";
 
 const Header: React.FC = () => {
   const router = useRouter();
-  const { community, isLoading } = useCommunity(router.query.id as string);
+  const { community, isLoading: isCommunityLoading } = useCommunity(
+    router.query.id as string
+  );
 
-  // const { joinOrLeaveCommunity, isJoinedCommunity, isLoading } =
-  //   useCommunityData();
+  const setAuthModalState = useSetRecoilState(authModalState);
+
+  const [user] = useAuthState(auth);
+
+  const { joinLeaveCommunity, isLoading } = useJoinLeaveCommunity();
+
+  const { communitySnippets } = useUserSnippets();
+
+  function handleJoinLeaveCommunity() {
+    if (!communitySnippets || !community) return;
+
+    if (!user) {
+      setAuthModalState({ open: true, view: "login" });
+      return;
+    }
+
+    joinLeaveCommunity({
+      community: community,
+      userId: user?.uid,
+      communitySnippets: communitySnippets,
+    });
+  }
 
   // const isJoined = isJoinedCommunity(community.id);
-  const isJoined = true;
+  const communitySnippet =
+    (communitySnippets?.find(
+      (snippet) => snippet.communityId === community?.id
+    ) as CommunitySnippet) || null;
+
+  const isJoined = Boolean(communitySnippet);
+
+  const isModerator = communitySnippet?.isModerator;
 
   return (
     <Flex direction="column" width="100%" height="146px">
@@ -58,7 +94,7 @@ const Header: React.FC = () => {
           </Box>
           <Flex p="10px 16px">
             <Flex direction="column" mr={6}>
-              {isLoading ? (
+              {isCommunityLoading ? (
                 <>
                   <Skeleton height={3} w={20} my={2} />
                   <Skeleton height={2} w={16} />
@@ -74,15 +110,18 @@ const Header: React.FC = () => {
                 </>
               )}
             </Flex>
-            <Button
-              variant={isJoined ? "outline" : "solid"}
-              height="30px"
-              px={6}
-              isLoading={isLoading}
-              onClick={() => null}
-            >
-              {isJoined ? "joined" : "join"}
-            </Button>
+            {!isCommunityLoading && (
+              <Button
+                variant={isJoined ? "outline" : "solid"}
+                height="30px"
+                px={6}
+                isLoading={isLoading}
+                onClick={() => handleJoinLeaveCommunity()}
+                isDisabled={isModerator}
+              >
+                {isJoined ? "joined" : "join"}
+              </Button>
+            )}
           </Flex>
         </Flex>
       </Flex>
