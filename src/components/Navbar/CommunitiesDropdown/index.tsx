@@ -1,10 +1,21 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Menu, MenuButton, Flex, Icon, MenuList, Text } from "@chakra-ui/react";
+import {
+  Menu,
+  MenuButton,
+  Flex,
+  Icon,
+  MenuList,
+  Text,
+  Spinner,
+} from "@chakra-ui/react";
 import React from "react";
 import { TiHome } from "react-icons/ti";
 import CommunitiesList from "./CommunitiesList";
+import { useUserSnippets } from "@/features/user/useUserSnippets";
 
 const CommunitiesDropdown: React.FC = () => {
+  const { communitySnippets, isLoading } = useUserSnippets();
+
   return (
     <Menu>
       <MenuButton
@@ -34,7 +45,13 @@ const CommunitiesDropdown: React.FC = () => {
         </Flex>
       </MenuButton>
       <MenuList>
-        <CommunitiesList />
+        {isLoading ? (
+          <Flex justify="center">
+            <Spinner color="gray.300" my={5} />
+          </Flex>
+        ) : (
+          <CommunitiesList communitySnippets={communitySnippets ?? []} />
+        )}
       </MenuList>
     </Menu>
   );

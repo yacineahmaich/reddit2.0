@@ -29,8 +29,7 @@ const AboutCommunity: React.FC = () => {
     router.query.id as string
   );
 
-  const { updateCommunityProfile, isLoading, isError } =
-    useUpdateCommunityImage();
+  const { updateCommunityProfile, isLoading } = useUpdateCommunityImage();
 
   const imageRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<string>();
@@ -41,6 +40,7 @@ const AboutCommunity: React.FC = () => {
     updateCommunityProfile({
       id: community.id,
       image: selectedImage,
+      userId: user?.uid!,
     });
   }
 
@@ -116,7 +116,7 @@ const AboutCommunity: React.FC = () => {
                   </Text>
                 )}
               </Flex>
-              <Link href={`/r/${router.query.communityId}/submit`}>
+              <Link href={`/r/${community?.id}/submit`}>
                 <Button mt={3} height="30px" w="full">
                   Create Post
                 </Button>
