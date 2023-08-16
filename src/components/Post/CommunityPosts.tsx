@@ -12,7 +12,7 @@ const CommunityPosts: React.FC = () => {
   const { posts, isLoading } = useCommunityPosts();
 
   function getUserVote(postId: string) {
-    const vote = votes.find((v) => v.postId === postId);
+    const vote = votes?.find((v) => v.postId === postId);
 
     if (!vote) return 0;
 

@@ -3,7 +3,7 @@ import React from "react";
 
 const Logo: React.FC = () => {
   return (
-    <Flex alignItems="center">
+    <Flex alignItems="center" shrink={0}>
       <Image src="/images/redditFace.svg" alt="reddit logo" height="30px" />
       <Image
         src="/images/redditText.svg"

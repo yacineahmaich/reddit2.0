@@ -22,6 +22,8 @@ import { useVotePost } from "@/features/posts/useVotePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/client";
 import { Post } from "@/features/posts/types";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "@/atoms/authModalAtom";
 
 type PostItemProps = {
   post: Post;
@@ -34,6 +36,7 @@ const PostItem: React.FC<PostItemProps> = ({
   userIsCreator,
   userVoteValue,
 }) => {
+  const setAuthModalState = useSetRecoilState(authModalState);
   const [imageIsLoading, setImageIsLoading] = useState(true);
 
   const [user] = useAuthState(auth);
@@ -41,6 +44,11 @@ const PostItem: React.FC<PostItemProps> = ({
   const { votePost, isLoading: isVoting } = useVotePost();
 
   function handleVotePost(vote: number) {
+    if (!user) {
+      setAuthModalState({ open: true, view: "login" });
+      return;
+    }
+
     votePost({
       post,
       userId: user?.uid!,

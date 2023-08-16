@@ -2,7 +2,7 @@ import { auth, firestore } from "@/firebase/client";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { CommunityPrivacyType } from "./types";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 
 type Vars = {
@@ -38,6 +38,7 @@ const createNewCommunity = async ({ name, type, userId }: Vars) => {
 
 export const useCreateCommunity = () => {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [user] = useAuthState(auth);
 
   const { mutate: createCommunity, isLoading } = useMutation({
@@ -45,6 +46,7 @@ export const useCreateCommunity = () => {
       createNewCommunity({ name, type, userId: user?.uid! }),
     onSuccess: (_, { name }) => {
       router.push(`/r/${name}`);
+      queryClient.invalidateQueries(["user", "snippets"]);
     },
   });
 

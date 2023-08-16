@@ -2,7 +2,6 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
   Icon,
-  Menu,
   MenuButton,
   MenuDivider,
   MenuItem,
@@ -10,36 +9,35 @@ import {
   Text,
 } from "@chakra-ui/react";
 import React from "react";
+const Menu = dynamic(
+  import("@chakra-ui/react").then((mod) => mod.Menu),
+  { ssr: false }
+);
 
 import { authModalState } from "@/atoms/authModalAtom";
-import { auth } from "@/firebase/client";
-import { User, signOut } from "firebase/auth";
+import { useLogout } from "@/features/auth/useLogout";
+import { User } from "firebase/auth";
+import dynamic from "next/dynamic";
 import { BsPerson } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
-import { useResetRecoilState, useSetRecoilState } from "recoil";
-import { communityState } from "@/atoms/communitiesAtom";
-import { useQueryClient } from "@tanstack/react-query";
+import { useSetRecoilState } from "recoil";
 
 type UserDropdownProps = {
   user?: User | null;
 };
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
-  const queryClient = useQueryClient();
   const setAuthModal = useSetRecoilState(authModalState);
-  const resetCommunityState = useResetRecoilState(communityState);
 
-  const handleSignOut = async () => {
-    await signOut(auth);
-    resetCommunityState();
-    queryClient.removeQueries();
-  };
+  const { mutate: logout } = useLogout();
+
   return (
     <Menu>
       <MenuButton
+        id="UserDropdown"
         p="0 6px"
         borderRadius={4}
         _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
@@ -100,7 +98,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
               fontSize="10pt"
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
-              onClick={handleSignOut}
+              onClick={() => logout()}
             >
               <Flex align="center" gap={3}>
                 <Icon as={MdOutlineLogout} fontSize={20} />
@@ -115,9 +113,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
               fontSize="10pt"
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
-              onClick={() =>
-                setAuthModal((state) => ({ open: true, view: "login" }))
-              }
+              onClick={() => setAuthModal({ open: true, view: "login" })}
             >
               <Flex align="center" gap={3}>
                 <Icon as={MdOutlineLogout} fontSize={20} />

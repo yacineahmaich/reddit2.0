@@ -21,6 +21,7 @@ const DropdownButton: React.FC = () => {
     <MenuButton
       p="0 6px"
       mx={{ base: 1, md: 3 }}
+      minW="100px"
       borderRadius={4}
       _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
     >
@@ -31,7 +32,7 @@ const DropdownButton: React.FC = () => {
         color="gray.500"
       >
         <Flex align="center">
-          {community && isLoading ? (
+          {community || isLoading ? (
             <SkeletonCircle
               w={7}
               h={7}

@@ -24,7 +24,6 @@ export function useCommunity() {
   const { data, isLoading, isError } = useQuery({
     queryKey: ["community", communityId],
     queryFn: () => getCommunity(communityId),
-    enabled: !!communityId,
   });
 
   return {

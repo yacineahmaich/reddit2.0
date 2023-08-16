@@ -70,7 +70,7 @@ export function useJoinLeaveCommunity() {
   const { mutate: joinLeaveCommunity, isLoading } = useMutation({
     mutationFn: joinOrLeaveCommunity,
     onSuccess: (_, { userId }) =>
-      queryClient.invalidateQueries(["user", userId, "snippets"]),
+      queryClient.invalidateQueries(["user", "snippets"]),
   });
 
   return {
