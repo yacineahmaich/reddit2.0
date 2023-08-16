@@ -1,8 +1,8 @@
 import { auth, firestore } from "@/firebase/client";
 import { getDocs, collection } from "firebase/firestore";
-import { CommunitySnippet } from "./types";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { CommunitySnippet } from "@/types/global";
 
 async function getUserCommunitySnippets(
   userId: string

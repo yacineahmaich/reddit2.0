@@ -1,23 +1,21 @@
 import { authModalState } from "@/atoms/authModalAtom";
 import { useCommunity } from "@/features/communities/useCommunity";
 import { useJoinLeaveCommunity } from "@/features/communities/useJoinLeaveCommunity";
-import { CommunitySnippet } from "@/features/user/types";
 import { useUserSnippets } from "@/features/user/useUserSnippets";
 import { auth } from "@/firebase/client";
+import { CommunitySnippet } from "@/types/global";
 import {
   Box,
   Button,
   Flex,
-  Icon,
-  Image,
-  Text,
-  SkeletonCircle,
   Skeleton,
+  SkeletonCircle,
+  Text,
 } from "@chakra-ui/react";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { FaReddit } from "react-icons/fa";
 import { useSetRecoilState } from "recoil";
+import CommunityProfile from "../shared/CommunityProfile";
 
 const CommunityHeader: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -59,24 +57,10 @@ const CommunityHeader: React.FC = () => {
             borderRadius="full"
           >
             <SkeletonCircle w="full" h="full" isLoaded={!!community}>
-              {community?.imageURL ? (
-                <Image
-                  src={community?.imageURL}
-                  borderRadius="full"
-                  w="full"
-                  h="full"
-                  objectFit="cover"
-                  alt={community?.id}
-                />
-              ) : (
-                <Icon
-                  as={FaReddit}
-                  w="full"
-                  h="full"
-                  borderRadius="full"
-                  color="blue.500"
-                />
-              )}
+              <CommunityProfile
+                source={community?.imageURL}
+                alt={community?.id}
+              />
             </SkeletonCircle>
           </Box>
           <Flex p="10px 16px">

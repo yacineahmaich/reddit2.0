@@ -18,11 +18,11 @@ import { useForm } from "react-hook-form";
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { postSchema } from "./schema";
 import { WarningIcon } from "@chakra-ui/icons";
-import { Post } from "@/atoms/postsAtom";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import { useCreatePost } from "@/features/posts/useCreatePost";
 import { useCommunity } from "@/features/communities/useCommunity";
+import { Post } from "@/types/global";
 
 type CreatePostValues = {
   title: string;
@@ -31,9 +31,7 @@ type CreatePostValues = {
 
 const TextInputs: React.FC = () => {
   const router = useRouter();
-  const { community, isLoading: isCommunityLoading } = useCommunity(
-    router.query.id as string
-  );
+  const { community, isLoading: isCommunityLoading } = useCommunity();
   const { createPost, isLoading, isError } = useCreatePost();
 
   const [user] = useAuthState(auth);

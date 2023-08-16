@@ -1,4 +1,3 @@
-import { CommunityPrivacyType } from "@/features/communities/types";
 import { useCreateCommunity } from "@/features/communities/useCreateCommunity";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
@@ -29,6 +28,7 @@ import { useForm } from "react-hook-form";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
 import { createCommunitySchema } from "./schema";
+import { CommunityPrivacyType } from "@/types/global";
 
 type CreateCommunityModalProps = {
   open: boolean;

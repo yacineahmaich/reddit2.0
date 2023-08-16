@@ -1,20 +1,22 @@
-import React from "react";
+import CommunityProfile from "@/components/shared/CommunityProfile";
+import { useCommunity } from "@/features/communities/useCommunity";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
-  MenuButton,
   Flex,
   Icon,
-  Text,
-  Box,
-  Image,
+  MenuButton,
   Skeleton,
   SkeletonCircle,
+  Text,
 } from "@chakra-ui/react";
+import { useRouter } from "next/router";
+import React from "react";
 import { TiHome } from "react-icons/ti";
-import { useCommunity } from "@/features/communities/useCommunity";
-import { FaReddit } from "react-icons/fa";
 
 const DropdownButton: React.FC = () => {
+  const router = useRouter();
+  const communityId = router.query.id;
+
   const { community, isLoading } = useCommunity();
 
   return (
@@ -32,38 +34,23 @@ const DropdownButton: React.FC = () => {
         color="gray.500"
       >
         <Flex align="center">
-          {community || isLoading ? (
+          {community || communityId ? (
             <SkeletonCircle
               w={7}
               h={7}
               isLoaded={!isLoading}
               mr={{ base: 1, md: 2 }}
             >
-              <Box w={7} h={7}>
-                {community?.imageURL ? (
-                  <Image
-                    src={community?.imageURL}
-                    borderRadius="full"
-                    w="full"
-                    h="full"
-                    objectFit="cover"
-                    alt={community?.id}
-                  />
-                ) : (
-                  <Icon
-                    as={FaReddit}
-                    w="full"
-                    h="full"
-                    borderRadius="full"
-                    color="blue.500"
-                  />
-                )}
-              </Box>
+              <CommunityProfile
+                source={community?.imageURL}
+                size={7}
+                alt={community?.id}
+              />
             </SkeletonCircle>
           ) : (
             <Icon as={TiHome} mr={{ base: 1, md: 2 }} h={7} w={7} />
           )}
-          <Skeleton isLoaded={!isLoading}>
+          <Skeleton isLoaded={!isLoading || !communityId}>
             <Text
               display={{ base: "none", md: "block" }}
               fontWeight={600}

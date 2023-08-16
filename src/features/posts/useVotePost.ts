@@ -1,7 +1,7 @@
 import { doc, increment, runTransaction } from "firebase/firestore";
 import { firestore } from "@/firebase/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Post } from "./types";
+import { Post } from "@/types/global";
 
 type Vars = {
   post: Post;

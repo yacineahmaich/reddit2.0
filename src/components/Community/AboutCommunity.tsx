@@ -8,7 +8,6 @@ import {
   Divider,
   Flex,
   Icon,
-  Image,
   Spinner,
   Stack,
   Text,
@@ -17,9 +16,9 @@ import moment from "moment";
 import Link from "next/link";
 import React, { useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { FaReddit } from "react-icons/fa";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
+import CommunityProfile from "../shared/CommunityProfile";
 
 const AboutCommunity: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -139,21 +138,12 @@ const AboutCommunity: React.FC = () => {
                         onChange={handleSelectFile}
                         hidden
                       />
-                      {community?.imageURL || selectedImage ? (
-                        <Image
-                          src={selectedImage || community?.imageURL}
-                          alt="community  image"
-                          borderRadius="full"
-                          boxSize="40px"
-                        />
-                      ) : (
-                        <Icon
-                          as={FaReddit}
-                          fontSize={40}
-                          color="brand.100"
-                          mr={2}
-                        />
-                      )}
+                      <CommunityProfile
+                        source={selectedImage || community?.imageURL || ""}
+                        size={10}
+                        fallbackColor="brand.100"
+                        alt={community.id}
+                      />
                     </Flex>
                     {selectedImage && (
                       <Button

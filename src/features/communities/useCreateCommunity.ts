@@ -1,9 +1,9 @@
 import { auth, firestore } from "@/firebase/client";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
-import { CommunityPrivacyType } from "./types";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/router";
+import { CommunityPrivacyType } from "@/types/global";
 
 type Vars = {
   name: string;

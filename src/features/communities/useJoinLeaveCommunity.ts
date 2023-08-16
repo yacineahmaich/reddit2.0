@@ -1,8 +1,7 @@
 import { firestore } from "@/firebase/client";
 import { writeBatch, doc, increment } from "firebase/firestore";
-import { Community } from "./types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { CommunitySnippet } from "../user/types";
+import { Community, CommunitySnippet } from "@/types/global";
 
 // Join Community
 const joinCommunuity = async (community: Community, userId: string) => {

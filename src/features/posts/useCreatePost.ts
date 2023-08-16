@@ -2,8 +2,8 @@ import { firestore, storage } from "@/firebase/client";
 import { addDoc, collection, updateDoc } from "firebase/firestore";
 import { ref, uploadString, getDownloadURL } from "firebase/storage";
 import { useRouter } from "next/router";
-import { Post } from "./types";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { Post } from "@/types/global";
 
 type Vars = {
   post: Post;

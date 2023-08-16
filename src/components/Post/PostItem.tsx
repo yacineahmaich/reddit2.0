@@ -21,9 +21,9 @@ import moment from "moment";
 import { useVotePost } from "@/features/posts/useVotePost";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/client";
-import { Post } from "@/features/posts/types";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "@/atoms/authModalAtom";
+import { Post } from "@/types/global";
 
 type PostItemProps = {
   post: Post;

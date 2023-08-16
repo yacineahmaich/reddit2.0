@@ -1,4 +1,3 @@
-import { CommunityPrivacyType } from "@/features/communities/types";
 import * as Z from "zod";
 
 export const createCommunitySchema = Z.object({

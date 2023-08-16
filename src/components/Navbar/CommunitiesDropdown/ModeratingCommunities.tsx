@@ -1,4 +1,4 @@
-import { CommunitySnippet } from "@/features/user/types";
+import { CommunitySnippet } from "@/types/global";
 import {
   Box,
   Flex,
