@@ -1,7 +1,12 @@
 import { Timestamp } from "firebase/firestore";
 import { atom } from "recoil";
 
-export type CommunityPrivacyType = "public" | "restricted" | "private";
+// export type CommunityPrivacyType = "public" | "restricted" | "private";
+export enum CommunityPrivacyType {
+  PUBLIC = "public",
+  RESTRICTED = "restricted",
+  PRIVATE = "private",
+}
 
 export type Community = {
   id: string;

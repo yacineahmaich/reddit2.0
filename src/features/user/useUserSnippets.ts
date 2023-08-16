@@ -21,18 +21,14 @@ async function getUserCommunitySnippets(
 export function useUserSnippets() {
   const [user] = useAuthState(auth);
 
-  const {
-    data: communitySnippets,
-    isLoading,
-    isError,
-  } = useQuery({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ["user", user?.uid, "snippets"],
     queryFn: () => getUserCommunitySnippets(user?.uid!),
     enabled: !!user,
   });
 
   return {
-    communitySnippets,
+    communitySnippets: data!,
     isLoading,
     isError,
   };

@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import moment from "moment";
 import Link from "next/link";
-import { useRouter } from "next/router";
 import React, { useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaReddit } from "react-icons/fa";
@@ -23,12 +22,9 @@ import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
 
 const AboutCommunity: React.FC = () => {
-  const router = useRouter();
   const [user] = useAuthState(auth);
-  const { community, isLoading: isCommunityLoading } = useCommunity(
-    router.query.id as string
-  );
 
+  const { community, isLoading: isCommunityLoading } = useCommunity();
   const { updateCommunityProfile, isLoading } = useUpdateCommunityImage();
 
   const imageRef = useRef<HTMLInputElement>(null);
@@ -36,7 +32,8 @@ const AboutCommunity: React.FC = () => {
   const { handleSelectFile } = useSelectFile(setSelectedImage);
 
   function handleUpdateCommunityProfile() {
-    if (!selectedImage || !community) return;
+    if (!selectedImage) return;
+
     updateCommunityProfile({
       id: community.id,
       image: selectedImage,

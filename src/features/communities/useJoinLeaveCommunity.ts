@@ -5,7 +5,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CommunitySnippet } from "../user/types";
 
 // Join Community
-async function joinCommunuity(community: Community, userId: string) {
+const joinCommunuity = async (community: Community, userId: string) => {
   const batch = writeBatch(firestore);
 
   const newSnippet = {
@@ -23,10 +23,10 @@ async function joinCommunuity(community: Community, userId: string) {
   });
 
   await batch.commit();
-}
+};
 
 // Leave Community
-async function leaveCommunity(community: Community, userId: string) {
+const leaveCommunity = async (community: Community, userId: string) => {
   const batch = writeBatch(firestore);
 
   // update community number of members
@@ -38,7 +38,7 @@ async function leaveCommunity(community: Community, userId: string) {
     doc(firestore, `users/${userId}/communitySnippets`, community.id)
   );
   await batch.commit();
-}
+};
 
 type Vars = {
   community: Community;
@@ -48,11 +48,11 @@ type Vars = {
 
 // Join Leave Community
 
-async function joinOrLeaveCommunity({
+const joinOrLeaveCommunity = async ({
   community,
   userId,
   communitySnippets,
-}: Vars) {
+}: Vars) => {
   const isJoined = Boolean(
     communitySnippets.find((c) => c.communityId === community.id)
   );
@@ -62,7 +62,7 @@ async function joinOrLeaveCommunity({
   } else {
     await joinCommunuity(community, userId);
   }
-}
+};
 
 export function useJoinLeaveCommunity() {
   const queryClient = useQueryClient();

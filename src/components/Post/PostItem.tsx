@@ -1,20 +1,15 @@
 import { Post } from "@/atoms/postsAtom";
 import {
-  Box,
   Button,
   Flex,
-  IconButton,
   Text,
   Image,
   HStack,
   Icon,
   Skeleton,
-  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { AiOutlineDelete } from "react-icons/ai";
-import { BsChat, BsDot } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
+import { BsChat } from "react-icons/bs";
 import {
   IoArrowDownCircleOutline,
   IoArrowDownCircleSharp,
@@ -24,9 +19,6 @@ import {
   IoBookmarkOutline,
 } from "react-icons/io5";
 import moment from "moment";
-import { DeleteIcon } from "@chakra-ui/icons";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/client";
 
 type PostItemProps = {
   post: Post;
@@ -43,10 +35,7 @@ const PostItem: React.FC<PostItemProps> = ({
   onVotePost,
   onSelectPost,
 }) => {
-  const [user] = useAuthState(auth);
   const [imageIsLoading, setImageIsLoading] = useState(true);
-  const [isDeleting, setIsDeleting] = useState(false);
-  const toast = useToast();
 
   return (
     <Flex

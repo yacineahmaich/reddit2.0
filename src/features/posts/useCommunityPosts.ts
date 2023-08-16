@@ -2,8 +2,9 @@ import { Post } from "./types";
 import { firestore } from "@/firebase/client";
 import { useQuery } from "@tanstack/react-query";
 import { query, collection, where, orderBy, getDocs } from "firebase/firestore";
+import { useRouter } from "next/router";
 
-export async function getCommunityPosts(id: string): Promise<Post[]> {
+const getCommunityPosts = async (id: string): Promise<Post[]> => {
   const postsQuery = query(
     collection(firestore, "posts"),
     where("communityId", "==", id),
@@ -21,17 +22,20 @@ export async function getCommunityPosts(id: string): Promise<Post[]> {
   );
 
   return posts;
-}
+};
 
-export function useCommunityPosts(id: string) {
+export const useCommunityPosts = () => {
+  const router = useRouter();
+  const communityId = router.query.id as string;
+
   const {
     data: posts,
     isLoading,
     isError,
   } = useQuery({
-    queryKey: ["community", id, "posts"],
-    queryFn: () => getCommunityPosts(id),
-    enabled: !!id,
+    queryKey: ["community", communityId, "posts"],
+    queryFn: () => getCommunityPosts(communityId),
+    enabled: !!communityId,
   });
 
   return {
@@ -39,4 +43,4 @@ export function useCommunityPosts(id: string) {
     isLoading,
     isError,
   };
-}
+};

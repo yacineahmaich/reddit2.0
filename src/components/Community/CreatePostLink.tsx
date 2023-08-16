@@ -14,9 +14,9 @@ type CreatePostProps = {};
 
 const CreatePostLink: React.FC<CreatePostProps> = () => {
   const router = useRouter();
-  const { community, isLoading } = useCommunity(router.query.id as string);
-
   const [user] = useAuthState(auth);
+
+  const { community, isLoading } = useCommunity();
   const setAuthModal = useSetRecoilState(authModalState);
 
   const onNavigateToSubmitPage = () => {
@@ -62,7 +62,7 @@ const CreatePostLink: React.FC<CreatePostProps> = () => {
         borderRadius={4}
         mr={4}
         onClick={onNavigateToSubmitPage}
-        disabled={isLoading || !community}
+        isDisabled={isLoading || !community}
         _disabled={{
           cursor: "auto",
         }}

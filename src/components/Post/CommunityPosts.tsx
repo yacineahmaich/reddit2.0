@@ -5,23 +5,21 @@ import PostItem from "./PostItem";
 import { Stack } from "@chakra-ui/react";
 import PostSkeleton from "./PostSkeleton";
 import { useCommunityPosts } from "@/features/posts/useCommunityPosts";
-import { useRouter } from "next/router";
 
 const CommunityPosts: React.FC = () => {
-  const router = useRouter();
-  const { posts, isLoading } = useCommunityPosts(router.query.id as string);
-
   const [user] = useAuthState(auth);
+  const { posts, isLoading } = useCommunityPosts();
+
   const { postState, setPostState, onDeletePost, onSelectPost, onVotePost } =
     usePosts();
 
   return (
     <>
-      {isLoading || !posts ? (
+      {isLoading ? (
         <PostSkeleton />
       ) : (
         <Stack>
-          {posts.map((post) => (
+          {posts?.map((post) => (
             <PostItem
               key={post.id}
               post={post}

@@ -1,9 +1,9 @@
-import CreateCommunityModal from "@/components/Modal/Community/CreateCommunityModal";
+import CreateCommunityModal from "./CreateCommunityModal";
 import { MenuItem, Flex, Icon } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { GrAdd } from "react-icons/gr";
 
-const CreateCommunityButton: React.FC = () => {
+const CreateCommunity: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
 
   function closeModal() {
@@ -28,4 +28,4 @@ const CreateCommunityButton: React.FC = () => {
     </>
   );
 };
-export default CreateCommunityButton;
+export default CreateCommunity;

@@ -3,29 +3,33 @@ import { parseObj } from "@/utils/helpers";
 import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
 import { Community } from "./types";
+import { useRouter } from "next/router";
 
-async function getCommunity(id: string): Promise<Community> {
+async function getCommunity(id: string): Promise<Community | null> {
   const communityDocRef = doc(firestore, "communities", id);
 
   const communityDoc = await getDoc(communityDocRef);
   const community = {
     id: communityDoc.id,
     ...communityDoc.data(),
-  };
+  } as Community;
 
-  return communityDoc.exists() ? parseObj(community) : null;
+  return communityDoc.exists() ? parseObj<Community>(community) : null;
 }
 
-export function useCommunity(id: string) {
-  const {
-    data: community,
-    isLoading,
-    isError,
-  } = useQuery({
-    queryKey: ["community", id],
-    queryFn: () => getCommunity(id),
-    enabled: !!id,
+export function useCommunity() {
+  const router = useRouter();
+  const communityId = router.query.id as string;
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["community", communityId],
+    queryFn: () => getCommunity(communityId),
+    enabled: !!communityId,
   });
 
-  return { community, isLoading, isError };
+  return {
+    community: data!,
+    isLoading,
+    isError,
+  };
 }

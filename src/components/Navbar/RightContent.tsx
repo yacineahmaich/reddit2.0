@@ -1,5 +1,5 @@
 import { Flex } from "@chakra-ui/react";
-import AuthModal from "../Modal/Auth/AuthModal";
+import AuthModal from "../Auth/AuthModal";
 import AuthButtons from "./RightContent/AuthButtons";
 import UserDropdown from "./RightContent/UserDropdown";
 import UserNav from "./RightContent/UserNav";

@@ -14,29 +14,19 @@ import {
   SkeletonCircle,
   Skeleton,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { FaReddit } from "react-icons/fa";
 import { useSetRecoilState } from "recoil";
 
 const Header: React.FC = () => {
-  const router = useRouter();
-  const { community, isLoading: isCommunityLoading } = useCommunity(
-    router.query.id as string
-  );
-
-  const setAuthModalState = useSetRecoilState(authModalState);
-
   const [user] = useAuthState(auth);
-
+  const setAuthModalState = useSetRecoilState(authModalState);
+  const { community, isLoading: isCommunityLoading } = useCommunity();
   const { joinLeaveCommunity, isLoading } = useJoinLeaveCommunity();
-
   const { communitySnippets } = useUserSnippets();
 
   function handleJoinLeaveCommunity() {
-    if (!communitySnippets || !community) return;
-
     if (!user) {
       setAuthModalState({ open: true, view: "login" });
       return;
@@ -49,14 +39,11 @@ const Header: React.FC = () => {
     });
   }
 
-  // const isJoined = isJoinedCommunity(community.id);
-  const communitySnippet =
-    (communitySnippets?.find(
-      (snippet) => snippet.communityId === community?.id
-    ) as CommunitySnippet) || null;
+  const communitySnippet = communitySnippets?.find(
+    (snippet) => snippet.communityId === community?.id
+  ) as CommunitySnippet | null;
 
-  const isJoined = Boolean(communitySnippet);
-
+  const isJoined = !!communitySnippet;
   const isModerator = communitySnippet?.isModerator;
 
   return (
