@@ -1,7 +1,7 @@
 import CreateCommunityModal from "./CreateCommunityModal";
-import { MenuItem, Flex, Icon } from "@chakra-ui/react";
+import { MenuItem } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { GrAdd } from "react-icons/gr";
+import { FaPlus } from "react-icons/fa";
 
 const CreateCommunity: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -19,11 +19,11 @@ const CreateCommunity: React.FC = () => {
         fontSize="10pt"
         _hover={{ bg: "gray.100" }}
         onClick={() => setModalOpen(true)}
+        color="gray.400"
+        icon={<FaPlus />}
+        fontWeight={700}
       >
-        <Flex fontSize="11pt" align="center" fontWeight={700} gap={2}>
-          <Icon as={GrAdd} fontSize={16} />
-          Create Community
-        </Flex>
+        Create Community
       </MenuItem>
     </>
   );

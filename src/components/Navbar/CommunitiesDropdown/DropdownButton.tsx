@@ -1,12 +1,21 @@
 import React from "react";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { MenuButton, Flex, Icon, Text, Box, Image } from "@chakra-ui/react";
+import {
+  MenuButton,
+  Flex,
+  Icon,
+  Text,
+  Box,
+  Image,
+  Skeleton,
+  SkeletonCircle,
+} from "@chakra-ui/react";
 import { TiHome } from "react-icons/ti";
 import { useCommunity } from "@/features/communities/useCommunity";
 import { FaReddit } from "react-icons/fa";
 
 const DropdownButton: React.FC = () => {
-  const { community } = useCommunity();
+  const { community, isLoading } = useCommunity();
 
   return (
     <MenuButton
@@ -22,9 +31,14 @@ const DropdownButton: React.FC = () => {
         color="gray.500"
       >
         <Flex align="center">
-          {community ? (
-            <>
-              <Box w={7} h={7} mr={{ base: 1, md: 2 }}>
+          {community || isLoading ? (
+            <SkeletonCircle
+              w={7}
+              h={7}
+              isLoaded={!isLoading}
+              mr={{ base: 1, md: 2 }}
+            >
+              <Box w={7} h={7}>
                 {community?.imageURL ? (
                   <Image
                     src={community?.imageURL}
@@ -44,17 +58,19 @@ const DropdownButton: React.FC = () => {
                   />
                 )}
               </Box>
-            </>
+            </SkeletonCircle>
           ) : (
             <Icon as={TiHome} mr={{ base: 1, md: 2 }} h={7} w={7} />
           )}
-          <Text
-            display={{ base: "none", md: "block" }}
-            fontWeight={600}
-            fontSize="10pt"
-          >
-            {community?.id || "Home"}
-          </Text>
+          <Skeleton isLoaded={!isLoading}>
+            <Text
+              display={{ base: "none", md: "block" }}
+              fontWeight={600}
+              fontSize="10pt"
+            >
+              {community?.id || "Home"}
+            </Text>
+          </Skeleton>
         </Flex>
 
         <Icon as={ChevronDownIcon} fontSize={24} />
