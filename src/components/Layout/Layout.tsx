@@ -1,3 +1,4 @@
+import { useUserVotes } from "@/features/user/useUserVotes";
 import Navbar from "../Navbar";
 
 type LayoutProps = {
@@ -5,6 +6,8 @@ type LayoutProps = {
 };
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
+  useUserVotes();
+
   return (
     <>
       <Navbar />

@@ -19,7 +19,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { FaReddit } from "react-icons/fa";
 import { useSetRecoilState } from "recoil";
 
-const Header: React.FC = () => {
+const CommunityHeader: React.FC = () => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
   const { community, isLoading: isCommunityLoading } = useCommunity();
@@ -115,4 +115,4 @@ const Header: React.FC = () => {
     </Flex>
   );
 };
-export default Header;
+export default CommunityHeader;

@@ -1,12 +1,11 @@
-import { Post } from "@/atoms/postsAtom";
 import {
   Button,
   Flex,
   Text,
   Image,
   HStack,
-  Icon,
   Skeleton,
+  IconButton,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { BsChat } from "react-icons/bs";
@@ -19,23 +18,35 @@ import {
   IoBookmarkOutline,
 } from "react-icons/io5";
 import moment from "moment";
+import { useVotePost } from "@/features/posts/useVotePost";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/client";
+import { Post } from "@/features/posts/types";
 
 type PostItemProps = {
   post: Post;
   userIsCreator?: boolean;
   userVoteValue?: number;
-  onVotePost: (post: Post, value: number) => void;
-  onSelectPost: () => void;
 };
 
 const PostItem: React.FC<PostItemProps> = ({
   post,
   userIsCreator,
   userVoteValue,
-  onVotePost,
-  onSelectPost,
 }) => {
   const [imageIsLoading, setImageIsLoading] = useState(true);
+
+  const [user] = useAuthState(auth);
+
+  const { votePost, isLoading: isVoting } = useVotePost();
+
+  function handleVotePost(vote: number) {
+    votePost({
+      post,
+      userId: user?.uid!,
+      vote,
+    });
+  }
 
   return (
     <Flex
@@ -45,39 +56,46 @@ const PostItem: React.FC<PostItemProps> = ({
       _hover={{ borderColor: "gray.500" }}
       bg="white"
       cursor="pointer"
-      onClick={onSelectPost}
       overflow="hidden"
     >
-      <Flex
-        direction="column"
-        align="center"
-        bg={"gray.100"}
-        p={2}
-        width="40px"
-      >
-        <Icon
-          as={
-            userVoteValue === 1 ? IoArrowUpCircleSharp : IoArrowUpCircleOutline
+      <Flex direction="column" align="center" bg="gray.100" p={2} width="40px">
+        <IconButton
+          variant="ghost"
+          aria-label="Upvote Post"
+          isDisabled={isVoting}
+          icon={
+            userVoteValue === 1 ? (
+              <IoArrowUpCircleSharp />
+            ) : (
+              <IoArrowUpCircleOutline />
+            )
           }
           color={userVoteValue === 1 ? "brand.100" : "gray.400"}
           fontSize={22}
           cursor="pointer"
+          onClick={() => handleVotePost(1)}
         />
         <Text fontSize="9pt" fontWeight={600}>
-          {post.voteStatus}
+          {post.numOfVotes}
         </Text>
-        <Icon
-          as={
-            userVoteValue === -1
-              ? IoArrowDownCircleSharp
-              : IoArrowDownCircleOutline
+        <IconButton
+          aria-label="Downvote Post"
+          isDisabled={isVoting}
+          variant="ghost"
+          icon={
+            userVoteValue === -1 ? (
+              <IoArrowDownCircleSharp />
+            ) : (
+              <IoArrowDownCircleOutline />
+            )
           }
           color={userVoteValue === -1 ? "#4379FF" : "gray.400"}
           fontSize={22}
           cursor="pointer"
+          onClick={() => handleVotePost(-1)}
         />
       </Flex>
-      <Flex grow={1} direction="column" gap={4} p={4} w="full">
+      <Flex grow={1} direction="column" gap={2} p={4} w="full">
         <HStack>
           {/* Community Icon */}
           <Text fontSize="9pt" color="gray.300">
@@ -111,7 +129,7 @@ const PostItem: React.FC<PostItemProps> = ({
             _hover={{ bg: "gray.100" }}
             color="gray.500"
             fontSize="9pt"
-            // fontWeight={700}
+            fontWeight={700}
             variant="ghost"
             borderRadius={4}
           >

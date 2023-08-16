@@ -31,7 +31,7 @@ const DropdownButton: React.FC = () => {
         color="gray.500"
       >
         <Flex align="center">
-          {community || isLoading ? (
+          {community && isLoading ? (
             <SkeletonCircle
               w={7}
               h={7}

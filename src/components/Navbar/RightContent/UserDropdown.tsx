@@ -21,18 +21,21 @@ import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useResetRecoilState, useSetRecoilState } from "recoil";
 import { communityState } from "@/atoms/communitiesAtom";
+import { useQueryClient } from "@tanstack/react-query";
 
 type UserDropdownProps = {
   user?: User | null;
 };
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
+  const queryClient = useQueryClient();
   const setAuthModal = useSetRecoilState(authModalState);
   const resetCommunityState = useResetRecoilState(communityState);
 
   const handleSignOut = async () => {
     await signOut(auth);
     resetCommunityState();
+    queryClient.removeQueries();
   };
   return (
     <Menu>

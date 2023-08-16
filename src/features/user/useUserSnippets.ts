@@ -22,7 +22,7 @@ export function useUserSnippets() {
   const [user] = useAuthState(auth);
 
   const { data, isLoading, isError } = useQuery({
-    queryKey: ["user", user?.uid, "snippets"],
+    queryKey: ["user", "snippets"],
     queryFn: () => getUserCommunitySnippets(user?.uid!),
     enabled: !!user,
   });

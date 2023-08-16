@@ -77,7 +77,7 @@ const TextInputs: React.FC = () => {
       body: values.body,
       createdAt: serverTimestamp() as Timestamp,
       numOfComments: 0,
-      voteStatus: 0,
+      numOfVotes: 0,
     };
 
     createPost(
