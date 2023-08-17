@@ -42,7 +42,8 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   open,
   onClose,
 }) => {
-  const { createCommunity, isLoading: isCreating } = useCreateCommunity();
+  const { mutate: createCommunity, isLoading: isCreating } =
+    useCreateCommunity();
 
   const {
     register,

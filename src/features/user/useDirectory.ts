@@ -4,9 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { CommunitySnippet } from "@/types/global";
 
-async function getUserCommunitySnippets(
-  userId: string
-): Promise<CommunitySnippet[]> {
+async function getUserDirectory(userId: string): Promise<CommunitySnippet[]> {
   const snippetDocs = await getDocs(
     collection(firestore, `users/${userId}/communitySnippets`)
   );
@@ -18,18 +16,12 @@ async function getUserCommunitySnippets(
   return snippets;
 }
 
-export function useUserSnippets() {
+export function useDirectory() {
   const [user] = useAuthState(auth);
 
-  const { data, isLoading, isError } = useQuery({
+  return useQuery({
     queryKey: ["user", "snippets"],
-    queryFn: () => getUserCommunitySnippets(user?.uid!),
+    queryFn: () => getUserDirectory(user?.uid!),
     enabled: !!user,
   });
-
-  return {
-    communitySnippets: data!,
-    isLoading,
-    isError,
-  };
 }

@@ -1,79 +1,56 @@
 import { firestore } from "@/firebase/client";
-import { writeBatch, doc, increment } from "firebase/firestore";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Community, CommunitySnippet } from "@/types/global";
-
-// Join Community
-const joinCommunuity = async (community: Community, userId: string) => {
-  const batch = writeBatch(firestore);
-
-  const newSnippet = {
-    communityId: community.id,
-    imageURL: community.imageURL || "",
-  };
-  // update user communitySnippets
-  batch.set(
-    doc(firestore, `users/${userId}/communitySnippets`, community.id),
-    newSnippet
-  );
-  // update community number of members
-  batch.update(doc(firestore, "communities", community.id), {
-    numMembers: increment(1),
-  });
-
-  await batch.commit();
-};
-
-// Leave Community
-const leaveCommunity = async (community: Community, userId: string) => {
-  const batch = writeBatch(firestore);
-
-  // update community number of members
-  batch.update(doc(firestore, "communities", community.id), {
-    numMembers: increment(-1),
-  });
-  // delete user communitySnippets
-  batch.delete(
-    doc(firestore, `users/${userId}/communitySnippets`, community.id)
-  );
-  await batch.commit();
-};
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { doc, increment, runTransaction } from "firebase/firestore";
 
 type Vars = {
-  community: Community;
+  communityId: string;
   userId: string;
   communitySnippets: CommunitySnippet[];
 };
 
-// Join Leave Community
+const joinOrLeaveCommunity = async ({ communityId, userId }: Vars) => {
+  await runTransaction(firestore, async (transaction) => {
+    // get snippet
+    const snippetDocRef = doc(
+      firestore,
+      `/users/${userId}/communitySnippets`,
+      communityId
+    );
+    const snippetDoc = await transaction.get(snippetDocRef);
 
-const joinOrLeaveCommunity = async ({
-  community,
-  userId,
-  communitySnippets,
-}: Vars) => {
-  const isJoined = Boolean(
-    communitySnippets.find((c) => c.communityId === community.id)
-  );
+    // get Community
+    const communityDocRef = doc(firestore, "communities", communityId);
+    const communityDoc = await transaction.get(communityDocRef);
+    const communityData = communityDoc.data() as Community;
 
-  if (isJoined) {
-    await leaveCommunity(community, userId);
-  } else {
-    await joinCommunuity(community, userId);
-  }
+    // user Already joined  the community
+    if (snippetDoc.exists()) {
+      // delete user snippet
+      transaction.delete(snippetDocRef);
+      // decrement community numMembers
+      transaction.update(communityDocRef, {
+        numMembers: increment(-1),
+      });
+    } else {
+      // add user snippet
+      transaction.set(snippetDocRef, {
+        communityId: communityData.id,
+        imageURL: communityData.imageURL || "",
+      });
+      // increment community numMembers
+      transaction.update(communityDocRef, {
+        numMembers: increment(1),
+      });
+    }
+  });
 };
 
 export function useJoinLeaveCommunity() {
   const queryClient = useQueryClient();
 
-  const { mutate: joinLeaveCommunity, isLoading } = useMutation({
+  return useMutation({
     mutationFn: joinOrLeaveCommunity,
-    onSuccess: (_, { userId }) =>
-      queryClient.invalidateQueries(["user", "snippets"]),
+    onSuccess: () => queryClient.invalidateQueries(["user", "snippets"]),
   });
-
-  return {
-    joinLeaveCommunity,
-    isLoading,
-  };
 }

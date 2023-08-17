@@ -32,7 +32,7 @@ type CreatePostValues = {
 const TextInputs: React.FC = () => {
   const router = useRouter();
   const { community, isLoading: isCommunityLoading } = useCommunity();
-  const { createPost, isLoading, isError } = useCreatePost();
+  const { mutate: createPost, isLoading, isError } = useCreatePost();
 
   const [user] = useAuthState(auth);
   const resetCreatePostState = useResetRecoilState(createPostState);

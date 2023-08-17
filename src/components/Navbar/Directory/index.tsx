@@ -1,13 +1,13 @@
 import { Menu, Flex, MenuList, Spinner } from "@chakra-ui/react";
 import React from "react";
-import { useUserSnippets } from "@/features/user/useUserSnippets";
+import { useDirectory } from "@/features/user/useDirectory";
 import CreateCommunity from "./CreateCommunity";
 import FollowingCommunities from "./FollowingCommunities";
 import ModeratingCommunities from "./ModeratingCommunities";
-import DropdownButton from "./DropdownButton";
+import DropdownButton from "./OpenDirectory";
 
 const CommunitiesDropdown: React.FC = () => {
-  const { communitySnippets, isLoading } = useUserSnippets();
+  const { data: communitySnippets = [], isLoading } = useDirectory();
 
   return (
     <Menu>

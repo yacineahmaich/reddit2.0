@@ -16,24 +16,17 @@ const CommunityProfile: React.FC<CommunityProfileProps> = ({
   fallbackColor = "blue.500",
 }) => {
   return (
-    <Box w={size || "full"} h={size || "full"}>
+    <Box
+      w={size || "full"}
+      h={size || "full"}
+      bg="gray.100"
+      borderRadius="full"
+      overflow="hidden"
+    >
       {source ? (
-        <Image
-          src={source}
-          borderRadius="full"
-          w="full"
-          h="full"
-          objectFit="cover"
-          alt={alt}
-        />
+        <Image src={source} w="full" h="full" objectFit="cover" alt={alt} />
       ) : (
-        <Icon
-          as={FaReddit}
-          w="full"
-          h="full"
-          borderRadius="full"
-          color={fallbackColor}
-        />
+        <Icon as={FaReddit} w="full" h="full" color={fallbackColor} />
       )}
     </Box>
   );

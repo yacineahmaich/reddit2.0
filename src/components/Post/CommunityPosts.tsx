@@ -8,15 +8,13 @@ import { useUserVotes } from "@/features/user/useUserVotes";
 
 const CommunityPosts: React.FC = () => {
   const [user] = useAuthState(auth);
-  const { votes } = useUserVotes();
-  const { posts, isLoading } = useCommunityPosts();
+  const { data: votes } = useUserVotes();
+  const { data: posts, isLoading } = useCommunityPosts();
 
   function getUserVote(postId: string) {
-    const vote = votes?.find((v) => v.postId === postId);
+    const postVote = votes?.find((v) => v.postId === postId);
 
-    if (!vote) return 0;
-
-    return vote.vote;
+    return postVote ? postVote.vote : 0;
   }
 
   return (

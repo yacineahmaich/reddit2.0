@@ -58,7 +58,7 @@ const voteOnPost = async ({ post, userId, vote }: Vars) => {
 export const useVotePost = () => {
   const queryClient = useQueryClient();
 
-  const { mutate: votePost, isLoading } = useMutation({
+  return useMutation({
     mutationFn: voteOnPost,
     onSuccess: async (_, { post }) => {
       await queryClient.invalidateQueries([
@@ -69,9 +69,4 @@ export const useVotePost = () => {
       await queryClient.invalidateQueries(["user", "votes"]);
     },
   });
-
-  return {
-    votePost,
-    isLoading,
-  };
 };

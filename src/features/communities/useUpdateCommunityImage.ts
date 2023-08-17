@@ -30,20 +30,10 @@ async function updateProfile({ id, image, userId }: Vars) {
 export function useUpdateCommunityImage() {
   const router = useRouter();
 
-  const {
-    mutate: updateCommunityProfile,
-    isLoading,
-    isError,
-  } = useMutation({
+  return useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
       router.reload();
     },
   });
-
-  return {
-    updateCommunityProfile,
-    isLoading,
-    isError,
-  };
 }

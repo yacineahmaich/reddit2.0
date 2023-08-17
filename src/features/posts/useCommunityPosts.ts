@@ -28,19 +28,9 @@ export const useCommunityPosts = () => {
   const router = useRouter();
   const communityId = router.query.id as string;
 
-  const {
-    data: posts,
-    isLoading,
-    isError,
-  } = useQuery({
+  return useQuery({
     queryKey: ["community", communityId, "posts"],
     queryFn: () => getCommunityPosts(communityId),
     enabled: !!communityId,
   });
-
-  return {
-    posts,
-    isLoading,
-    isError,
-  };
 };

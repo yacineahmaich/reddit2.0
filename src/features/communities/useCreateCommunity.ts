@@ -24,7 +24,7 @@ const createNewCommunity = async ({ name, type, userId }: Vars) => {
     transaction.set(communityDocRef, {
       creatorId: userId,
       numMembers: 1,
-      name,
+      id: name,
       privacyType: type,
       createdAt: serverTimestamp(),
     });
@@ -41,7 +41,7 @@ export const useCreateCommunity = () => {
   const queryClient = useQueryClient();
   const [user] = useAuthState(auth);
 
-  const { mutate: createCommunity, isLoading } = useMutation({
+  return useMutation({
     mutationFn: ({ name, type }: Pick<Vars, "name" | "type">) =>
       createNewCommunity({ name, type, userId: user?.uid! }),
     onSuccess: (_, { name }) => {
@@ -49,9 +49,4 @@ export const useCreateCommunity = () => {
       queryClient.invalidateQueries(["user", "snippets"]);
     },
   });
-
-  return {
-    createCommunity,
-    isLoading,
-  };
 };

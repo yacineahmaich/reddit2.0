@@ -21,15 +21,9 @@ async function getUserPostVotes(userId: string): Promise<Data[]> {
 export function useUserVotes() {
   const [user] = useAuthState(auth);
 
-  const { data, isLoading, isError } = useQuery({
+  return useQuery({
     queryKey: ["user", "votes"],
     queryFn: () => getUserPostVotes(user?.uid!),
     enabled: !!user,
   });
-
-  return {
-    votes: data!,
-    isLoading,
-    isError,
-  };
 }

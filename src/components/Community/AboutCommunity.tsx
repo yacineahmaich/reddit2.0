@@ -19,26 +19,28 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
 import CommunityProfile from "../shared/CommunityProfile";
+import { FaEdit } from "react-icons/fa";
 
 const AboutCommunity: React.FC = () => {
   const [user] = useAuthState(auth);
 
   const { community, isLoading: isCommunityLoading } = useCommunity();
-  const { updateCommunityProfile, isLoading } = useUpdateCommunityImage();
+  const { mutate: updateCommunityProfile, isLoading } =
+    useUpdateCommunityImage();
 
   const imageRef = useRef<HTMLInputElement>(null);
   const [selectedImage, setSelectedImage] = useState<string>();
   const { handleSelectFile } = useSelectFile(setSelectedImage);
 
   function handleUpdateCommunityProfile() {
-    if (!selectedImage) return;
-
     updateCommunityProfile({
       id: community.id,
-      image: selectedImage,
+      image: selectedImage!,
       userId: user?.uid!,
     });
   }
+
+  const isModerator = user?.uid === community?.creatorId;
 
   return (
     <Box pt={4} position="sticky" top="14px">
@@ -68,7 +70,7 @@ const AboutCommunity: React.FC = () => {
           <Spinner color="gray.300" />
         ) : (
           <Box w="full">
-            {user?.uid === community?.creatorId && (
+            {isModerator && (
               <Box
                 bg="gray.100"
                 width="100%"
@@ -117,21 +119,20 @@ const AboutCommunity: React.FC = () => {
                   Create Post
                 </Button>
               </Link>
-              {user?.uid === community?.creatorId && (
+              {isModerator && (
                 <>
                   <Divider />
                   <Stack spacing={1} fontSize="11pt">
-                    <Text fontWeight={600}>Admin</Text>
+                    <Text fontWeight={600}>Creator</Text>
                     <Flex align="center" justify="space-between">
-                      <Text
-                        color="blue.500"
-                        cursor="pointer"
-                        _hover={{ textDecoration: "underline" }}
+                      <Button
+                        leftIcon={<FaEdit />}
+                        size="xs"
+                        variant="link"
                         onClick={() => imageRef?.current?.click()}
-                        fontSize="10pt"
                       >
-                        Change Image
-                      </Text>
+                        Edit Profile
+                      </Button>
                       <input
                         type="file"
                         ref={imageRef}

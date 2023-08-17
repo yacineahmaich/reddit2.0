@@ -13,7 +13,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { TiHome } from "react-icons/ti";
 
-const DropdownButton: React.FC = () => {
+const OpenDirectory: React.FC = () => {
   const router = useRouter();
   const communityId = router.query.id;
 
@@ -66,4 +66,4 @@ const DropdownButton: React.FC = () => {
     </MenuButton>
   );
 };
-export default DropdownButton;
+export default OpenDirectory;

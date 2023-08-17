@@ -1,7 +1,7 @@
 import { auth } from "@/firebase/client";
 import { Flex } from "@chakra-ui/react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import CommunitiesDropdown from "./CommunitiesDropdown";
+import CommunitiesDropdown from "./Directory";
 import Logo from "./Logo";
 import RightContent from "./RightContent";
 import Search from "./Search";

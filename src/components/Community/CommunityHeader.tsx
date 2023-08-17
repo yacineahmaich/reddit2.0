@@ -1,7 +1,7 @@
 import { authModalState } from "@/atoms/authModalAtom";
 import { useCommunity } from "@/features/communities/useCommunity";
 import { useJoinLeaveCommunity } from "@/features/communities/useJoinLeaveCommunity";
-import { useUserSnippets } from "@/features/user/useUserSnippets";
+import { useDirectory } from "@/features/user/useDirectory";
 import { auth } from "@/firebase/client";
 import { CommunitySnippet } from "@/types/global";
 import {
@@ -21,17 +21,19 @@ const CommunityHeader: React.FC = () => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
   const { community, isLoading: isCommunityLoading } = useCommunity();
-  const { joinLeaveCommunity, isLoading } = useJoinLeaveCommunity();
-  const { communitySnippets } = useUserSnippets();
+  const { mutate: joinLeaveCommunity, isLoading } = useJoinLeaveCommunity();
+  const { data: communitySnippets = [] } = useDirectory();
 
   function handleJoinLeaveCommunity() {
+    if (!community) return;
+
     if (!user) {
       setAuthModalState({ open: true, view: "login" });
       return;
     }
 
     joinLeaveCommunity({
-      community: community,
+      communityId: community.id,
       userId: user?.uid,
       communitySnippets: communitySnippets,
     });
@@ -42,7 +44,6 @@ const CommunityHeader: React.FC = () => {
   ) as CommunitySnippet | null;
 
   const isJoined = !!communitySnippet;
-  const isModerator = communitySnippet?.isModerator;
 
   return (
     <Flex direction="column" width="100%" height="146px">
@@ -88,7 +89,12 @@ const CommunityHeader: React.FC = () => {
                 px={6}
                 isLoading={isLoading}
                 onClick={() => handleJoinLeaveCommunity()}
-                isDisabled={isModerator}
+                isDisabled={communitySnippet?.isModerator}
+                _disabled={{
+                  cursor: "auto",
+                  color: "gray.300",
+                  borderColor: "gray.300",
+                }}
               >
                 {isJoined ? "joined" : "join"}
               </Button>

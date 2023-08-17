@@ -29,17 +29,11 @@ export function useCreatePost() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const {
-    mutate: createPost,
-    isLoading,
-    isError,
-  } = useMutation({
+  return useMutation({
     mutationFn: createCommunityPost,
     onSuccess: (_, { post }) => {
       queryClient.invalidateQueries(["community", post.id, "posts"]);
       router.back();
     },
   });
-
-  return { createPost, isLoading, isError };
 }

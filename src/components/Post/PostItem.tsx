@@ -41,7 +41,7 @@ const PostItem: React.FC<PostItemProps> = ({
 
   const [user] = useAuthState(auth);
 
-  const { votePost, isLoading: isVoting } = useVotePost();
+  const { mutate: votePost, isLoading: isVoting } = useVotePost();
 
   function handleVotePost(vote: number) {
     if (!user) {
