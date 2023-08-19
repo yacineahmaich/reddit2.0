@@ -15,7 +15,7 @@ import { TiHome } from "react-icons/ti";
 
 const OpenDirectory: React.FC = () => {
   const router = useRouter();
-  const communityId = router.query.id;
+  const communityId = router.query.communityId;
 
   const { community, isLoading } = useCommunity();
 

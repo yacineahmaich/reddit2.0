@@ -19,7 +19,7 @@ async function getCommunity(id: string): Promise<Community | null> {
 
 export function useCommunity() {
   const router = useRouter();
-  const communityId = router.query.id as string;
+  const communityId = router.query.communityId as string;
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ["community", communityId],

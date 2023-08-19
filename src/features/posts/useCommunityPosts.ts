@@ -26,7 +26,7 @@ const getCommunityPosts = async (id: string): Promise<Post[]> => {
 
 export const useCommunityPosts = () => {
   const router = useRouter();
-  const communityId = router.query.id as string;
+  const communityId = router.query.communityId as string;
 
   return useQuery({
     queryKey: ["community", communityId, "posts"],

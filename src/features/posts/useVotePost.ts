@@ -2,6 +2,7 @@ import { doc, increment, runTransaction } from "firebase/firestore";
 import { firestore } from "@/firebase/client";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Post } from "@/types/global";
+import { useRouter } from "next/router";
 
 type Vars = {
   post: Post;
@@ -56,7 +57,10 @@ const voteOnPost = async ({ post, userId, vote }: Vars) => {
 };
 
 export const useVotePost = () => {
+  const router = useRouter();
   const queryClient = useQueryClient();
+
+  const isPostDetailPage = router.query.postId;
 
   return useMutation({
     mutationFn: voteOnPost,
@@ -67,6 +71,10 @@ export const useVotePost = () => {
         "posts",
       ]);
       await queryClient.invalidateQueries(["user", "votes"]);
+
+      if (isPostDetailPage) {
+        router.replace(router.asPath);
+      }
     },
   });
 };

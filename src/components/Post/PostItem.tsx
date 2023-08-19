@@ -1,13 +1,23 @@
+import { authModalState } from "@/atoms/authModalAtom";
+import { useVotePost } from "@/features/posts/useVotePost";
+import { auth } from "@/firebase/client";
+import { Post } from "@/types/global";
+import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Divider,
   Flex,
-  Text,
-  Image,
   HStack,
-  Skeleton,
   IconButton,
+  Image,
+  Skeleton,
+  Text
 } from "@chakra-ui/react";
+import moment from "moment";
+import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { BsChat } from "react-icons/bs";
 import {
   IoArrowDownCircleOutline,
@@ -17,13 +27,7 @@ import {
   IoArrowUpCircleSharp,
   IoBookmarkOutline,
 } from "react-icons/io5";
-import moment from "moment";
-import { useVotePost } from "@/features/posts/useVotePost";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/client";
 import { useSetRecoilState } from "recoil";
-import { authModalState } from "@/atoms/authModalAtom";
-import { Post } from "@/types/global";
 
 type PostItemProps = {
   post: Post;
@@ -36,10 +40,10 @@ const PostItem: React.FC<PostItemProps> = ({
   userIsCreator,
   userVoteValue,
 }) => {
+  const router = useRouter();
+  const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalState);
   const [imageIsLoading, setImageIsLoading] = useState(true);
-
-  const [user] = useAuthState(auth);
 
   const { mutate: votePost, isLoading: isVoting } = useVotePost();
 
@@ -56,6 +60,10 @@ const PostItem: React.FC<PostItemProps> = ({
     });
   }
 
+  const createdDate = moment(post.createdAt.seconds * 1000).fromNow();
+
+  const isPostDetailPage = !!router.query.postId;
+
   return (
     <Flex
       border="1px solid"
@@ -63,10 +71,16 @@ const PostItem: React.FC<PostItemProps> = ({
       borderRadius={4}
       _hover={{ borderColor: "gray.500" }}
       bg="white"
-      cursor="pointer"
       overflow="hidden"
     >
-      <Flex direction="column" align="center" bg="gray.100" p={2} width="40px">
+      {/* ASIDE */}
+      <Flex
+        direction="column"
+        align="center"
+        bg={isPostDetailPage ? "white" : "gray.100"}
+        p={2}
+        width="40px"
+      >
         <IconButton
           variant="ghost"
           aria-label="Upvote Post"
@@ -103,73 +117,55 @@ const PostItem: React.FC<PostItemProps> = ({
           onClick={() => handleVotePost(-1)}
         />
       </Flex>
-      <Flex grow={1} direction="column" gap={2} p={4} w="full">
-        <HStack>
-          {/* Community Icon */}
-          <Text fontSize="9pt" color="gray.300">
-            Posted by u/{post.creatorDisplayName} a{" "}
-            {moment(post.createdAt.toDate()).fromNow()}
+
+      {/* MAIN CONTENT */}
+      <Link
+        href={
+          isPostDetailPage ? router.asPath : `${router.asPath}/posts/${post.id}`
+        }
+        style={{ flexGrow: 1, cursor: isPostDetailPage ? 'auto' : 'pointer' }}
+      >
+        <Flex grow={1} direction="column" gap={2} p={4} w="full">
+          <HStack>
+            {/* Community Icon */}
+            <Text fontSize="9pt" color="gray.300">
+              Posted by u/{post.creatorDisplayName} a {createdDate}
+            </Text>
+          </HStack>
+          <Text fontWeight={700} fontSize="12pt">
+            {post.title}
           </Text>
-        </HStack>
-        <Text fontWeight={700} fontSize="12pt">
-          {post.title}
-        </Text>
-        <Text fontSize="10pt">{post.body}</Text>
+          <Text fontSize="10pt">{post.body}</Text>
 
-        {post.imageURL && (
-          <Flex align="center" justify="center">
-            {imageIsLoading && (
-              <Skeleton height="200px" width="100%" borderRadius={4} />
-            )}
-            <Image
-              src={post.imageURL}
-              alt={post.title}
-              maxHeight="460px"
-              onLoad={() => setImageIsLoading(false)}
-            />
-          </Flex>
-        )}
+          {post.imageURL && (
+            <Flex align="center" justify="center">
+              {imageIsLoading && !isPostDetailPage && (
+                <Skeleton height="200px" width="100%" borderRadius={4} />
+              )}
+              <Image
+                src={post.imageURL}
+                alt={post.title}
+                maxHeight="460px"
+                onLoad={() => setImageIsLoading(false)}
+              />
+            </Flex>
+          )}
 
-        <HStack ml={1} mb={0.5}>
-          <Button
-            leftIcon={<BsChat />}
-            size="sm"
-            _hover={{ bg: "gray.100" }}
-            color="gray.500"
-            fontSize="9pt"
-            fontWeight={700}
-            variant="ghost"
-            borderRadius={4}
-          >
-            {post.numOfComments}
-          </Button>
-          <Button
-            leftIcon={<IoArrowRedoOutline />}
-            size="sm"
-            _hover={{ bg: "gray.100" }}
-            color="gray.500"
-            fontSize="9pt"
-            fontWeight={400}
-            variant="ghost"
-            borderRadius={4}
-          >
-            Share
-          </Button>
-          <Button
-            leftIcon={<IoBookmarkOutline />}
-            size="sm"
-            _hover={{ bg: "gray.100" }}
-            color="gray.500"
-            fontSize="9pt"
-            fontWeight={400}
-            variant="ghost"
-            borderRadius={4}
-          >
-            Save
-          </Button>
-          {/* {user?.uid === post.creatorId && (
+          <HStack ml={1} mb={0.5}>
             <Button
-              leftIcon={<DeleteIcon />}
+              leftIcon={<BsChat />}
+              size="sm"
+              _hover={{ bg: "gray.100" }}
+              color="gray.500"
+              fontSize="9pt"
+              fontWeight={700}
+              variant="ghost"
+              borderRadius={4}
+            >
+              {post.numOfComments}
+            </Button>
+            <Button
+              leftIcon={<IoArrowRedoOutline />}
               size="sm"
               _hover={{ bg: "gray.100" }}
               color="gray.500"
@@ -177,14 +173,58 @@ const PostItem: React.FC<PostItemProps> = ({
               fontWeight={400}
               variant="ghost"
               borderRadius={4}
-              onClick={handleDelete}
-              isLoading={isDeleting}
             >
-              Delete
+              Share
             </Button>
-          )} */}
-        </HStack>
-      </Flex>
+            <Button
+              leftIcon={<IoBookmarkOutline />}
+              size="sm"
+              _hover={{ bg: "gray.100" }}
+              color="gray.500"
+              fontSize="9pt"
+              fontWeight={400}
+              variant="ghost"
+              borderRadius={4}
+            >
+              Save
+            </Button>
+            {user?.uid === post.creatorId && isPostDetailPage && (
+              <>
+                <Divider orientation="vertical" height="20px" />
+                <Button
+                // color="blue.400"
+                  leftIcon={<EditIcon />}
+                  size="sm"
+                  _hover={{ bg: "gray.100" }}
+                  color="blue.300"
+                  fontSize="9pt"
+                  fontWeight={400}
+                  variant="ghost"
+                  borderRadius={4}
+                  // onClick={handleDelete}
+                  // isLoading={isDeleting}
+                >
+                  Edit
+                </Button>
+                <Button
+                  leftIcon={<DeleteIcon />}
+                  size="sm"
+                  _hover={{ bg: "gray.100" }}
+                  color="red.300"
+                  fontSize="9pt"
+                  fontWeight={400}
+                  variant="ghost"
+                  borderRadius={4}
+                  // onClick={handleDelete}
+                  // isLoading={isDeleting}
+                >
+                  Delete
+                </Button>
+              </>
+            )}
+          </HStack>
+        </Flex>
+      </Link>
     </Flex>
   );
 };
