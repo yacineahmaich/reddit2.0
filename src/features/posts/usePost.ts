@@ -19,13 +19,13 @@ export const getPost = async (postId: string): Promise<Post> => {
   return post;
 };
 
-export const usePost = () => {
+export const usePost = (postId?: string) => {
   const router = useRouter();
-  const postId = router.query.postId as string;
   const communityId = router.query.communityId as string;
 
   return useQuery({
     queryKey: ["community", communityId, "posts", postId],
-    queryFn: () => getPost(postId),
+    queryFn: () => getPost(postId!),
+    enabled: !!postId,
   });
 };

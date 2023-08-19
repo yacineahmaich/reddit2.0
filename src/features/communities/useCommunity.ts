@@ -21,7 +21,7 @@ export function useCommunity() {
   const router = useRouter();
   const communityId = router.query.communityId as string;
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["community", communityId],
     queryFn: () => getCommunity(communityId),
     enabled: !!communityId,
@@ -31,5 +31,6 @@ export function useCommunity() {
     community: data!,
     isLoading,
     isError,
+    refetch,
   };
 }

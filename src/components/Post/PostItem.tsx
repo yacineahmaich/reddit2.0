@@ -195,6 +195,8 @@ const PostItem: React.FC<PostItemProps> = ({
               <>
                 <Divider orientation="vertical" height="20px" />
                 <Button
+                  as={Link}
+                  href={`/r/${post.communityId}/submit/${post.id}/edit`}
                   // color="blue.400"
                   leftIcon={<EditIcon />}
                   size="sm"

@@ -33,7 +33,7 @@ export function useCreatePost() {
     mutationFn: createCommunityPost,
     onSuccess: (_, { post }) => {
       queryClient.invalidateQueries(["community", post.id, "posts"]);
-      router.back();
+      router.push(`/r/${post.communityId}`);
     },
   });
 }

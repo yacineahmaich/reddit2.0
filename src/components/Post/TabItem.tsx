@@ -1,5 +1,5 @@
 import React from "react";
-import { TabItemType } from "./NewPostForm";
+import { TabItemType } from "./PostForm";
 import { Flex, Icon, Text } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
 import { createPostState } from "@/atoms/createPostAtom";

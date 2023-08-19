@@ -1,7 +1,7 @@
 import AboutCommunity from "@/components/Community/AboutCommunity";
 import PageContent from "@/components/Layout/PageContent";
 import PostItem from "@/components/Post/PostItem";
-import { getPost, usePost } from "@/features/posts/usePost";
+import { getPost } from "@/features/posts/usePost";
 import { useUserVotes } from "@/features/user/useUserVotes";
 import { Post } from "@/types/global";
 import { parseObj } from "@/utils/helpers";

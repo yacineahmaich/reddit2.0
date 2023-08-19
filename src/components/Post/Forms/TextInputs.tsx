@@ -21,7 +21,6 @@ import { WarningIcon } from "@chakra-ui/icons";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import { useCreatePost } from "@/features/posts/useCreatePost";
-import { useCommunity } from "@/features/communities/useCommunity";
 import { Post } from "@/types/global";
 
 type CreatePostValues = {
@@ -29,10 +28,21 @@ type CreatePostValues = {
   body: string;
 };
 
-const TextInputs: React.FC = () => {
+type Props = {
+  post: Post | null;
+  isEditing: boolean;
+};
+
+const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
   const router = useRouter();
-  const { community, isLoading: isCommunityLoading } = useCommunity();
-  const { mutate: createPost, isLoading, isError } = useCreatePost();
+
+  const communityId = router.query.communityId as string;
+
+  const {
+    mutate: createPost,
+    isLoading: isCreatigPost,
+    isError,
+  } = useCreatePost();
 
   const [user] = useAuthState(auth);
   const resetCreatePostState = useResetRecoilState(createPostState);
@@ -46,8 +56,8 @@ const TextInputs: React.FC = () => {
     watch,
   } = useForm<CreatePostValues>({
     defaultValues: {
-      title,
-      body,
+      title: post?.title ?? title,
+      body: post?.body ?? body,
     },
     resolver: zodResolver(postSchema),
   });
@@ -64,10 +74,10 @@ const TextInputs: React.FC = () => {
   }, [enteredTitle, enteredBody, setCreatePostState]);
 
   async function onSubmit(values: CreatePostValues) {
-    if (!user || !community) return;
+    if (!user || !communityId) return;
 
     const post: Post = {
-      communityId: community.id,
+      communityId,
       creatorId: user.uid,
       creatorDisplayName:
         user.displayName || (user.email!.split("@").at(0) as string),
@@ -109,10 +119,7 @@ const TextInputs: React.FC = () => {
         </Box>
       )}
       <Stack spacing={3}>
-        <FormControl
-          isInvalid={!!errors.title?.message}
-          isDisabled={isCommunityLoading}
-        >
+        <FormControl isInvalid={!!errors.title?.message}>
           <Input
             placeholder="Title"
             fontSize="10pt"
@@ -144,7 +151,6 @@ const TextInputs: React.FC = () => {
           }}
           height="100px"
           {...register("body")}
-          isDisabled={isCommunityLoading}
         />
         <Flex justify="end" gap={3}>
           <Button
@@ -152,7 +158,7 @@ const TextInputs: React.FC = () => {
             height="34x"
             padding="8px 30px"
             onClick={() => router.back()}
-            disabled={isLoading}
+            disabled={isCreatigPost}
           >
             Cancel
           </Button>
@@ -161,10 +167,10 @@ const TextInputs: React.FC = () => {
             height="34x"
             padding="8px 30px"
             onClick={() => null}
-            isDisabled={isLoading || isCommunityLoading}
-            isLoading={isLoading}
+            isDisabled={isCreatigPost}
+            isLoading={isCreatigPost}
           >
-            Post
+            {isEditing ? "Save" : "Post"}
           </Button>
         </Flex>
       </Stack>
