@@ -1,4 +1,5 @@
 import { authModalState } from "@/atoms/authModalAtom";
+import { useDeletePost } from "@/features/posts/useDeletePost";
 import { useVotePost } from "@/features/posts/useVotePost";
 import { auth } from "@/firebase/client";
 import { Post } from "@/types/global";
@@ -11,7 +12,7 @@ import {
   IconButton,
   Image,
   Skeleton,
-  Text
+  Text,
 } from "@chakra-ui/react";
 import moment from "moment";
 import Link from "next/link";
@@ -46,6 +47,8 @@ const PostItem: React.FC<PostItemProps> = ({
   const [imageIsLoading, setImageIsLoading] = useState(true);
 
   const { mutate: votePost, isLoading: isVoting } = useVotePost();
+
+  const { mutate: deletePost, isLoading: isDeleting } = useDeletePost();
 
   function handleVotePost(vote: number) {
     if (!user) {
@@ -123,7 +126,7 @@ const PostItem: React.FC<PostItemProps> = ({
         href={
           isPostDetailPage ? router.asPath : `${router.asPath}/posts/${post.id}`
         }
-        style={{ flexGrow: 1, cursor: isPostDetailPage ? 'auto' : 'pointer' }}
+        style={{ flexGrow: 1, cursor: isPostDetailPage ? "auto" : "pointer" }}
       >
         <Flex grow={1} direction="column" gap={2} p={4} w="full">
           <HStack>
@@ -192,7 +195,7 @@ const PostItem: React.FC<PostItemProps> = ({
               <>
                 <Divider orientation="vertical" height="20px" />
                 <Button
-                // color="blue.400"
+                  // color="blue.400"
                   leftIcon={<EditIcon />}
                   size="sm"
                   _hover={{ bg: "gray.100" }}
@@ -215,8 +218,8 @@ const PostItem: React.FC<PostItemProps> = ({
                   fontWeight={400}
                   variant="ghost"
                   borderRadius={4}
-                  // onClick={handleDelete}
-                  // isLoading={isDeleting}
+                  onClick={() => deletePost({ post })}
+                  isLoading={isDeleting}
                 >
                   Delete
                 </Button>
