@@ -1,27 +1,28 @@
 import { createPostState } from "@/atoms/createPostAtom";
+import { useCreatePost } from "@/features/posts/useCreatePost";
+import { useUpdatePost } from "@/features/posts/useUpdatePost";
 import { auth } from "@/firebase/client";
+import { Post } from "@/types/global";
+import { WarningIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
-  Input,
-  Stack,
-  Textarea,
   FormControl,
   FormErrorMessage,
-  Box,
+  Input,
+  Stack,
   Text,
+  Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Timestamp, serverTimestamp } from "firebase/firestore";
-import React, { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { useRecoilState, useResetRecoilState } from "recoil";
-import { postSchema } from "./schema";
-import { WarningIcon } from "@chakra-ui/icons";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
-import { useCreatePost } from "@/features/posts/useCreatePost";
-import { Post } from "@/types/global";
+import React, { useEffect } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useForm } from "react-hook-form";
+import { useRecoilState } from "recoil";
+import { postSchema } from "./schema";
 
 type CreatePostValues = {
   title: string;
@@ -44,8 +45,9 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
     isError,
   } = useCreatePost();
 
+  const { mutate: updatePost, isLoading: isUpdating } = useUpdatePost();
+
   const [user] = useAuthState(auth);
-  const resetCreatePostState = useResetRecoilState(createPostState);
   const [{ title, body, image }, setCreatePostState] =
     useRecoilState(createPostState);
 
@@ -56,8 +58,8 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
     watch,
   } = useForm<CreatePostValues>({
     defaultValues: {
-      title: post?.title ?? title,
-      body: post?.body ?? body,
+      title: title || post?.title,
+      body: body || post?.body,
     },
     resolver: zodResolver(postSchema),
   });
@@ -76,7 +78,24 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
   async function onSubmit(values: CreatePostValues) {
     if (!user || !communityId) return;
 
-    const post: Post = {
+    // Update Post ===========>
+    if (isEditing) {
+      updatePost(
+        {
+          post: post!,
+          title,
+          body: body || "",
+          image,
+        },
+        {
+          onSuccess: () => router.push(`/r/${communityId}/posts/${post?.id}`),
+        }
+      );
+      return;
+    }
+
+    // Create Post ===========>
+    const postData: Post = {
       communityId,
       creatorId: user.uid,
       creatorDisplayName:
@@ -88,18 +107,10 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
       numOfVotes: 0,
     };
 
-    createPost(
-      {
-        post,
-        image,
-      },
-      {
-        // reset createPost atom state when create post successed
-        onSuccess: () => {
-          resetCreatePostState();
-        },
-      }
-    );
+    createPost({
+      post: postData,
+      image,
+    });
   }
 
   return (
@@ -166,9 +177,8 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
             type="submit"
             height="34x"
             padding="8px 30px"
-            onClick={() => null}
-            isDisabled={isCreatigPost}
-            isLoading={isCreatigPost}
+            isDisabled={isCreatigPost || isUpdating}
+            isLoading={isCreatigPost || isUpdating}
           >
             {isEditing ? "Save" : "Post"}
           </Button>

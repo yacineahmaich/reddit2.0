@@ -4,7 +4,13 @@ import { Button, Flex, HStack, Image } from "@chakra-ui/react";
 import React, { useRef } from "react";
 import { useRecoilState } from "recoil";
 
-const UploadImage: React.FC = () => {
+import { Post } from "@/types/global";
+
+type UploadImageProps = {
+  post: Post;
+};
+
+const UploadImage: React.FC<UploadImageProps> = ({ post }) => {
   const [{ image }, setCreatePostState] = useRecoilState(createPostState);
 
   const { handleSelectFile } = useSelectFile((image) =>
@@ -30,26 +36,22 @@ const UploadImage: React.FC = () => {
     }));
   }
 
+  const postImage = post.imageURL;
+
   return (
     <Flex width="100%" justify="center" align="center" direction="column">
-      {image ? (
+      {(image || postImage) && (
         <>
-          <Image src={image} alt="image" maxHeight="400px" maxWidth="100%" />
-          <HStack mt={4}>
-            <Button size="sm" px="30px" onClick={handleGoBackToPost}>
-              Back to Post
-            </Button>
-            <Button
-              size="sm"
-              px="30px"
-              variant="outline"
-              onClick={handleRemove}
-            >
-              Remove
-            </Button>
-          </HStack>
+          <Image
+            src={image || postImage}
+            alt="image"
+            maxHeight={postImage ? "100px" : "400px"}
+            maxWidth="100%"
+            my={postImage ? "20px" : 0}
+          />
         </>
-      ) : (
+      )}
+      {!image && (
         <Flex
           border="1px dashed"
           borderColor="gray.200"
@@ -74,6 +76,16 @@ const UploadImage: React.FC = () => {
             onChange={handleSelectFile}
           />
         </Flex>
+      )}
+      {image && (
+        <HStack mt={4}>
+          <Button size="sm" px="30px" onClick={handleGoBackToPost}>
+            Back to Post
+          </Button>
+          <Button size="sm" px="30px" variant="outline" onClick={handleRemove}>
+            Remove
+          </Button>
+        </HStack>
       )}
     </Flex>
   );

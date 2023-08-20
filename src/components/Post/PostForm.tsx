@@ -1,17 +1,14 @@
-import React, { useEffect, useMemo } from "react";
-import { Alert, Text, Flex, Icon, Spinner, Button } from "@chakra-ui/react";
+import { createPostState } from "@/atoms/createPostAtom";
+import { Post } from "@/types/global";
+import { Flex, Icon } from "@chakra-ui/react";
+import React from "react";
+import { BiPoll } from "react-icons/bi";
 import { BsLink45Deg, BsMic } from "react-icons/bs";
 import { IoDocumentText, IoImageOutline } from "react-icons/io5";
-import { BiPoll } from "react-icons/bi";
-import TabItem from "./TabItem";
+import { useRecoilState } from "recoil";
 import TextInputs from "./Forms/TextInputs";
 import UploadImage from "./Forms/UploadImage";
-import { useRecoilState } from "recoil";
-import { createPostState } from "@/atoms/createPostAtom";
-import { usePost } from "@/features/posts/usePost";
-import { WarningIcon } from "@chakra-ui/icons";
-import { useCommunity } from "@/features/communities/useCommunity";
-import { Post } from "@/types/global";
+import TabItem from "./TabItem";
 
 export type TabItemType = {
   key: string;
@@ -53,20 +50,7 @@ type PostFormProps = {
 };
 
 const PostForm: React.FC<PostFormProps> = ({ isEditing, post }) => {
-  const [{ activeTab }, setCreatePostState] = useRecoilState(createPostState);
-
-  const { id, body, title, imageURL } = post ?? {};
-
-  useEffect(() => {
-    if (id) return;
-
-    setCreatePostState({
-      activeTab: "Post",
-      title: title!,
-      body: body,
-      image: imageURL,
-    });
-  }, [setCreatePostState, body, title, imageURL, id]);
+  const [{ activeTab }] = useRecoilState(createPostState);
 
   return (
     <Flex
@@ -85,7 +69,7 @@ const PostForm: React.FC<PostFormProps> = ({ isEditing, post }) => {
         {activeTab === "post" && (
           <TextInputs post={post} isEditing={isEditing} />
         )}
-        {activeTab === "upload" && <UploadImage />}
+        {activeTab === "upload" && <UploadImage post={post!} />}
       </Flex>
     </Flex>
   );

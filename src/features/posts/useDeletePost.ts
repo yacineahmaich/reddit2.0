@@ -2,8 +2,7 @@ import { firestore, storage } from "@/firebase/client";
 import { Post } from "@/types/global";
 import { useMutation } from "@tanstack/react-query";
 import { deleteDoc, doc } from "firebase/firestore";
-import { ref, deleteObject } from "firebase/storage";
-import { useRouter } from "next/router";
+import { deleteObject, ref } from "firebase/storage";
 
 type Vars = {
   post: Post;
@@ -26,12 +25,8 @@ const deletePost = async ({ post }: Vars) => {
 };
 
 export function useDeletePost() {
-  const router = useRouter();
 
   return useMutation({
     mutationFn: deletePost,
-    onSuccess: () => {
-      router.back();
-    },
   });
 }

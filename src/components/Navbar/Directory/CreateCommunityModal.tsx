@@ -1,6 +1,8 @@
 import { useCreateCommunity } from "@/features/communities/useCreateCommunity";
+import { CommunityPrivacyType } from "@/types/global";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -28,7 +30,6 @@ import { useForm } from "react-hook-form";
 import { BsFillEyeFill, BsFillPersonFill } from "react-icons/bs";
 import { HiLockClosed } from "react-icons/hi";
 import { createCommunitySchema } from "./schema";
-import { CommunityPrivacyType } from "@/types/global";
 
 type CreateCommunityModalProps = {
   open: boolean;
@@ -42,8 +43,12 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   open,
   onClose,
 }) => {
-  const { mutate: createCommunity, isLoading: isCreating } =
-    useCreateCommunity();
+  const {
+    mutate: createCommunity,
+    isLoading: isCreating,
+    error,
+    isError,
+  } = useCreateCommunity();
 
   const {
     register,
@@ -95,6 +100,20 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box p={3}>
             <Divider />
+            {isError && (
+              <Alert
+                status="error"
+                borderRadius={4}
+                fontSize="10pt"
+                color="red"
+                fontWeight={600}
+              >
+                {
+                  //@ts-ignore
+                  error?.message && error?.message
+                }
+              </Alert>
+            )}
             <ModalBody display="flex" flexDirection="column" padding="10px 0">
               <Text fontWeight={600} fontSize={15}>
                 Name

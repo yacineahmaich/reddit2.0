@@ -1,9 +1,9 @@
 import { auth, firestore } from "@/firebase/client";
-import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useRouter } from "next/router";
 import { CommunityPrivacyType } from "@/types/global";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
+import { useRouter } from "next/router";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 type Vars = {
   name: string;
@@ -12,28 +12,39 @@ type Vars = {
 };
 
 const createNewCommunity = async ({ name, type, userId }: Vars) => {
-  const communityDocRef = doc(firestore, "communities", name);
+  try {
+    const communityDocRef = doc(firestore, "communities", name);
 
-  await runTransaction(firestore, async (transaction) => {
-    const communityDoc = await transaction.get(communityDocRef);
-    if (communityDoc.exists()) {
-      throw new Error(`Sorry, r/${name} is taken, Try another.`);
-    }
+    await runTransaction(firestore, async (transaction) => {
+      const communityDoc = await transaction.get(communityDocRef);
+      if (communityDoc.exists()) {
+        throw new Error(`COMMUNITY_NAME_TAKEN`);
+      }
 
-    // create community
-    transaction.set(communityDocRef, {
-      creatorId: userId,
-      numMembers: 1,
-      id: name,
-      privacyType: type,
-      createdAt: serverTimestamp(),
+      // create community
+      transaction.set(communityDocRef, {
+        creatorId: userId,
+        numMembers: 1,
+        id: name,
+        privacyType: type,
+        createdAt: serverTimestamp(),
+      });
+
+      transaction.set(
+        doc(firestore, `users/${userId}/communitySnippets`, name),
+        {
+          communityId: name,
+          isModerator: true,
+        }
+      );
     });
-
-    transaction.set(doc(firestore, `users/${userId}/communitySnippets`, name), {
-      communityId: name,
-      isModerator: true,
-    });
-  });
+  } catch (error: any) {
+    throw new Error(
+      error.message === "COMMUNITY_NAME_TAKEN"
+        ? `Sorry, r/${name} was already taken!`
+        : "Something went wrong! Could not create community"
+    );
+  }
 };
 
 export const useCreateCommunity = () => {

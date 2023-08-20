@@ -63,6 +63,17 @@ const PostItem: React.FC<PostItemProps> = ({
     });
   }
 
+  function handleDeletePost() {
+    deletePost(
+      {
+        post,
+      },
+      {
+        onSuccess: () => router.push(`/r/${post.communityId}`),
+      }
+    );
+  }
+
   const createdDate = moment(post.createdAt.seconds * 1000).fromNow();
 
   const isPostDetailPage = !!router.query.postId;
@@ -220,7 +231,7 @@ const PostItem: React.FC<PostItemProps> = ({
                   fontWeight={400}
                   variant="ghost"
                   borderRadius={4}
-                  onClick={() => deletePost({ post })}
+                  onClick={() => handleDeletePost()}
                   isLoading={isDeleting}
                 >
                   Delete
