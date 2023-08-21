@@ -8,7 +8,7 @@ type Data = {
   vote: number;
 };
 
-async function getUserPostVotes(userId: string): Promise<Data[]> {
+export async function getUserVotes(userId: string): Promise<Data[]> {
   const snippetDocs = await getDocs(
     collection(firestore, `users/${userId}/votes`)
   );
@@ -23,7 +23,7 @@ export function useUserVotes() {
 
   return useQuery({
     queryKey: ["user", "votes"],
-    queryFn: () => getUserPostVotes(user?.uid!),
+    queryFn: () => getUserVotes(user?.uid!),
     enabled: !!user,
   });
 }
