@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { WarningIcon } from "@chakra-ui/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSetRecoilState } from "recoil";
@@ -24,7 +24,7 @@ type LoginValues = {
 };
 
 const Login: React.FC = () => {
-  const setAuthModal = useSetRecoilState(authModalState);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
 
   const [login, user, loading, loginError] =
     useSignInWithEmailAndPassword(auth);
@@ -126,7 +126,10 @@ const Login: React.FC = () => {
             fontWeight={700}
             cursor="pointer"
             onClick={() =>
-              setAuthModal((state) => ({ ...state, view: "resetPassword" }))
+              setAuthModalState((state) => ({
+                ...state,
+                view: "resetPassword",
+              }))
             }
           >
             Reset
@@ -140,7 +143,7 @@ const Login: React.FC = () => {
             fontWeight={700}
             cursor="pointer"
             onClick={() =>
-              setAuthModal((state) => ({ ...state, view: "signup" }))
+              setAuthModalState((state) => ({ ...state, view: "signup" }))
             }
           >
             SIGN UP

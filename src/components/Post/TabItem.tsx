@@ -2,14 +2,14 @@ import React from "react";
 import { TabItemType } from "./PostForm";
 import { Flex, Icon, Text } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
-import { createPostState } from "@/atoms/createPostAtom";
+import { createPostAtom } from "@/atoms/createPostAtom";
 
 type TabItemProps = {
   item: TabItemType;
 };
 
 const TabItem: React.FC<TabItemProps> = ({ item }) => {
-  const [{ activeTab }, setCreatePostState] = useRecoilState(createPostState);
+  const [{ activeTab }, setCreatePostState] = useRecoilState(createPostAtom);
 
   const isActive = activeTab === item.key;
 

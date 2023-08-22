@@ -1,4 +1,4 @@
-import { createPostState } from "@/atoms/createPostAtom";
+import { createPostAtom } from "@/atoms/createPostAtom";
 import { Post } from "@/types/global";
 import { Flex, Icon } from "@chakra-ui/react";
 import React from "react";
@@ -50,7 +50,7 @@ type PostFormProps = {
 };
 
 const PostForm: React.FC<PostFormProps> = ({ isEditing, post }) => {
-  const [{ activeTab }] = useRecoilState(createPostState);
+  const [{ activeTab }] = useRecoilState(createPostAtom);
 
   return (
     <Flex

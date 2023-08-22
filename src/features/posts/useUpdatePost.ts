@@ -1,4 +1,4 @@
-import { createPostState } from "@/atoms/createPostAtom";
+import { createPostAtom } from "@/atoms/createPostAtom";
 import { firestore, storage } from "@/firebase/client";
 import { Post } from "@/types/global";
 import { useMutation } from "@tanstack/react-query";
@@ -60,7 +60,7 @@ const updatePost = async ({ post, title, body, image }: Vars) => {
 };
 
 export function useUpdatePost() {
-  const resetCreatePost = useResetRecoilState(createPostState);
+  const resetCreatePost = useResetRecoilState(createPostAtom);
 
   return useMutation({
     mutationFn: updatePost,

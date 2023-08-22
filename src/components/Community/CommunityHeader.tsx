@@ -1,4 +1,4 @@
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { useCommunity } from "@/features/communities/useCommunity";
 import { useJoinLeaveCommunity } from "@/features/communities/useJoinLeaveCommunity";
 import { useDirectory } from "@/features/user/useDirectory";
@@ -19,7 +19,7 @@ import CommunityProfile from "../shared/CommunityProfile";
 
 const CommunityHeader: React.FC = () => {
   const [user] = useAuthState(auth);
-  const setAuthModalState = useSetRecoilState(authModalState);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
   const { community, isLoading: isCommunityLoading } = useCommunity();
   const { mutate: joinLeaveCommunity, isLoading } = useJoinLeaveCommunity();
   const { data: communitySnippets = [] } = useDirectory();

@@ -1,4 +1,4 @@
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { auth } from "@/firebase/client";
 import { Button, Flex, Image, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
@@ -6,7 +6,7 @@ import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
 
 const ResetPassword: React.FC = () => {
-  const setAuthModal = useSetRecoilState(authModalState);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
   const [email, setEmail] = useState("");
   const [success, setSuccess] = useState(false);
 
@@ -79,7 +79,7 @@ const ResetPassword: React.FC = () => {
           fontWeight={700}
           color="blue.500"
           cursor="pointer"
-          onClick={() => setAuthModal((state) => ({ ...state, view: "login" }))}
+          onClick={() => setAuthModalState((state) => ({ ...state, view: "login" }))}
         >
           LOGIN
         </Text>
@@ -90,7 +90,7 @@ const ResetPassword: React.FC = () => {
           color="blue.500"
           cursor="pointer"
           onClick={() =>
-            setAuthModal((state) => ({ ...state, view: "signup" }))
+            setAuthModalState((state) => ({ ...state, view: "signup" }))
           }
         >
           SIGNUP

@@ -20,7 +20,7 @@ export function useDirectory() {
   const [user] = useAuthState(auth);
 
   return useQuery({
-    queryKey: ["user", "snippets"],
+    queryKey: ["user", "directory"],
     queryFn: () => getUserDirectory(user?.uid!),
     enabled: !!user,
   });

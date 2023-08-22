@@ -1,4 +1,4 @@
-import { createPostState } from "@/atoms/createPostAtom";
+import { createPostAtom } from "@/atoms/createPostAtom";
 import { useCreatePost } from "@/features/posts/useCreatePost";
 import { useUpdatePost } from "@/features/posts/useUpdatePost";
 import { auth } from "@/firebase/client";
@@ -49,7 +49,7 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
 
   const [user] = useAuthState(auth);
   const [{ title, body, image }, setCreatePostState] =
-    useRecoilState(createPostState);
+    useRecoilState(createPostAtom);
 
   const {
     register,

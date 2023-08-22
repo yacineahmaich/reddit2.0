@@ -1,4 +1,4 @@
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { useDeletePost } from "@/features/posts/useDeletePost";
 import { useVotePost } from "@/features/posts/useVotePost";
 import { auth } from "@/firebase/client";
@@ -43,7 +43,7 @@ const PostItem: React.FC<PostItemProps> = ({
 }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
-  const setAuthModalState = useSetRecoilState(authModalState);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
   const [imageIsLoading, setImageIsLoading] = useState(true);
 
   const { mutate: votePost, isLoading: isVoting } = useVotePost();

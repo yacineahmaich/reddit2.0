@@ -1,4 +1,4 @@
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { auth, firestore } from "@/firebase/client";
 import { getFirebaseError } from "@/firebase/errors";
 import { WarningIcon } from "@chakra-ui/icons";
@@ -26,7 +26,7 @@ type SignupValues = {
 };
 
 const Signup: React.FC = () => {
-  const setAuthModal = useSetRecoilState(authModalState);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
 
   const [signup, user, loading, signupError] =
     useCreateUserWithEmailAndPassword(auth);
@@ -161,7 +161,7 @@ const Signup: React.FC = () => {
             fontWeight={700}
             cursor="pointer"
             onClick={() =>
-              setAuthModal((state) => ({ ...state, view: "login" }))
+              setAuthModalState((state) => ({ ...state, view: "login" }))
             }
           >
             LOG IN

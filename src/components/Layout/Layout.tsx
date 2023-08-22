@@ -12,11 +12,15 @@ type LayoutProps = {
 const Layout: React.FC<LayoutProps> = ({ children }) => {
   const queryClient = useQueryClient();
 
-  const [user,isLoading, error] = useAuthState(auth, {
+  const [_, isLoading, error] = useAuthState(auth, {
     onUserChanged: async (user) => {
       if (user) {
         queryClient.prefetchQuery({
           queryKey: ["user", "votes"],
+          queryFn: () => getUserVotes(user.uid),
+        });
+        queryClient.prefetchQuery({
+          queryKey: ["user", "directory"],
           queryFn: () => getUserVotes(user.uid),
         });
       }

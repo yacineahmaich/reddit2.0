@@ -1,4 +1,4 @@
-import { createPostState } from "@/atoms/createPostAtom";
+import { createPostAtom } from "@/atoms/createPostAtom";
 import { useSelectFile } from "@/hooks/useSelectFile";
 import { Button, Flex, HStack, Image } from "@chakra-ui/react";
 import React, { useRef } from "react";
@@ -11,7 +11,7 @@ type UploadImageProps = {
 };
 
 const UploadImage: React.FC<UploadImageProps> = ({ post }) => {
-  const [{ image }, setCreatePostState] = useRecoilState(createPostState);
+  const [{ image }, setCreatePostState] = useRecoilState(createPostAtom);
 
   const { handleSelectFile } = useSelectFile((image) =>
     setCreatePostState((state) => ({
@@ -36,7 +36,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ post }) => {
     }));
   }
 
-  const postImage = post.imageURL;
+  const postImage = post?.imageURL;
 
   return (
     <Flex width="100%" justify="center" align="center" direction="column">

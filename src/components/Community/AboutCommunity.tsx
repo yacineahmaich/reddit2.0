@@ -70,7 +70,7 @@ const AboutCommunity: React.FC = () => {
           <Spinner color="gray.300" />
         ) : (
           <Box w="full">
-            {isModerator && (
+            {/*isModerator && (
               <Box
                 bg="gray.100"
                 width="100%"
@@ -84,7 +84,7 @@ const AboutCommunity: React.FC = () => {
                   Add description
                 </Text>
               </Box>
-            )}
+            )*/}
             <Stack spacing={2}>
               <Flex width="100%" p={2} fontWeight={600} fontSize="10pt">
                 <Flex direction="column" flexGrow={1}>

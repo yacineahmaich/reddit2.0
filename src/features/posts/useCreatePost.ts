@@ -1,4 +1,4 @@
-import { createPostState } from "@/atoms/createPostAtom";
+import { createPostAtom } from "@/atoms/createPostAtom";
 import { firestore, storage } from "@/firebase/client";
 import { Post } from "@/types/global";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -30,7 +30,7 @@ export async function createCommunityPost({ post, image }: Vars) {
 export function useCreatePost() {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const resetCreatePost = useResetRecoilState(createPostState);
+  const resetCreatePost = useResetRecoilState(createPostAtom);
 
   return useMutation({
     mutationFn: createCommunityPost,

@@ -14,7 +14,7 @@ const Menu = dynamic(
   { ssr: false }
 );
 
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { useLogout } from "@/features/auth/useLogout";
 import { User } from "firebase/auth";
 import dynamic from "next/dynamic";
@@ -30,7 +30,7 @@ type UserDropdownProps = {
 };
 
 const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
-  const setAuthModal = useSetRecoilState(authModalState);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
 
   const { mutate: logout } = useLogout();
 
@@ -113,7 +113,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
               fontSize="10pt"
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
-              onClick={() => setAuthModal({ open: true, view: "login" })}
+              onClick={() => setAuthModalState({ open: true, view: "login" })}
             >
               <Flex align="center" gap={3}>
                 <Icon as={MdOutlineLogout} fontSize={20} />

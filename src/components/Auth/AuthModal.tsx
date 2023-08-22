@@ -9,7 +9,7 @@ import {
   Flex,
 } from "@chakra-ui/react";
 import { useRecoilState } from "recoil";
-import { authModalState } from "@/atoms/authModalAtom";
+import { authModalAtom } from "@/atoms/authModalAtom";
 import AuthForms from "./AuthForms";
 import OAuthButtons from "./OAuthButtons";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -17,7 +17,7 @@ import { auth } from "@/firebase/client";
 import ResetPassword from "./ResetPassword";
 
 const AuthModal: React.FC = () => {
-  const [authModal, setAuthModal] = useRecoilState(authModalState);
+  const [authModalState, setAuthModalState] = useRecoilState(authModalAtom);
 
   // close Auth Modal whe user authenticate
   useAuthState(auth, {
@@ -27,17 +27,17 @@ const AuthModal: React.FC = () => {
   });
 
   function handleClose() {
-    setAuthModal((state) => ({ ...state, open: false }));
+    setAuthModalState((state) => ({ ...state, open: false }));
   }
 
   return (
-    <Modal isOpen={authModal.open} onClose={handleClose}>
+    <Modal isOpen={authModalState.open} onClose={handleClose}>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader textAlign="center">
-          {authModal.view === "login" && "Login"}
-          {authModal.view === "signup" && "Sign Up"}
-          {authModal.view === "resetPassword" && "Reset Password"}
+          {authModalState.view === "login" && "Login"}
+          {authModalState.view === "signup" && "Sign Up"}
+          {authModalState.view === "resetPassword" && "Reset Password"}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody
@@ -48,7 +48,7 @@ const AuthModal: React.FC = () => {
           paddingBottom={6}
         >
           <Flex direction="column" align="center" justify="center" width="70%">
-            {authModal.view !== "resetPassword" ? (
+            {authModalState.view !== "resetPassword" ? (
               <>
                 <OAuthButtons />
                 <AuthForms />
