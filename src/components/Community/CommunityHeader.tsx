@@ -66,7 +66,7 @@ const CommunityHeader: React.FC = () => {
           </Box>
           <Flex p="10px 16px">
             <Flex direction="column" mr={6}>
-              {isCommunityLoading ? (
+              {isCommunityLoading || !community ? (
                 <>
                   <Skeleton height={3} w={20} my={2} />
                   <Skeleton height={2} w={16} />
@@ -82,7 +82,7 @@ const CommunityHeader: React.FC = () => {
                 </>
               )}
             </Flex>
-            {!isCommunityLoading && (
+            {(!isCommunityLoading && community) && (
               <Button
                 variant={isJoined ? "outline" : "solid"}
                 height="30px"

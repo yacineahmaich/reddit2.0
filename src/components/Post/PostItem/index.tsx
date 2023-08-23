@@ -10,34 +10,36 @@ import PostActions from "./PostActions";
 
 type PostItemProps = {
   post: Post;
+  isSinglePostPage?: boolean;
 };
 
-const PostItem: React.FC<PostItemProps> = ({ post }) => {
+const PostItem: React.FC<PostItemProps> = ({
+  post,
+  isSinglePostPage = false,
+}) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
 
-  const isPostDetailPage = !!router.query.postId;
-
-  if (!post) return null;
-
   const navigateToPost = () => {
-    if (isPostDetailPage) return;
+    if (isSinglePostPage) return;
 
     router.push(`${router.asPath}/${post.id}`);
   };
+
+  if (!post) return null;
 
   return (
     <Flex
       border="1px solid"
       borderColor="gray.300"
-      borderRadius={4}
-      _hover={{ borderColor: "gray.500" }}
+      borderRadius={isSinglePostPage ? "4px 4px 0 0 " : 4}
+      _hover={{ borderColor: isSinglePostPage ? "none" : "gray.500" }}
       bg="white"
       overflow="hidden"
     >
       <PostSidebar
         post={post}
-        isPostDetailPage={isPostDetailPage}
+        isSinglePostPage={isSinglePostPage}
         user={user}
       />
       <Flex
@@ -49,11 +51,12 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         onClick={navigateToPost}
         position="relative"
         minH="200px"
+        cursor={isSinglePostPage ? "auto" : "pointer"}
       >
-        {isPostDetailPage && user?.uid === post.creatorId && (
+        {isSinglePostPage && user?.uid === post.creatorId && (
           <PostActions post={post} />
         )}
-        <PostContent post={post} isPostDetailPage={isPostDetailPage} />
+        <PostContent post={post} isSinglePostPage={isSinglePostPage} />
         <PostFooter post={post} />
       </Flex>
     </Flex>

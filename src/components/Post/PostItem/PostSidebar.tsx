@@ -13,13 +13,13 @@ import {
 import { useSetRecoilState } from "recoil";
 
 type PostSidebarProps = {
-  isPostDetailPage: boolean;
+  isSinglePostPage: boolean;
   user?: User | null;
   post: Post;
 };
 
 export const PostSidebar: React.FC<PostSidebarProps> = ({
-  isPostDetailPage,
+  isSinglePostPage,
   user,
   post,
 }) => {
@@ -47,7 +47,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
     <Flex
       direction="column"
       align="center"
-      bg={isPostDetailPage ? "white" : "gray.100"}
+      bg={isSinglePostPage ? "white" : "gray.100"}
       p={2}
       width="40px"
     >

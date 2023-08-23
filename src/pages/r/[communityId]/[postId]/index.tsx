@@ -11,7 +11,7 @@ const PostPage: NextPageWithLayout = () => {
 
   if (isLoading || !post) return <PostSkeleton />;
 
-  return <PostItem post={post} />;
+  return <PostItem post={post} isSinglePostPage />;
 };
 
 // Page Layout

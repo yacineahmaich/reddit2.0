@@ -5,12 +5,12 @@ import moment from "moment";
 
 type PostContentProps = {
   post: Post;
-  isPostDetailPage: boolean;
+  isSinglePostPage: boolean;
 };
 
 const PostContent: React.FC<PostContentProps> = ({
   post,
-  isPostDetailPage,
+  isSinglePostPage,
 }) => {
   const [imageIsLoading, setImageIsLoading] = useState(true);
   const created = moment(post.createdAt.seconds * 1000).fromNow();
@@ -30,7 +30,7 @@ const PostContent: React.FC<PostContentProps> = ({
 
       {post.imageURL && (
         <Flex align="center" justify="center">
-          {imageIsLoading && !isPostDetailPage && (
+          {imageIsLoading && !isSinglePostPage && (
             <Skeleton height="200px" width="100%" borderRadius={4} />
           )}
           <Image

@@ -60,8 +60,6 @@ export const useVotePost = () => {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const isPostDetailPage = router.query.postId;
-
   return useMutation({
     mutationFn: voteOnPost,
     onSuccess: async (_, { post }) => {
@@ -72,9 +70,7 @@ export const useVotePost = () => {
       ]);
       await queryClient.invalidateQueries(["user", "votes"]);
 
-      if (isPostDetailPage) {
-        router.replace(router.asPath);
-      }
+      await queryClient.invalidateQueries(["posts", post.id]);
     },
   });
 };

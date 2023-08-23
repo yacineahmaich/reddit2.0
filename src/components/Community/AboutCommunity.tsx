@@ -66,7 +66,7 @@ const AboutCommunity: React.FC = () => {
         bg="white"
         borderRadius="0px 0px 4px 4px"
       >
-        {isCommunityLoading ? (
+        {isCommunityLoading || !community ? (
           <Spinner color="gray.300" />
         ) : (
           <Box w="full">
