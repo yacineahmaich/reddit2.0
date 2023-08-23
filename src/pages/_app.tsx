@@ -7,6 +7,7 @@ import type { AppProps } from "next/app";
 import { RecoilRoot } from "recoil";
 import { ReactElement, ReactNode } from "react";
 import { NextPage } from "next";
+import GlobalLoader from "nextjs-toploader";
 
 const toastOptions: ToastProviderProps = {
   defaultOptions: {
@@ -39,6 +40,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     <QueryClientProvider client={queryClient}>
       <RecoilRoot>
         <ChakraProvider theme={theme} toastOptions={toastOptions}>
+          <GlobalLoader showSpinner={false} />
           <Layout>{getLayout(<Component {...pageProps} />)}</Layout>
         </ChakraProvider>
       </RecoilRoot>
