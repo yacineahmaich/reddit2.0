@@ -6,6 +6,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import PostContent from "./PostContent";
 import PostFooter from "./PostFooter";
 import PostSidebar from "./PostSidebar";
+import PostActions from "./PostActions";
 
 type PostItemProps = {
   post: Post;
@@ -46,7 +47,10 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         p={4}
         w="full"
         onClick={navigateToPost}
+        position="relative"
+        minH="200px"
       >
+        {isPostDetailPage && <PostActions post={post} />}
         <PostContent post={post} isPostDetailPage={isPostDetailPage} />
         <PostFooter post={post} />
       </Flex>

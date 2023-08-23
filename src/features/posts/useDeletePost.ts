@@ -3,6 +3,7 @@ import { Post } from "@/types/global";
 import { useMutation } from "@tanstack/react-query";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";
+import { useRouter } from "next/router";
 
 type Vars = {
   post: Post;
@@ -25,8 +26,10 @@ const deletePost = async ({ post }: Vars) => {
 };
 
 export function useDeletePost() {
+  const router = useRouter();
 
   return useMutation({
     mutationFn: deletePost,
+    onSuccess: (_, { post }) => router.push(`/r/${post.communityId}`),
   });
 }

@@ -26,6 +26,13 @@ export const Button: ComponentStyleConfig = {
         bg: "blue.400",
       },
     },
+    danger: {
+      color: "white",
+      bg: "red.400",
+      _hover: {
+        bg: "red.300",
+      },
+    },
     outline: {
       color: "blue.500",
       border: "1px solid",
