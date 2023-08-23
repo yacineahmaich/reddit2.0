@@ -2,16 +2,14 @@ import { createPostAtom } from "@/atoms/createPostAtom";
 import { firestore, storage } from "@/firebase/client";
 import { Post } from "@/types/global";
 import { useMutation } from "@tanstack/react-query";
-import {
-  doc,
-  writeBatch
-} from "firebase/firestore";
+import { doc, writeBatch } from "firebase/firestore";
 import {
   deleteObject,
   getDownloadURL,
   ref,
   uploadString,
 } from "firebase/storage";
+import { useRouter } from "next/router";
 import { useResetRecoilState } from "recoil";
 
 type Vars = {
@@ -60,11 +58,13 @@ const updatePost = async ({ post, title, body, image }: Vars) => {
 };
 
 export function useUpdatePost() {
+  const router = useRouter();
   const resetCreatePost = useResetRecoilState(createPostAtom);
 
   return useMutation({
     mutationFn: updatePost,
-    onSuccess: () => {
+    onSuccess: (_, { post }) => {
+      router.push(`/r/${post.communityId}/${post.id}`);
       resetCreatePost();
     },
   });

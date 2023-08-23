@@ -1,49 +1,36 @@
 import { createPostAtom } from "@/atoms/createPostAtom";
 import { useSelectFile } from "@/hooks/useSelectFile";
-import { Button, Flex, HStack, Image } from "@chakra-ui/react";
-import React, { useRef } from "react";
-import { useRecoilState } from "recoil";
-
 import { Post } from "@/types/global";
+import { Flex, Button, HStack, Image } from "@chakra-ui/react";
+import React, { useRef } from "react";
 
 type UploadImageProps = {
-  post: Post;
+  post?: Post;
+  onSelectImage: (image?: string) => void;
+  selectedImage?: string;
 };
 
-const UploadImage: React.FC<UploadImageProps> = ({ post }) => {
-  const [{ image }, setCreatePostState] = useRecoilState(createPostAtom);
-
-  const { handleSelectFile } = useSelectFile((image) =>
-    setCreatePostState((state) => ({
-      ...state,
-      image,
-    }))
-  );
+const UploadImage: React.FC<UploadImageProps> = ({
+  post,
+  onSelectImage,
+  selectedImage,
+}) => {
+  const { handleSelectFile } = useSelectFile(onSelectImage);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  function handleGoBackToPost() {
-    setCreatePostState((state) => ({
-      ...state,
-      activeTab: "post",
-    }));
-  }
-
   function handleRemove() {
-    setCreatePostState((state) => ({
-      ...state,
-      image: undefined,
-    }));
+    onSelectImage(undefined);
   }
 
   const postImage = post?.imageURL;
 
   return (
     <Flex width="100%" justify="center" align="center" direction="column">
-      {(image || postImage) && (
+      {(selectedImage || postImage) && (
         <>
           <Image
-            src={image || postImage}
+            src={selectedImage || postImage}
             alt="image"
             maxHeight={postImage ? "100px" : "400px"}
             maxWidth="100%"
@@ -51,7 +38,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ post }) => {
           />
         </>
       )}
-      {!image && (
+      {!selectedImage && (
         <Flex
           border="1px dashed"
           borderColor="gray.200"
@@ -77,11 +64,11 @@ const UploadImage: React.FC<UploadImageProps> = ({ post }) => {
           />
         </Flex>
       )}
-      {image && (
+      {selectedImage && (
         <HStack mt={4}>
-          <Button size="sm" px="30px" onClick={handleGoBackToPost}>
+          {/* <Button size="sm" px="30px" onClick={handleGoBackToPost}>
             Back to Post
-          </Button>
+          </Button> */}
           <Button size="sm" px="30px" variant="outline" onClick={handleRemove}>
             Remove
           </Button>

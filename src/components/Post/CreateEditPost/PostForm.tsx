@@ -1,4 +1,3 @@
-import { createPostAtom } from "@/atoms/createPostAtom";
 import { useCreatePost } from "@/features/posts/useCreatePost";
 import { useUpdatePost } from "@/features/posts/useUpdatePost";
 import { auth } from "@/firebase/client";
@@ -18,117 +17,98 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Timestamp, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
-import { useRecoilState } from "recoil";
 import { postSchema } from "./schema";
+
+type PostFormProps = {
+  post?: Post;
+  image?: string;
+};
 
 type CreatePostValues = {
   title: string;
   body: string;
 };
 
-type Props = {
-  post: Post | null;
-  isEditing: boolean;
-};
-
-const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
+const PostForm: React.FC<PostFormProps> = ({ post, image }) => {
   const router = useRouter();
+  const [user] = useAuthState(auth);
 
   const communityId = router.query.communityId as string;
 
   const {
     mutate: createPost,
-    isLoading: isCreatigPost,
-    isError,
+    isLoading: isUpdatingPost,
+    isError: isUpdatingPostError,
   } = useCreatePost();
-
-  const { mutate: updatePost, isLoading: isUpdating } = useUpdatePost();
-
-  const [user] = useAuthState(auth);
-  const [{ title, body, image }, setCreatePostState] =
-    useRecoilState(createPostAtom);
+  const {
+    mutate: updatePost,
+    isLoading: isCreatingPost,
+    isError: isCreatingPostError,
+  } = useUpdatePost();
 
   const {
     register,
     handleSubmit,
     formState: { errors },
-    watch,
   } = useForm<CreatePostValues>({
     defaultValues: {
-      title: title || post?.title,
-      body: body || post?.body,
+      title: post?.title || "",
+      body: post?.body || "",
     },
     resolver: zodResolver(postSchema),
   });
 
-  const enteredTitle = watch("title");
-  const enteredBody = watch("body");
+  const onSubmit = ({ body, title }: CreatePostValues) => {
+    if (post) {
+      // Update POst
+      updatePost({
+        post,
+        body,
+        title,
+        image,
+      });
+    } else {
+      // Create Post
+      if (!user) return;
+      const postData: Post = {
+        communityId,
+        creatorId: user.uid,
+        creatorDisplayName:
+          user.displayName || (user.email!.split("@").at(0) as string),
+        title,
+        body,
+        createdAt: serverTimestamp() as Timestamp,
+        numOfComments: 0,
+        numOfVotes: 0,
+      };
 
-  useEffect(() => {
-    setCreatePostState((state) => ({
-      ...state,
-      title: enteredTitle,
-      body: enteredBody,
-    }));
-  }, [enteredTitle, enteredBody, setCreatePostState]);
-
-  async function onSubmit(values: CreatePostValues) {
-    if (!user || !communityId) return;
-
-    // Update Post ===========>
-    if (isEditing) {
-      updatePost(
-        {
-          post: post!,
-          title,
-          body: body || "",
-          image,
-        },
-        {
-          onSuccess: () => router.push(`/r/${communityId}/posts/${post?.id}`),
-        }
-      );
-      return;
+      createPost({
+        post: postData,
+        image,
+      });
     }
-
-    // Create Post ===========>
-    const postData: Post = {
-      communityId,
-      creatorId: user.uid,
-      creatorDisplayName:
-        user.displayName || (user.email!.split("@").at(0) as string),
-      title: values.title,
-      body: values.body,
-      createdAt: serverTimestamp() as Timestamp,
-      numOfComments: 0,
-      numOfVotes: 0,
-    };
-
-    createPost({
-      post: postData,
-      image,
-    });
-  }
+  };
 
   return (
     <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-      {isError && (
-        <Box
-          fontSize="10pt"
-          display="flex"
-          alignItems="center"
-          gap={3}
-          color="red.400"
-          fontWeight={700}
-          mb={3}
-        >
-          <WarningIcon fontSize="11pt" />
-          <Text>something went wrong! Please try again</Text>
-        </Box>
-      )}
+      {isUpdatingPost ||
+        (isCreatingPost && (
+          <Box
+            fontSize="10pt"
+            display="flex"
+            alignItems="center"
+            gap={3}
+            color="red.400"
+            fontWeight={700}
+            mb={3}
+          >
+            <WarningIcon fontSize="11pt" />
+            <Text>something went wrong! Please try again</Text>
+          </Box>
+        ))}
       <Stack spacing={3}>
         <FormControl isInvalid={!!errors.title?.message}>
           <Input
@@ -169,7 +149,7 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
             height="34x"
             padding="8px 30px"
             onClick={() => router.back()}
-            disabled={isCreatigPost}
+            disabled={isCreatingPost}
           >
             Cancel
           </Button>
@@ -177,14 +157,14 @@ const TextInputs: React.FC<Props> = ({ post, isEditing }) => {
             type="submit"
             height="34x"
             padding="8px 30px"
-            isDisabled={isCreatigPost || isUpdating}
-            isLoading={isCreatigPost || isUpdating}
+            isDisabled={isCreatingPost || isUpdatingPost}
+            isLoading={isCreatingPost || isUpdatingPost}
           >
-            {isEditing ? "Save" : "Post"}
+            {post ? "Save" : "Post"}
           </Button>
         </Flex>
       </Stack>
     </form>
   );
 };
-export default TextInputs;
+export default PostForm;

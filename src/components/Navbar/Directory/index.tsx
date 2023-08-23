@@ -4,14 +4,14 @@ import { useDirectory } from "@/features/user/useDirectory";
 import CreateCommunity from "./CreateCommunity";
 import FollowingCommunities from "./FollowingCommunities";
 import ModeratingCommunities from "./ModeratingCommunities";
-import DropdownButton from "./OpenDirectory";
+import OpenDirectory from "./OpenDirectory";
 
 const CommunitiesDropdown: React.FC = () => {
   const { data: communitySnippets = [], isLoading } = useDirectory();
 
   return (
     <Menu>
-      <DropdownButton />
+      <OpenDirectory />
       <MenuList>
         {isLoading ? (
           <Flex justify="center">

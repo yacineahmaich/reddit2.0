@@ -12,10 +12,10 @@ import {
   SkeletonCircle,
   Text,
 } from "@chakra-ui/react";
-import React from "react";
+import React, { useMemo } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
-import CommunityProfile from "../shared/CommunityProfile";
+import CommunityAvatar from "../shared/CommunityAvatar";
 
 const CommunityHeader: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -25,8 +25,6 @@ const CommunityHeader: React.FC = () => {
   const { data: communitySnippets = [] } = useDirectory();
 
   function handleJoinLeaveCommunity() {
-    if (!community) return;
-
     if (!user) {
       setAuthModalState({ open: true, view: "login" });
       return;
@@ -39,9 +37,11 @@ const CommunityHeader: React.FC = () => {
     });
   }
 
-  const communitySnippet = communitySnippets?.find(
-    (snippet) => snippet.communityId === community?.id
-  ) as CommunitySnippet | null;
+  const communitySnippet = useMemo(() => {
+    return communitySnippets?.find(
+      (snippet) => snippet.communityId === community?.id
+    ) as CommunitySnippet | null;
+  }, [community?.id]);
 
   const isJoined = !!communitySnippet;
 
@@ -58,7 +58,7 @@ const CommunityHeader: React.FC = () => {
             borderRadius="full"
           >
             <SkeletonCircle w="full" h="full" isLoaded={!!community}>
-              <CommunityProfile
+              <CommunityAvatar
                 source={community?.imageURL}
                 alt={community?.id}
               />

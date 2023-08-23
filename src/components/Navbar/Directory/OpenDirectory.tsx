@@ -1,4 +1,4 @@
-import CommunityProfile from "@/components/shared/CommunityProfile";
+import CommunityAvatar from "@/components/shared/CommunityAvatar";
 import { useCommunity } from "@/features/communities/useCommunity";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
@@ -41,7 +41,7 @@ const OpenDirectory: React.FC = () => {
               isLoaded={!isLoading}
               mr={{ base: 1, md: 2 }}
             >
-              <CommunityProfile
+              <CommunityAvatar
                 source={community?.imageURL}
                 size={7}
                 alt={community?.id}

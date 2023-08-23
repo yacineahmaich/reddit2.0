@@ -18,7 +18,7 @@ import React, { useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
-import CommunityProfile from "../shared/CommunityProfile";
+import CommunityProfile from "../shared/CommunityAvatar";
 import { FaEdit } from "react-icons/fa";
 
 const AboutCommunity: React.FC = () => {

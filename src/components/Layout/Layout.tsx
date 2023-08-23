@@ -4,6 +4,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "@/firebase/client";
 import { Flex, Spinner, Image, Text, Button } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { getUserDirectory } from "@/features/user/useDirectory";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -21,7 +22,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         });
         queryClient.prefetchQuery({
           queryKey: ["user", "directory"],
-          queryFn: () => getUserVotes(user.uid),
+          queryFn: () => getUserDirectory(user.uid),
         });
       }
     },
