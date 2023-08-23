@@ -21,6 +21,7 @@ import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { postSchema } from "./schema";
+import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type PostFormProps = {
   post?: Post;
@@ -94,21 +95,8 @@ const PostForm: React.FC<PostFormProps> = ({ post, image }) => {
 
   return (
     <form style={{ width: "100%" }} onSubmit={handleSubmit(onSubmit)}>
-      {isUpdatingPost ||
-        (isCreatingPost && (
-          <Box
-            fontSize="10pt"
-            display="flex"
-            alignItems="center"
-            gap={3}
-            color="red.400"
-            fontWeight={700}
-            mb={3}
-          >
-            <WarningIcon fontSize="11pt" />
-            <Text>something went wrong! Please try again</Text>
-          </Box>
-        ))}
+      {(isUpdatingPostError || isCreatingPostError) && <ErrorMessage />}
+
       <Stack spacing={3}>
         <FormControl isInvalid={!!errors.title?.message}>
           <Input

@@ -1,4 +1,3 @@
-import { createPostAtom } from "@/atoms/createPostAtom";
 import { useSelectFile } from "@/hooks/useSelectFile";
 import { Post } from "@/types/global";
 import { Flex, Button, HStack, Image } from "@chakra-ui/react";

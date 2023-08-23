@@ -41,23 +41,23 @@ const CreateEditPost: React.FC = () => {
             </TabPanel>
           ) : (
             [
-              <TabPanel>
+              <TabPanel key="post-tab">
                 <PostForm post={post} image={image} />
               </TabPanel>,
-              <TabPanel>
+              <TabPanel key="upload-tab">
                 <UploadImage
                   post={post}
                   selectedImage={image}
                   onSelectImage={setImage}
                 />
               </TabPanel>,
-              <TabPanel>
+              <TabPanel key="link-tab">
                 <p>Link</p>
               </TabPanel>,
-              <TabPanel>
+              <TabPanel key="poll-tab">
                 <p>Poll</p>
               </TabPanel>,
-              <TabPanel>
+              <TabPanel key="talk-tab">
                 <p>Talk</p>
               </TabPanel>,
             ]

@@ -1,8 +1,8 @@
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useCreateCommunity } from "@/features/communities/useCreateCommunity";
 import { CommunityPrivacyType } from "@/types/global";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
-  Alert,
   Box,
   Button,
   Checkbox,
@@ -100,21 +100,11 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
         <form onSubmit={handleSubmit(onSubmit)}>
           <Box p={3}>
             <Divider />
-            {isError && (
-              <Alert
-                status="error"
-                borderRadius={4}
-                fontSize="10pt"
-                color="red"
-                fontWeight={600}
-              >
-                {
-                  //@ts-ignore
-                  error?.message && error?.message
-                }
-              </Alert>
-            )}
             <ModalBody display="flex" flexDirection="column" padding="10px 0">
+              {
+                // @ts-ignore
+                isError && <ErrorMessage error={error.message} />
+              }
               <Text fontWeight={600} fontSize={15}>
                 Name
               </Text>

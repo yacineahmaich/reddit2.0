@@ -1,3 +1,4 @@
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useDeletePost } from "@/features/posts/useDeletePost";
 import { Post } from "@/types/global";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
@@ -16,10 +17,10 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Text,
   useDisclosure,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import React from "react";
 import { HiDotsVertical } from "react-icons/hi";
 
 type PostActionsProps = {
@@ -29,7 +30,11 @@ type PostActionsProps = {
 const PostActions: React.FC<PostActionsProps> = ({ post }) => {
   const { isOpen, onClose, onOpen } = useDisclosure();
 
-  const { mutate: deletePost, isLoading: isDeleting } = useDeletePost();
+  const {
+    mutate: deletePost,
+    isLoading: isDeleting,
+    isError,
+  } = useDeletePost();
 
   return (
     <Box position="absolute" right="10px" top="10px">
@@ -42,15 +47,16 @@ const PostActions: React.FC<PostActionsProps> = ({ post }) => {
           _hover={{ bg: "none" }}
           _active={{ bg: "none" }}
         />
-        <MenuList fontSize="10pt" minW="160px">
+        <MenuList minW="160px">
           <MenuItem
             icon={<EditIcon />}
             as={Link}
             href={`/r/${post.communityId}/submit?post=${post.id}`}
+            fontSize="10pt"
           >
             Edit
           </MenuItem>
-          <MenuItem icon={<DeleteIcon />} onClick={onOpen}>
+          <MenuItem icon={<DeleteIcon />} onClick={onOpen} fontSize="10pt">
             Delete
           </MenuItem>
         </MenuList>
@@ -61,8 +67,14 @@ const PostActions: React.FC<PostActionsProps> = ({ post }) => {
         <ModalContent>
           <ModalHeader fontSize="11pt">Delete Post</ModalHeader>
           <ModalCloseButton />
-          <ModalBody color="gray.400" fontWeight={600} fontSize="10pt">
-            Are you sure about deleting this post ? This action cannot be undone !
+          <ModalBody>
+            {isError && (
+              <ErrorMessage error="Could not delete post! Please try again." />
+            )}
+            <Text color="gray.400" fontWeight={600} fontSize="10pt">
+              Are you sure about deleting this post ? This action cannot be
+              undone !
+            </Text>
           </ModalBody>
 
           <ModalFooter>

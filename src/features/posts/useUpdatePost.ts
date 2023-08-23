@@ -1,4 +1,3 @@
-import { createPostAtom } from "@/atoms/createPostAtom";
 import { firestore, storage } from "@/firebase/client";
 import { Post } from "@/types/global";
 import { useMutation } from "@tanstack/react-query";
@@ -59,13 +58,11 @@ const updatePost = async ({ post, title, body, image }: Vars) => {
 
 export function useUpdatePost() {
   const router = useRouter();
-  const resetCreatePost = useResetRecoilState(createPostAtom);
 
   return useMutation({
     mutationFn: updatePost,
     onSuccess: (_, { post }) => {
       router.push(`/r/${post.communityId}/${post.id}`);
-      resetCreatePost();
     },
   });
 }

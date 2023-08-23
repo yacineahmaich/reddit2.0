@@ -50,7 +50,9 @@ const PostItem: React.FC<PostItemProps> = ({ post }) => {
         position="relative"
         minH="200px"
       >
-        {isPostDetailPage && <PostActions post={post} />}
+        {isPostDetailPage && user?.uid === post.creatorId && (
+          <PostActions post={post} />
+        )}
         <PostContent post={post} isPostDetailPage={isPostDetailPage} />
         <PostFooter post={post} />
       </Flex>
