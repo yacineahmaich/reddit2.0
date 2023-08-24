@@ -76,6 +76,16 @@ export const useCreateComment = () => {
         [optimisticComment, ...previousComments]
       );
 
+      // Optimistically update  post numOfComments
+      queryClient.setQueryData<Post>(
+        ["posts", postId],
+        (post) =>
+          post && {
+            ...post,
+            numOfComments: post.numOfComments + 1,
+          }
+      );
+
       // Return a context object with the previous comments
       // to handle error case
       return { previousComments };
@@ -86,8 +96,16 @@ export const useCreateComment = () => {
         ["posts", postId, "comments"],
         context?.previousComments
       );
+      queryClient.setQueryData<Post>(
+        ["posts", postId],
+        (post) =>
+          post && {
+            ...post,
+            numOfComments: post.numOfComments - 1,
+          }
+      );
     },
-    onSuccess(_, { postId }) {
+    onSettled(_, err, { postId }) {
       queryClient.invalidateQueries(["posts", postId, "comments"]);
       queryClient.invalidateQueries(["posts", postId]);
     },
