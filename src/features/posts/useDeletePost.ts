@@ -1,5 +1,5 @@
 import { firestore, storage } from "@/firebase/client";
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import { useMutation } from "@tanstack/react-query";
 import { deleteDoc, doc } from "firebase/firestore";
 import { deleteObject, ref } from "firebase/storage";

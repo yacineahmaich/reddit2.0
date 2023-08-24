@@ -1,4 +1,4 @@
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import { HStack, Button } from "@chakra-ui/react";
 import React from "react";
 import { BsChat } from "react-icons/bs";

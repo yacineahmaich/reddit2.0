@@ -1,5 +1,5 @@
 import { useSelectFile } from "@/hooks/useSelectFile";
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import { Flex, Button, HStack, Image } from "@chakra-ui/react";
 import React, { useRef } from "react";
 

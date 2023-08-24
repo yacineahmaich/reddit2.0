@@ -1,5 +1,5 @@
 import { firestore } from "@/firebase/client";
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { query, collection, where, orderBy, getDocs } from "firebase/firestore";
 import { useRouter } from "next/router";

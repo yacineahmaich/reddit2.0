@@ -3,7 +3,7 @@ import { useCommunity } from "@/features/communities/useCommunity";
 import { useJoinLeaveCommunity } from "@/features/communities/useJoinLeaveCommunity";
 import { useDirectory } from "@/features/user/useDirectory";
 import { auth } from "@/firebase/client";
-import { CommunitySnippet } from "@/types/global";
+import { CommunitySnippet } from "@/types/database";
 import {
   Box,
   Button,
@@ -15,7 +15,7 @@ import {
 import React, { useMemo } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
-import CommunityAvatar from "../shared/CommunityAvatar";
+import Avatar from "../ui/Avatar";
 
 const CommunityHeader: React.FC = () => {
   const [user] = useAuthState(auth);
@@ -58,10 +58,7 @@ const CommunityHeader: React.FC = () => {
             borderRadius="full"
           >
             <SkeletonCircle w="full" h="full" isLoaded={!!community}>
-              <CommunityAvatar
-                source={community?.imageURL}
-                alt={community?.id}
-              />
+              <Avatar source={community?.imageURL} alt={community?.id} />
             </SkeletonCircle>
           </Box>
           <Flex p="10px 16px">
@@ -82,7 +79,7 @@ const CommunityHeader: React.FC = () => {
                 </>
               )}
             </Flex>
-            {(!isCommunityLoading && community) && (
+            {!isCommunityLoading && community && (
               <Button
                 variant={isJoined ? "outline" : "solid"}
                 height="30px"

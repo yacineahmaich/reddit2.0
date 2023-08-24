@@ -1,6 +1,6 @@
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useCreateCommunity } from "@/features/communities/useCreateCommunity";
-import { CommunityPrivacyType } from "@/types/global";
+import { CommunityPrivacyType } from "@/types/database";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
   Box,

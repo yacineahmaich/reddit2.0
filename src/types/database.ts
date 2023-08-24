@@ -14,6 +14,19 @@ export type Post = {
   createdAt: Timestamp;
 };
 
+export type Comment = {
+  id?: string;
+  author: {
+    id: string;
+    name: string;
+    profile: string;
+  };
+  postId: string;
+  body: string;
+  createdAt?: Timestamp;
+  isPending?: boolean;
+};
+
 export type CommunitySnippet = {
   communityId: string;
   isModerator?: boolean;

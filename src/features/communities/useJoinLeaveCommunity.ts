@@ -1,5 +1,5 @@
 import { firestore } from "@/firebase/client";
-import { Community, CommunitySnippet } from "@/types/global";
+import { Community, CommunitySnippet } from "@/types/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { doc, increment, runTransaction } from "firebase/firestore";
 

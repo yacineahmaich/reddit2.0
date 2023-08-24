@@ -1,5 +1,6 @@
 import AboutCommunity from "@/components/Community/AboutCommunity";
 import PageContent from "@/components/Layout/PageContent";
+import PostComments from "@/components/Post/PostComments";
 import PostItem from "@/components/Post/PostItem";
 import PostSkeleton from "@/components/Post/PostSkeleton";
 import { usePost } from "@/features/posts/usePost";
@@ -11,7 +12,12 @@ const PostPage: NextPageWithLayout = () => {
 
   if (isLoading || !post) return <PostSkeleton />;
 
-  return <PostItem post={post} isSinglePostPage />;
+  return (
+    <>
+      <PostItem post={post} isSinglePostPage />
+      <PostComments />
+    </>
+  );
 };
 
 // Page Layout

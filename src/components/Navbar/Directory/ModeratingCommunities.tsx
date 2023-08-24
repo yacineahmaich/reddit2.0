@@ -1,16 +1,8 @@
-import { CommunitySnippet } from "@/types/global";
-import {
-  Box,
-  Flex,
-  Icon,
-  MenuGroup,
-  MenuItem,
-  Image,
-  Text,
-} from "@chakra-ui/react";
+import Avatar from "@/components/ui/Avatar";
+import { CommunitySnippet } from "@/types/database";
+import { Flex, MenuGroup, MenuItem, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
-import { FaReddit } from "react-icons/fa";
 
 type ModeratingCommunitiesProps = {
   communitySnippets: CommunitySnippet[];
@@ -37,26 +29,11 @@ const ModeratingCommunities: React.FC<ModeratingCommunitiesProps> = ({
           href={`/r/${snippet.communityId}`}
         >
           <Flex fontSize="11pt" align="center" gap={2}>
-            <Box w={9} h={9}>
-              {snippet?.imageURL ? (
-                <Image
-                  src={snippet?.imageURL}
-                  borderRadius="full"
-                  w="full"
-                  h="full"
-                  objectFit="cover"
-                  alt={snippet?.communityId}
-                />
-              ) : (
-                <Icon
-                  as={FaReddit}
-                  w="full"
-                  h="full"
-                  borderRadius="full"
-                  color="blue.500"
-                />
-              )}
-            </Box>
+            <Avatar
+              source={snippet.imageURL}
+              alt={snippet.communityId}
+              size={9}
+            />
             <Text>r/{snippet.communityId}</Text>
           </Flex>
         </MenuItem>

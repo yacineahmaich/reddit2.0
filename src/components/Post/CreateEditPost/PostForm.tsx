@@ -1,18 +1,17 @@
+import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useCreatePost } from "@/features/posts/useCreatePost";
 import { useUpdatePost } from "@/features/posts/useUpdatePost";
 import { auth } from "@/firebase/client";
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
-  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   Input,
   Stack,
-  Text,
-  Textarea,
+  Textarea
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Timestamp, serverTimestamp } from "firebase/firestore";
@@ -21,7 +20,6 @@ import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { postSchema } from "./schema";
-import ErrorMessage from "@/components/ui/ErrorMessage";
 
 type PostFormProps = {
   post?: Post;

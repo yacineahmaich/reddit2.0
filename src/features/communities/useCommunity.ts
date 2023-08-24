@@ -1,5 +1,5 @@
 import { firestore } from "@/firebase/client";
-import { Community } from "@/types/global";
+import { Community } from "@/types/database";
 import { parseObj } from "@/utils/helpers";
 import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";

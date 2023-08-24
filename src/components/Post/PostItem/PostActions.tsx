@@ -1,6 +1,6 @@
 import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useDeletePost } from "@/features/posts/useDeletePost";
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import { DeleteIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Box,
@@ -38,7 +38,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post }) => {
 
   return (
     <Box position="absolute" right="10px" top="10px">
-      <Menu>
+      <Menu placement="top-end">
         <MenuButton
           as={IconButton}
           aria-label="Post Actions"

@@ -1,5 +1,5 @@
 import { auth, firestore } from "@/firebase/client";
-import { CommunityPrivacyType } from "@/types/global";
+import { CommunityPrivacyType } from "@/types/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/router";

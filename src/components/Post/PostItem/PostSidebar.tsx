@@ -1,7 +1,7 @@
 import { authModalAtom } from "@/atoms/authModalAtom";
 import { useVotePost } from "@/features/posts/useVotePost";
 import { useUserVotes } from "@/features/user/useUserVotes";
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import { Flex, IconButton, Text } from "@chakra-ui/react";
 import { User } from "firebase/auth";
 import {
@@ -50,6 +50,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
       bg={isSinglePostPage ? "white" : "gray.100"}
       p={2}
       width="40px"
+      borderLeftRadius={4}
     >
       <IconButton
         variant="ghost"

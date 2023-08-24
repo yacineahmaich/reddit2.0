@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { HStack, Flex, Skeleton, Text, Image } from "@chakra-ui/react";
-import { Post } from "@/types/global";
+import { Post } from "@/types/database";
 import moment from "moment";
 
 type PostContentProps = {

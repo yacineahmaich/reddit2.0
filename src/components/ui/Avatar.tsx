@@ -2,14 +2,14 @@ import { Icon, Box, Image } from "@chakra-ui/react";
 import React from "react";
 import { FaReddit } from "react-icons/fa";
 
-type CommunityAvatarProps = {
+type AvatarProps = {
   source?: string;
   alt: string;
   size?: number;
   fallbackColor?: string;
 };
 
-const CommunityAvatar: React.FC<CommunityAvatarProps> = ({
+const Avatar: React.FC<AvatarProps> = ({
   source,
   alt,
   size,
@@ -24,11 +24,11 @@ const CommunityAvatar: React.FC<CommunityAvatarProps> = ({
       overflow="hidden"
     >
       {source ? (
-        <Image src={source} w="full" h="full" objectFit="cover" alt={alt} />
+        <Image src={source} alt={alt} />
       ) : (
         <Icon as={FaReddit} w="full" h="full" color={fallbackColor} />
       )}
     </Box>
   );
 };
-export default CommunityAvatar;
+export default Avatar;

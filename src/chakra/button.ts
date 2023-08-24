@@ -25,6 +25,9 @@ export const Button: ComponentStyleConfig = {
       _hover: {
         bg: "blue.400",
       },
+      _disabled: {
+        pointerEvents: "none",
+      },
     },
     danger: {
       color: "white",
@@ -32,11 +35,17 @@ export const Button: ComponentStyleConfig = {
       _hover: {
         bg: "red.300",
       },
+      _disabled: {
+        pointerEvents: "none",
+      },
     },
     outline: {
       color: "blue.500",
       border: "1px solid",
       borderColor: "blue.500",
+      _disabled: {
+        pointerEvents: "none",
+      },
     },
     oauth: {
       height: "34px",
@@ -44,6 +53,9 @@ export const Button: ComponentStyleConfig = {
       borderColor: "gray.300",
       _hover: {
         bg: "gray.50",
+      },
+      _disabled: {
+        pointerEvents: "none",
       },
     },
   },

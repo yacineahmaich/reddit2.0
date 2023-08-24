@@ -1,4 +1,5 @@
-import { CommunitySnippet } from "@/types/global";
+import Avatar from "@/components/ui/Avatar";
+import { CommunitySnippet } from "@/types/database";
 import {
   MenuGroup,
   MenuItem,
@@ -37,26 +38,11 @@ const FollowingCommunities: React.FC<FollowingCommunitiesProps> = ({
           href={`/r/${snippet.communityId}`}
         >
           <Flex fontSize="11pt" align="center" gap={2}>
-            <Box w={9} h={9}>
-              {snippet?.imageURL ? (
-                <Image
-                  src={snippet?.imageURL}
-                  borderRadius="full"
-                  w="full"
-                  h="full"
-                  objectFit="cover"
-                  alt={snippet?.communityId}
-                />
-              ) : (
-                <Icon
-                  as={FaReddit}
-                  w="full"
-                  h="full"
-                  borderRadius="full"
-                  color="blue.500"
-                />
-              )}
-            </Box>
+            <Avatar
+              source={snippet.imageURL}
+              alt={snippet.communityId}
+              size={9}
+            />
             <Text>r/{snippet.communityId}</Text>
           </Flex>
         </MenuItem>

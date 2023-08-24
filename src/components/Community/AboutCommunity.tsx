@@ -18,7 +18,7 @@ import React, { useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
-import CommunityProfile from "../shared/CommunityAvatar";
+import Avatar from "../ui/Avatar";
 import { FaEdit } from "react-icons/fa";
 
 const AboutCommunity: React.FC = () => {
@@ -139,7 +139,7 @@ const AboutCommunity: React.FC = () => {
                         onChange={handleSelectFile}
                         hidden
                       />
-                      <CommunityProfile
+                      <Avatar
                         source={selectedImage || community?.imageURL || ""}
                         size={10}
                         fallbackColor="brand.100"
