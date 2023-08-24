@@ -27,7 +27,7 @@ const CommentItem: React.FC<CommentItemProps> = ({ comment }) => {
           </Text>
         </Flex>
         <Box>
-          <Text overflowWrap="anywhere" fontSize="11pt" >
+          <Text overflowWrap="anywhere" fontSize="11pt">
             {comment.body}
           </Text>
         </Box>

@@ -3,6 +3,7 @@ import { useVotePost } from "@/features/posts/useVotePost";
 import { useUserVotes } from "@/features/user/useUserVotes";
 import { Post } from "@/types/database";
 import { Flex, IconButton, Text } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import { User } from "firebase/auth";
 import {
   IoArrowUpCircleSharp,
@@ -23,6 +24,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
   user,
   post,
 }) => {
+  const queryClient = useQueryClient();
   const setAuthModalState = useSetRecoilState(authModalAtom);
   const { data: userVotes } = useUserVotes();
   const { mutate: votePost, isLoading: isVoting } = useVotePost();
@@ -36,11 +38,27 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
       return;
     }
 
-    votePost({
-      post,
-      userId: user?.uid!,
-      vote,
-    });
+    votePost(
+      {
+        post,
+        userId: user?.uid!,
+        vote,
+      },
+      {
+        onSettled() {
+          queryClient.invalidateQueries(["user", "votes"]);
+          if (isSinglePostPage) {
+            queryClient.invalidateQueries(["posts", post.id]);
+          } else {
+            queryClient.invalidateQueries([
+              "community",
+              post.communityId,
+              "posts",
+            ]);
+          }
+        },
+      }
+    );
   }
 
   return (
@@ -55,7 +73,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
       <IconButton
         variant="ghost"
         aria-label="Upvote Post"
-        isDisabled={isVoting}
+        // isDisabled={isVoting}
         icon={
           userVoteValue === 1 ? (
             <IoArrowUpCircleSharp />
@@ -73,7 +91,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
       </Text>
       <IconButton
         aria-label="Downvote Post"
-        isDisabled={isVoting}
+        // isDisabled={isVoting}
         variant="ghost"
         icon={
           userVoteValue === -1 ? (

@@ -46,7 +46,6 @@ const CommentForm: React.FC<CommentFormProps> = ({ post }) => {
             type="submit"
             size="sm"
             px={30}
-            isDisabled={body.trim().length < 1}
           >
             Comment
           </Button>
