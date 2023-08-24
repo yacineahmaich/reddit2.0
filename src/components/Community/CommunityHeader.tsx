@@ -12,7 +12,7 @@ import {
   SkeletonCircle,
   Text,
 } from "@chakra-ui/react";
-import React, { useMemo } from "react";
+import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
 import Avatar from "../ui/Avatar";
@@ -37,11 +37,9 @@ const CommunityHeader: React.FC = () => {
     });
   }
 
-  const communitySnippet = useMemo(() => {
-    return communitySnippets?.find(
-      (snippet) => snippet.communityId === community?.id
-    ) as CommunitySnippet | null;
-  }, [community?.id]);
+  const communitySnippet = communitySnippets?.find(
+    (snippet) => snippet.communityId === community?.id
+  ) as CommunitySnippet | null;
 
   const isJoined = !!communitySnippet;
 

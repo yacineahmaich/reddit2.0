@@ -1,4 +1,5 @@
 import { usePost } from "@/features/posts/usePost";
+import useQueryParam from "@/hooks/useQueryParam";
 import {
   Flex,
   Spinner,
@@ -6,15 +7,13 @@ import {
   TabPanels,
   Tabs
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React, { useState } from "react";
 import PostForm from "./PostForm";
 import PostFormHeader from "./PostFormHeader";
 import UploadImage from "./UploadImage";
 
 const CreateEditPost: React.FC = () => {
-  const router = useRouter();
-  const postId = router.query.post as string;
+  const postId = useQueryParam("postId")
   const { data: post, isLoading } = usePost(postId);
 
   const [image, setImage] = useState<string>();

@@ -2,6 +2,7 @@ import ErrorMessage from "@/components/ui/ErrorMessage";
 import { useCreatePost } from "@/features/posts/useCreatePost";
 import { useUpdatePost } from "@/features/posts/useUpdatePost";
 import { auth } from "@/firebase/client";
+import useQueryParam from "@/hooks/useQueryParam";
 import { Post } from "@/types/database";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
@@ -11,15 +12,15 @@ import {
   FormErrorMessage,
   Input,
   Stack,
-  Textarea
+  Textarea,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Timestamp, serverTimestamp } from "firebase/firestore";
-import { useRouter } from "next/router";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useForm } from "react-hook-form";
 import { postSchema } from "./schema";
+import { useRouter } from "next/router";
 
 type PostFormProps = {
   post?: Post;
@@ -34,8 +35,8 @@ type CreatePostValues = {
 const PostForm: React.FC<PostFormProps> = ({ post, image }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
+  const communityId = useQueryParam("communityId");
 
-  const communityId = router.query.communityId as string;
 
   const {
     mutate: createPost,

@@ -2,14 +2,13 @@ import AboutCommunity from "@/components/Community/AboutCommunity";
 import PageContent from "@/components/Layout/PageContent";
 import CreateEditPost from "@/components/Post/CreateEditPost";
 import { usePost } from "@/features/posts/usePost";
+import useQueryParam from "@/hooks/useQueryParam";
 import { NextPageWithLayout } from "@/pages/_app";
 import { Box, Text } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 
 const SubmitPostPage: NextPageWithLayout = () => {
-  const router = useRouter();
+  const postId =  useQueryParam("postId")
 
-  const postId = router.query.post as string;
   const { data: post, isLoading } = usePost(postId);
 
   return (

@@ -1,5 +1,6 @@
 import Avatar from "@/components/ui/Avatar";
 import { useCommunity } from "@/features/communities/useCommunity";
+import useQueryParam from "@/hooks/useQueryParam";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Flex,
@@ -9,13 +10,11 @@ import {
   SkeletonCircle,
   Text,
 } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import React from "react";
 import { TiHome } from "react-icons/ti";
 
 const OpenDirectory: React.FC = () => {
-  const router = useRouter();
-  const communityId = router.query.communityId;
+  const communityId = useQueryParam("communityId");
 
   const { community, isLoading } = useCommunity();
 

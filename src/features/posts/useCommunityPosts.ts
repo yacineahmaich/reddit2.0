@@ -1,8 +1,8 @@
 import { firestore } from "@/firebase/client";
+import useQueryParam from "@/hooks/useQueryParam";
 import { Post } from "@/types/database";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { query, collection, where, orderBy, getDocs } from "firebase/firestore";
-import { useRouter } from "next/router";
+import { collection, getDocs, orderBy, query, where } from "firebase/firestore";
 
 const getCommunityPosts = async (id: string) => {
   const postsQuery = query(
@@ -25,10 +25,10 @@ const getCommunityPosts = async (id: string) => {
 };
 
 export const useCommunityPosts = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
-  const communityId = router.query.communityId as string;
+  const communityId = useQueryParam("communityId")
+
 
   return useQuery({
     queryKey: ["community", communityId, "posts"],

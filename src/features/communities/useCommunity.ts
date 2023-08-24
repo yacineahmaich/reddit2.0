@@ -1,9 +1,9 @@
 import { firestore } from "@/firebase/client";
+import useQueryParam from "@/hooks/useQueryParam";
 import { Community } from "@/types/database";
 import { parseObj } from "@/utils/helpers";
 import { useQuery } from "@tanstack/react-query";
 import { doc, getDoc } from "firebase/firestore";
-import { useRouter } from "next/router";
 
 async function getCommunity(id: string): Promise<Community | null> {
   const communityDocRef = doc(firestore, "communities", id);
@@ -18,8 +18,7 @@ async function getCommunity(id: string): Promise<Community | null> {
 }
 
 export function useCommunity() {
-  const router = useRouter();
-  const communityId = router.query.communityId as string;
+  const communityId = useQueryParam("communityId")
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["community", communityId],

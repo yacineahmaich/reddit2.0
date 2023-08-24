@@ -51,6 +51,6 @@ export function useJoinLeaveCommunity() {
 
   return useMutation({
     mutationFn: joinOrLeaveCommunity,
-    onSuccess: () => queryClient.invalidateQueries(["user", "snippets"]),
+    onSuccess: () => queryClient.invalidateQueries(["user", "directory"]),
   });
 }
