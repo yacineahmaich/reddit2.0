@@ -50,7 +50,6 @@ const PostItem: React.FC<PostItemProps> = ({
         w="full"
         onClick={navigateToPost}
         position="relative"
-        // minH="200px"
         cursor={isSinglePostPage ? "auto" : "pointer"}
       >
         {isSinglePostPage && user?.uid === post.creatorId && (

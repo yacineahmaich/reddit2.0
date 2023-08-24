@@ -16,6 +16,7 @@ const Menu = dynamic(
 
 import { authModalAtom } from "@/atoms/authModalAtom";
 import { useLogout } from "@/features/auth/useLogout";
+import { getUserNameFromUserObj } from "@/firebase/helpers";
 import { User } from "firebase/auth";
 import dynamic from "next/dynamic";
 import { BsPerson } from "react-icons/bs";
@@ -59,9 +60,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
                   fontSize="8pt"
                   shrink={0}
                 >
-                  <Text fontWeight={700}>
-                    {user.displayName || user.email?.split("@")[0]}
-                  </Text>
+                  <Text fontWeight={700}>{getUserNameFromUserObj(user)}</Text>
                   <Flex gap={1}>
                     <Icon as={IoSparkles} color="brand.100" />
                     <Text color="gray.400">1 karma</Text>

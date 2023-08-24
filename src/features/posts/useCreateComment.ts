@@ -1,6 +1,6 @@
 import { firestore } from "@/firebase/client";
 import { Comment, Post } from "@/types/database";
-import { getUserNameFromUserObj } from "@/utils/helpers";
+import { getUserNameFromUserObj } from "@/firebase/helpers";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { User } from "firebase/auth";
 import {

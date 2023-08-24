@@ -18,10 +18,7 @@ const PostSkeleton: React.FC<PostSkeletonProps> = () => {
         <SkeletonCircle width={10} height={10} />
         <SkeletonText height={5} w="50%" noOfLines={1} />
       </Flex>
-      {/* <SkeletonText height={7} w="50%" noOfLines={1} /> */}
-
       <SkeletonText height={7} />
-
       <Skeleton flexGrow={1} mt={4} />
     </Flex>
   );

@@ -1,17 +1,13 @@
 import Avatar from "@/components/ui/Avatar";
 import { CommunitySnippet } from "@/types/database";
 import {
+  Flex,
   MenuGroup,
   MenuItem,
-  Flex,
-  Icon,
-  Image,
-  Text,
-  Box,
+  Text
 } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
-import { FaReddit } from "react-icons/fa";
 
 type FollowingCommunitiesProps = {
   communitySnippets: CommunitySnippet[];
