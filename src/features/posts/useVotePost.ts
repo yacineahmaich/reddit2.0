@@ -67,15 +67,23 @@ export const useVotePost = () => {
 
   return useMutation({
     mutationFn: voteOnPost,
-    onMutate({ post, userId, vote }) {
+    onMutate({ post, vote }) {
       // 1) Cancel active queries
       queryClient.cancelQueries(["user", "votes"]);
 
       // 2) Previous user votes snapshot
-      const previousVotes =
+      const previousUserVotes =
         queryClient.getQueryData<Vote[]>(["user", "votes"]) ?? [];
 
-      const alreadyVoted = previousVotes.find(
+      const previousPost = queryClient.getQueryData<Post>(["posts", post.id]);
+
+      const previousPosts = queryClient.getQueryData<Post[]>([
+        "community",
+        post.communityId,
+        "posts",
+      ]);
+
+      const alreadyVoted = previousUserVotes.find(
         (vote) => vote.postId === post.id
       );
 
@@ -84,7 +92,7 @@ export const useVotePost = () => {
         if (alreadyVoted.vote === vote) {
           queryClient.setQueryData(
             ["user", "votes"],
-            previousVotes.filter((v) => v.postId !== post.id)
+            previousUserVotes.filter((v) => v.postId !== post.id)
           );
           // optimisticaly update post numOfvotes
           queryClient.setQueryData(["posts", post.id], {
@@ -110,7 +118,7 @@ export const useVotePost = () => {
           // toggle vote
           queryClient.setQueryData(
             ["user", "votes"],
-            previousVotes.map((v) =>
+            previousUserVotes.map((v) =>
               v.postId === post.id
                 ? {
                     ...v,
@@ -148,7 +156,7 @@ export const useVotePost = () => {
         // optimisticaly update user votes
         queryClient.setQueryData(
           ["user", "votes"],
-          [optimisticVote, ...previousVotes]
+          [optimisticVote, ...previousUserVotes]
         );
         // optimisticaly update post numOfvotes
         queryClient.setQueryData(["posts", post.id], {
@@ -169,6 +177,27 @@ export const useVotePost = () => {
           }
         );
       }
+
+      return {
+        previousUserVotes,
+        previousPost,
+        previousPosts,
+      };
+    },
+    onError(_err, { post }, ctx) {
+      queryClient.setQueryData(["user", "votes"], ctx?.previousUserVotes);
+
+      queryClient.setQueryData(["posts", post.id], ctx?.previousPost);
+
+      queryClient.setQueryData(
+        ["community", post.communityId, "posts"],
+        ctx?.previousPosts
+      );
+    },
+    onSuccess: (_data, { post }) => {
+      queryClient.invalidateQueries(["user", "votes"]);
+      queryClient.invalidateQueries(["posts", post.id]);
+      queryClient.invalidateQueries(["community", post.communityId, "posts"]);
     },
   });
 };

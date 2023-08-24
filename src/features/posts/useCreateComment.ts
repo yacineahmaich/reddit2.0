@@ -90,11 +90,11 @@ export const useCreateComment = () => {
       // to handle error case
       return { previousComments };
     },
-    onError(error, { postId }, context) {
+    onError(_err, { postId }, ctx) {
       // In case of error reset the cache
       queryClient.setQueryData(
         ["posts", postId, "comments"],
-        context?.previousComments
+        ctx?.previousComments
       );
       queryClient.setQueryData<Post>(
         ["posts", postId],

@@ -38,27 +38,11 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
       return;
     }
 
-    votePost(
-      {
-        post,
-        userId: user?.uid!,
-        vote,
-      },
-      {
-        onSettled() {
-          queryClient.invalidateQueries(["user", "votes"]);
-          if (isSinglePostPage) {
-            queryClient.invalidateQueries(["posts", post.id]);
-          } else {
-            queryClient.invalidateQueries([
-              "community",
-              post.communityId,
-              "posts",
-            ]);
-          }
-        },
-      }
-    );
+    votePost({
+      post,
+      userId: user?.uid!,
+      vote,
+    });
   }
 
   return (

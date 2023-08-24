@@ -50,7 +50,7 @@ export function useJoinLeaveCommunity() {
 
   return useMutation({
     mutationFn: joinOrLeaveCommunity,
-    onMutate({ userId, community }) {
+    onMutate({ community }) {
       // 1)- Cancel queries
       queryClient.cancelQueries(["user", "directory"]);
 
