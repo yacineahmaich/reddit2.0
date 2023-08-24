@@ -4,23 +4,22 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { doc, increment, runTransaction } from "firebase/firestore";
 
 type Vars = {
-  communityId: string;
+  community: Community;
   userId: string;
-  communitySnippets: CommunitySnippet[];
 };
 
-const joinOrLeaveCommunity = async ({ communityId, userId }: Vars) => {
+const joinOrLeaveCommunity = async ({ community, userId }: Vars) => {
   await runTransaction(firestore, async (transaction) => {
     // get snippet
     const snippetDocRef = doc(
       firestore,
       `/users/${userId}/communitySnippets`,
-      communityId
+      community.id
     );
     const snippetDoc = await transaction.get(snippetDocRef);
 
     // get Community
-    const communityDocRef = doc(firestore, "communities", communityId);
+    const communityDocRef = doc(firestore, "communities", community.id);
     const communityDoc = await transaction.get(communityDocRef);
     const communityData = communityDoc.data() as Community;
 
@@ -51,6 +50,48 @@ export function useJoinLeaveCommunity() {
 
   return useMutation({
     mutationFn: joinOrLeaveCommunity,
-    onSuccess: () => queryClient.invalidateQueries(["user", "directory"]),
+    onMutate({ userId, community }) {
+      // 1)- Cancel queries
+      queryClient.cancelQueries(["user", "directory"]);
+
+      // current directory snapshot
+      const previousDirectory = queryClient.getQueryData<CommunitySnippet[]>([
+        "user",
+        "directory",
+      ]);
+
+      const joinedCommunity = previousDirectory?.find(
+        (s) => s.communityId === community.id
+      );
+
+      if (joinedCommunity) {
+        // Optimisticly update user directory cache
+        queryClient.setQueryData<CommunitySnippet[]>(
+          ["user", "directory"],
+          (snippets = []) =>
+            snippets.filter((s) => s.communityId !== community.id)
+        );
+      } else {
+        const optimisticSnippet: CommunitySnippet = {
+          communityId: community.id,
+          imageURL: community.imageURL,
+        };
+        // Optimisticly update user directory cache
+        queryClient.setQueryData<CommunitySnippet[]>(
+          ["user", "directory"],
+          (snippets = []) => [optimisticSnippet, ...snippets]
+        );
+      }
+
+      return { previousDirectory };
+    },
+    onError(_err, _vars, ctx) {
+      // Optimisticly update user directory cache
+      queryClient.setQueryData<CommunitySnippet[]>(
+        ["user", "directory"],
+        ctx?.previousDirectory
+      );
+    },
+    onSettled: () => queryClient.invalidateQueries(["user", "directory"]),
   });
 }

@@ -21,7 +21,7 @@ const CommunityHeader: React.FC = () => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalAtom);
   const { community, isLoading: isCommunityLoading } = useCommunity();
-  const { mutate: joinLeaveCommunity, isLoading } = useJoinLeaveCommunity();
+  const { mutate: joinLeaveCommunity } = useJoinLeaveCommunity();
   const { data: communitySnippets = [] } = useDirectory();
 
   function handleJoinLeaveCommunity() {
@@ -31,9 +31,8 @@ const CommunityHeader: React.FC = () => {
     }
 
     joinLeaveCommunity({
-      communityId: community.id,
+      community: community!,
       userId: user?.uid,
-      communitySnippets: communitySnippets,
     });
   }
 
@@ -82,9 +81,7 @@ const CommunityHeader: React.FC = () => {
                 variant={isJoined ? "outline" : "solid"}
                 height="30px"
                 px={6}
-                isLoading={isLoading}
                 onClick={() => handleJoinLeaveCommunity()}
-                isDisabled={communitySnippet?.isModerator}
                 _disabled={{
                   cursor: "auto",
                   color: "gray.300",
