@@ -1,4 +1,5 @@
 import Avatar from "@/components/ui/Avatar";
+import { getStorageDownloadUrl } from "@/firebase/helpers";
 import { CommunitySnippet } from "@/types/database";
 import { Flex, MenuGroup, MenuItem, Text } from "@chakra-ui/react";
 import Link from "next/link";
@@ -30,7 +31,7 @@ const ModeratingCommunities: React.FC<ModeratingCommunitiesProps> = ({
         >
           <Flex fontSize="11pt" align="center" gap={2}>
             <Avatar
-              source={snippet.imageURL}
+              source={getStorageDownloadUrl(`communities/${snippet.communityId}`)}
               alt={snippet.communityId}
               size={9}
             />

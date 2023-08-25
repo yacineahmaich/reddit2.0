@@ -12,7 +12,7 @@ type Vars = {
 
 async function updateProfile({ id, image, userId }: Vars) {
   const communityDocRef = doc(firestore, "communities", id);
-  const imageRef = ref(storage, `/communities/${communityDocRef.id}/image`);
+  const imageRef = ref(storage, `/communities/${communityDocRef.id}`);
 
   await uploadString(imageRef, image, "data_url");
 

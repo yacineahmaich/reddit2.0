@@ -1,11 +1,7 @@
 import Avatar from "@/components/ui/Avatar";
+import { getStorageDownloadUrl } from "@/firebase/helpers";
 import { CommunitySnippet } from "@/types/database";
-import {
-  Flex,
-  MenuGroup,
-  MenuItem,
-  Text
-} from "@chakra-ui/react";
+import { Flex, MenuGroup, MenuItem, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
 
@@ -20,7 +16,7 @@ const FollowingCommunities: React.FC<FollowingCommunitiesProps> = ({
     (snippet) => !snippet.isModerator
   );
 
-  if (followingCommunities.length === 0) return null;
+  if (followingCommunities?.length === 0) return null;
 
   return (
     <MenuGroup title="FOLLOWING" color="gray.400">
@@ -35,7 +31,9 @@ const FollowingCommunities: React.FC<FollowingCommunitiesProps> = ({
         >
           <Flex fontSize="11pt" align="center" gap={2}>
             <Avatar
-              source={snippet.imageURL}
+              source={getStorageDownloadUrl(
+                `communities/${snippet.communityId}`
+              )}
               alt={snippet.communityId}
               size={9}
             />

@@ -2,21 +2,24 @@ import AboutCommunity from "@/components/Community/AboutCommunity";
 import CommunityHeader from "@/components/Community/CommunityHeader";
 import CommunityNotFound from "@/components/Community/CommunityNotFound";
 import PageContent from "@/components/Layout/PageContent";
-import CommunityPosts from "@/components/Post/CommunityPosts";
 import { useCommunity } from "@/features/communities/useCommunity";
 import React from "react";
 import CreatePostLink from "../../../components/Community/CreatePostLink";
 import { NextPageWithLayout } from "@/pages/_app";
+import { useCommunityPosts } from "@/features/posts/useCommunityPosts";
+import PostsFeed from "@/components/Post/PostsFeed";
 
 const CommunityPage: NextPageWithLayout = () => {
-  const { community, isLoading } = useCommunity();
+  const { community, isLoading: isCommunityLoading } = useCommunity();
+  const { data: posts, isLoading: isCommunityPostsLoading } =
+    useCommunityPosts();
 
-  if (!isLoading && !community) return <CommunityNotFound />;
+  if (!isCommunityLoading && !community) return <CommunityNotFound />;
 
   return (
     <>
       <CreatePostLink />
-      <CommunityPosts />
+      <PostsFeed posts={posts} isLoading={isCommunityPostsLoading} />
     </>
   );
 };

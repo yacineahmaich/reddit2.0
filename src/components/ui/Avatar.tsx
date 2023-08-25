@@ -1,5 +1,5 @@
 import { Icon, Box, Image } from "@chakra-ui/react";
-import React from "react";
+import React, { useState } from "react";
 import { FaReddit } from "react-icons/fa";
 
 type AvatarProps = {
@@ -15,6 +15,7 @@ const Avatar: React.FC<AvatarProps> = ({
   size,
   fallbackColor = "blue.500",
 }) => {
+  const [error, setError] = useState(false);
   return (
     <Box
       w={size || "full"}
@@ -23,8 +24,8 @@ const Avatar: React.FC<AvatarProps> = ({
       borderRadius="full"
       overflow="hidden"
     >
-      {source ? (
-        <Image src={source} alt={alt} />
+      {source && !error ? (
+        <Image src={source} alt={alt} onError={() => setError(true)} />
       ) : (
         <Icon as={FaReddit} w="full" h="full" color={fallbackColor} />
       )}

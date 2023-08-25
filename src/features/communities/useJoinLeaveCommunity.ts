@@ -1,27 +1,25 @@
 import { firestore } from "@/firebase/client";
-import { Community, CommunitySnippet } from "@/types/database";
+import { CommunitySnippet } from "@/types/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { doc, increment, runTransaction } from "firebase/firestore";
 
 type Vars = {
-  community: Community;
+  communityId: string;
   userId: string;
 };
 
-const joinOrLeaveCommunity = async ({ community, userId }: Vars) => {
+const joinOrLeaveCommunity = async ({ communityId, userId }: Vars) => {
   await runTransaction(firestore, async (transaction) => {
     // get snippet
     const snippetDocRef = doc(
       firestore,
       `/users/${userId}/communitySnippets`,
-      community.id
+      communityId
     );
     const snippetDoc = await transaction.get(snippetDocRef);
 
     // get Community
-    const communityDocRef = doc(firestore, "communities", community.id);
-    const communityDoc = await transaction.get(communityDocRef);
-    const communityData = communityDoc.data() as Community;
+    const communityDocRef = doc(firestore, "communities", communityId);
 
     // user Already joined  the community
     if (snippetDoc.exists()) {
@@ -34,8 +32,7 @@ const joinOrLeaveCommunity = async ({ community, userId }: Vars) => {
     } else {
       // add user snippet
       transaction.set(snippetDocRef, {
-        communityId: communityData.id,
-        imageURL: communityData.imageURL || "",
+        communityId: communityId,
       });
       // increment community numMembers
       transaction.update(communityDocRef, {
@@ -50,7 +47,7 @@ export function useJoinLeaveCommunity() {
 
   return useMutation({
     mutationFn: joinOrLeaveCommunity,
-    onMutate({ community }) {
+    onMutate({ communityId }) {
       // 1)- Cancel queries
       queryClient.cancelQueries(["user", "directory"]);
 
@@ -61,7 +58,7 @@ export function useJoinLeaveCommunity() {
       ]);
 
       const joinedCommunity = previousDirectory?.find(
-        (s) => s.communityId === community.id
+        (s) => s.communityId === communityId
       );
 
       if (joinedCommunity) {
@@ -69,12 +66,11 @@ export function useJoinLeaveCommunity() {
         queryClient.setQueryData<CommunitySnippet[]>(
           ["user", "directory"],
           (snippets = []) =>
-            snippets.filter((s) => s.communityId !== community.id)
+            snippets.filter((s) => s.communityId !== communityId)
         );
       } else {
         const optimisticSnippet: CommunitySnippet = {
-          communityId: community.id,
-          imageURL: community.imageURL,
+          communityId: communityId,
         };
         // Optimisticly update user directory cache
         queryClient.setQueryData<CommunitySnippet[]>(
@@ -86,12 +82,11 @@ export function useJoinLeaveCommunity() {
       return { previousDirectory };
     },
     onError(_err, _vars, ctx) {
-      // Optimisticly update user directory cache
       queryClient.setQueryData<CommunitySnippet[]>(
         ["user", "directory"],
         ctx?.previousDirectory
       );
     },
-    onSettled: () => queryClient.invalidateQueries(["user", "directory"]),
+    onSuccess: () => queryClient.invalidateQueries(["user", "directory"]),
   });
 }

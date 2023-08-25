@@ -14,7 +14,7 @@ export async function createCommunityPost({ post, image }: Vars) {
   const postDocRef = await addDoc(collection(firestore, "posts"), post);
 
   if (image) {
-    const imageRef = ref(storage, `/posts/${postDocRef.id}/image`);
+    const imageRef = ref(storage, `/posts/${postDocRef.id}`);
     await uploadString(imageRef, image, "data_url");
 
     const imageDownloadURL = await getDownloadURL(imageRef);

@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { HStack, Flex, Skeleton, Text, Image } from "@chakra-ui/react";
 import { Post } from "@/types/database";
 import moment from "moment";
+import Avatar from "@/components/ui/Avatar";
+import { getStorageDownloadUrl } from "@/firebase/helpers";
 
 type PostContentProps = {
   post: Post;
@@ -18,7 +20,11 @@ const PostContent: React.FC<PostContentProps> = ({
   return (
     <>
       <HStack>
-        {/* Community Icon */}
+        <Avatar
+          source={getStorageDownloadUrl(`communities/${post.communityId}`)}
+          alt={post.communityId}
+          size={8}
+        />
         <Text fontSize="9pt" color="gray.300">
           Posted by u/{post.creatorDisplayName} a {created}
         </Text>
@@ -31,7 +37,11 @@ const PostContent: React.FC<PostContentProps> = ({
       {post.imageURL && (
         <Flex align="center" justify="center">
           {imageIsLoading && (
-            <Skeleton height={isSinglePostPage ? "250px" : "200px"} my={6} width="100%" />
+            <Skeleton
+              height={isSinglePostPage ? "250px" : "200px"}
+              my={6}
+              width="100%"
+            />
           )}
           <Image
             src={post.imageURL}
