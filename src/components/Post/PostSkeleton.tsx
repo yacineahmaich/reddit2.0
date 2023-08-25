@@ -1,9 +1,11 @@
 import { Flex, SkeletonCircle, SkeletonText, Skeleton } from "@chakra-ui/react";
 import React from "react";
 
-type PostSkeletonProps = {};
+type PostSkeletonProps = {
+  isSinglePostPage?: boolean;
+};
 
-const PostSkeleton: React.FC<PostSkeletonProps> = () => {
+const PostSkeleton: React.FC<PostSkeletonProps> = ({ isSinglePostPage }) => {
   return (
     <Flex
       direction="column"
@@ -13,6 +15,7 @@ const PostSkeleton: React.FC<PostSkeletonProps> = () => {
       height="480px"
       border="1px solid"
       borderColor="gray.300"
+      borderRadius={isSinglePostPage ? "4px 4px 0 0 " : 4}
     >
       <Flex gap={4} align="center">
         <SkeletonCircle width={10} height={10} />

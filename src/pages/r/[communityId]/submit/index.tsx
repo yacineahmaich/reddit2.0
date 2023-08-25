@@ -7,8 +7,8 @@ import { NextPageWithLayout } from "@/pages/_app";
 import { Box, Text } from "@chakra-ui/react";
 
 const SubmitPostPage: NextPageWithLayout = () => {
-  const postId =  useQueryParam("postId")
-
+  const postId =  useQueryParam("post")
+  console.log(postId)
   const { data: post, isLoading } = usePost(postId);
 
   return (

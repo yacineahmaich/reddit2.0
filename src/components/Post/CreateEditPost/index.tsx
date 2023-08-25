@@ -13,7 +13,7 @@ import PostFormHeader from "./PostFormHeader";
 import UploadImage from "./UploadImage";
 
 const CreateEditPost: React.FC = () => {
-  const postId = useQueryParam("postId")
+  const postId = useQueryParam("post")
   const { data: post, isLoading } = usePost(postId);
 
   const [image, setImage] = useState<string>();

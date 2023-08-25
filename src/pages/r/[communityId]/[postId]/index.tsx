@@ -10,7 +10,7 @@ import React from "react";
 const PostPage: NextPageWithLayout = () => {
   const { data: post, isLoading } = usePost();
 
-  if (isLoading || !post) return <PostSkeleton />;
+  if (isLoading || !post) return <PostSkeleton isSinglePostPage />;
 
   return (
     <>

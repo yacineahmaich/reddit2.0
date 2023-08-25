@@ -30,8 +30,8 @@ const PostContent: React.FC<PostContentProps> = ({
 
       {post.imageURL && (
         <Flex align="center" justify="center">
-          {imageIsLoading && !isSinglePostPage && (
-            <Skeleton height="200px" width="100%" borderRadius={4} />
+          {imageIsLoading && (
+            <Skeleton height={isSinglePostPage ? "250px" : "200px"} my={6} width="100%" />
           )}
           <Image
             src={post.imageURL}

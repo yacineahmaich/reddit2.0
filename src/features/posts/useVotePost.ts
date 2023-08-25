@@ -70,6 +70,8 @@ export const useVotePost = () => {
     onMutate({ post, vote }) {
       // 1) Cancel active queries
       queryClient.cancelQueries(["user", "votes"]);
+      queryClient.cancelQueries(["posts", post.id]);
+      queryClient.cancelQueries(["community", post.communityId, "posts"]);
 
       // 2) Previous user votes snapshot
       const previousUserVotes =
