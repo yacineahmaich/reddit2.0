@@ -1,11 +1,15 @@
-import { useCommunityPosts } from "@/features/posts/useCommunityPosts";
+import { Post } from "@/types/database";
 import { Stack } from "@chakra-ui/react";
+import React from "react";
 import PostItem from "./PostItem";
 import PostSkeleton from "./PostSkeleton";
 
-const CommunityPosts: React.FC = () => {
-  const { data: posts, isLoading } = useCommunityPosts();
+type PostsFeedProps = {
+  posts?: Post[];
+  isLoading: boolean;
+};
 
+const PostsFeed: React.FC<PostsFeedProps> = ({ posts = [], isLoading }) => {
   return (
     <>
       {isLoading ? (
@@ -20,4 +24,4 @@ const CommunityPosts: React.FC = () => {
     </>
   );
 };
-export default CommunityPosts;
+export default PostsFeed;
