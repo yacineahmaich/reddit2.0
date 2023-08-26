@@ -1,38 +1,44 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# [Reddit2.0](https://reddit-v2.netlify.app/)
 
-## Getting Started
+Welcome to the Reddit Clone Project! This is an open-source web application designed to replicate the core functionality of the popular social media platform Reddit. Our project aims to provide users with a platform where they can create, share, and discuss content on a variety of topics in a community-driven environment.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-```
+- Authentication & permissions
+- Create & join communities
+- Create post on specific community
+- Upvote or downvote posts
+- Comment on posts
+- Recommanded communities
+- Feed
+- Search by communities, users and posts
+- Upload & edit community profile image
+  ...
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## ⚡ Technologies Used
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- React
+- Nextjs (pages router)
+- Typescript
+- Firebase (authentication & database & file storage)
+- Chakra ui (ui components)
+- Tanstak query (react-query)
+- React Hook Form (form handlig)
+- Recoil (client state management)
+- Zod (validation)
+- Momentjs (formating dates)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+  ...
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## 🛩 Installation
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. Clone the repository
+2. Navigate to the project's directory.
+3. `cp .env.example .env.local`
+2. `replace enviroment varibales with valide values`
+4. `npm install`
+6. `npm run dev`
 
-## Learn More
+## 📜 License
 
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+This project is released under the MIT License.
