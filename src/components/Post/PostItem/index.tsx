@@ -11,11 +11,13 @@ import PostActions from "./PostActions";
 type PostItemProps = {
   post: Post;
   isSinglePostPage?: boolean;
+  isCommunityFeed?: boolean;
 };
 
 const PostItem: React.FC<PostItemProps> = ({
   post,
-  isSinglePostPage = false,
+  isSinglePostPage,
+  isCommunityFeed,
 }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
@@ -23,7 +25,7 @@ const PostItem: React.FC<PostItemProps> = ({
   const navigateToPost = () => {
     if (isSinglePostPage) return;
 
-    router.push(`${router.asPath}/${post.id}`);
+    router.push(`/r/${post.communityId}/${post.id}`);
   };
 
   if (!post) return null;
@@ -55,7 +57,11 @@ const PostItem: React.FC<PostItemProps> = ({
         {isSinglePostPage && user?.uid === post.creatorId && (
           <PostActions post={post} />
         )}
-        <PostContent post={post} isSinglePostPage={isSinglePostPage} />
+        <PostContent
+          post={post}
+          isSinglePostPage={isSinglePostPage}
+          isCommunityFeed={isCommunityFeed}
+        />
         <PostFooter post={post} />
       </Flex>
     </Flex>

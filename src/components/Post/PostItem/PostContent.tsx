@@ -1,34 +1,57 @@
-import React, { useState } from "react";
-import { HStack, Flex, Skeleton, Text, Image } from "@chakra-ui/react";
-import { Post } from "@/types/database";
-import moment from "moment";
 import Avatar from "@/components/ui/Avatar";
 import { getStorageDownloadUrl } from "@/firebase/helpers";
+import { Post } from "@/types/database";
+import { Flex, Icon, Image, Skeleton, Text } from "@chakra-ui/react";
+import moment from "moment";
+import Link from "next/link";
+import React, { useState } from "react";
+import { BsDot } from "react-icons/bs";
 
 type PostContentProps = {
   post: Post;
-  isSinglePostPage: boolean;
+  isSinglePostPage?: boolean;
+  isCommunityFeed?: boolean;
 };
 
 const PostContent: React.FC<PostContentProps> = ({
   post,
   isSinglePostPage,
+  isCommunityFeed,
 }) => {
   const [imageIsLoading, setImageIsLoading] = useState(true);
   const created = moment(post.createdAt.seconds * 1000).fromNow();
 
   return (
     <>
-      <HStack>
-        <Avatar
-          source={getStorageDownloadUrl(`communities/${post.communityId}`)}
-          alt={post.communityId}
-          size={8}
-        />
+      <Flex align="center">
+        {!isCommunityFeed && (
+          <>
+            <Flex align="center" gap={2}>
+              <Avatar
+                source={getStorageDownloadUrl(
+                  `communities/${post.communityId}`
+                )}
+                alt={post.communityId}
+                size={7}
+              />
+              <Text
+                fontSize="10pt"
+                _hover={{ textDecoration: "underline" }}
+                fontWeight={600}
+                as={Link}
+                href={`/r/${post.communityId}`}
+                onClick={(e) => e.stopPropagation()}
+              >
+                r/{post.communityId}
+              </Text>
+            </Flex>
+            <Icon as={BsDot} fontSize={10} color="gray.500" />
+          </>
+        )}
         <Text fontSize="9pt" color="gray.300">
           Posted by u/{post.creatorDisplayName} a {created}
         </Text>
-      </HStack>
+      </Flex>
       <Text fontWeight={700} fontSize="12pt">
         {post.title}
       </Text>

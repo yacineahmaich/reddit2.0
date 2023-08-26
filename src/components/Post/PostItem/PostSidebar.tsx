@@ -13,7 +13,7 @@ import {
 import { useSetRecoilState } from "recoil";
 
 type PostSidebarProps = {
-  isSinglePostPage: boolean;
+  isSinglePostPage?: boolean;
   user?: User | null;
   post: Post;
 };
@@ -25,7 +25,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
 }) => {
   const setAuthModalState = useSetRecoilState(authModalAtom);
   const { data: userVotes } = useUserVotes();
-  const { mutate: votePost, isLoading: isVoting } = useVotePost();
+  const { mutate: votePost } = useVotePost();
 
   const userVoteValue =
     userVotes?.find((v) => v.postId === post?.id)?.vote ?? 0;
