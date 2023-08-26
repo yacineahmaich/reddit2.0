@@ -1,3 +1,4 @@
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { useCommunity } from "@/features/communities/useCommunity";
 import { useUpdateCommunityImage } from "@/features/communities/useUpdateCommunityImage";
 import { auth } from "@/firebase/client";
@@ -13,16 +14,19 @@ import {
   Text,
 } from "@chakra-ui/react";
 import moment from "moment";
-import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useRef, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { FaEdit } from "react-icons/fa";
 import { HiOutlineDotsHorizontal } from "react-icons/hi";
 import { RiCakeLine } from "react-icons/ri";
+import { useSetRecoilState } from "recoil";
 import Avatar from "../ui/Avatar";
-import { FaEdit } from "react-icons/fa";
 
 const AboutCommunity: React.FC = () => {
+  const router = useRouter();
   const [user] = useAuthState(auth);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
 
   const { community, isLoading: isCommunityLoading } = useCommunity();
   const { mutate: updateCommunityProfile, isLoading } =
@@ -38,6 +42,12 @@ const AboutCommunity: React.FC = () => {
       image: selectedImage!,
       userId: user?.uid!,
     });
+  }
+
+  function handleCreatePostClick() {
+    if (!user) return setAuthModalState({ open: true, view: "login" });
+
+    router.push(`/r/${community?.id}/submit`);
   }
 
   const isModerator = user?.uid === community?.creatorId;
@@ -70,21 +80,6 @@ const AboutCommunity: React.FC = () => {
           <Spinner color="gray.300" />
         ) : (
           <Box w="full">
-            {/*isModerator && (
-              <Box
-                bg="gray.100"
-                width="100%"
-                p={2}
-                borderRadius={4}
-                border="1px solid"
-                borderColor="gray.300"
-                cursor="pointer"
-              >
-                <Text fontSize="9pt" fontWeight={700} color="blue.500">
-                  Add description
-                </Text>
-              </Box>
-            )*/}
             <Stack spacing={2}>
               <Flex width="100%" p={2} fontWeight={600} fontSize="10pt">
                 <Flex direction="column" flexGrow={1}>
@@ -114,11 +109,15 @@ const AboutCommunity: React.FC = () => {
                   </Text>
                 )}
               </Flex>
-              <Link href={`/r/${community?.id}/submit`}>
-                <Button mt={3} height="30px" w="full">
-                  Create Post
-                </Button>
-              </Link>
+              <Button
+                role="link"
+                mt={3}
+                height="30px"
+                w="full"
+                onClick={handleCreatePostClick}
+              >
+                Create Post
+              </Button>
               {isModerator && (
                 <>
                   <Divider />
