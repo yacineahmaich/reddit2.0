@@ -1,5 +1,5 @@
 import { authModalAtom } from "@/atoms/authModalAtom";
-import { auth, firestore } from "@/firebase/client";
+import { useSignin } from "@/features/auth/useSignup";
 import { getFirebaseError } from "@/firebase/errors";
 import { WarningIcon } from "@chakra-ui/icons";
 import {
@@ -12,12 +12,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { AuthError } from "firebase/auth";
 import { useForm } from "react-hook-form";
 import { useSetRecoilState } from "recoil";
 import { signupSchema } from "./schemas";
-import { doc, setDoc } from "firebase/firestore";
-import { transformUser } from "@/firebase/helpers";
 
 type SignupValues = {
   email: string;
@@ -28,8 +26,8 @@ type SignupValues = {
 const Signup: React.FC = () => {
   const setAuthModalState = useSetRecoilState(authModalAtom);
 
-  const [signup, user, loading, signupError] =
-    useCreateUserWithEmailAndPassword(auth);
+  const { mutate: signup, isLoading, isError, error } = useSignin();
+  const signupError = error as AuthError;
 
   const {
     register,
@@ -43,21 +41,14 @@ const Signup: React.FC = () => {
     resolver: zodResolver(signupSchema),
   });
 
-  async function onSubmit({ email, password }: SignupValues) {
-    const data = await signup(email, password);
-    if (!data) return;
-
-    // safe created user in firestore collection
-    const user = transformUser(data.user);
-    const userDocRef = doc(firestore, "users", user.uid);
-
-    await setDoc(userDocRef, user);
+  function onSubmit({ email, password }: SignupValues) {
+    signup({ email, password });
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
       <Flex direction="column" gap={2}>
-        {signupError && (
+        {isError && (
           <Box
             fontSize="10pt"
             display="flex"
@@ -150,7 +141,7 @@ const Signup: React.FC = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <Button type="submit" height="36px" isLoading={loading}>
+        <Button type="submit" height="36px" isLoading={isLoading}>
           Sign Up
         </Button>
         <Flex fontSize="10pt" justify="center">

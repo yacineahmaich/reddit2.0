@@ -1,22 +1,22 @@
 import {
+  Box,
   Button,
   Flex,
   FormControl,
   FormErrorMessage,
   Input,
   Text,
-  Box,
 } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
 
 import { authModalAtom } from "@/atoms/authModalAtom";
+import { useLogin } from "@/features/auth/useLogin";
+import { getFirebaseError } from "@/firebase/errors";
 import { WarningIcon } from "@chakra-ui/icons";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { AuthError } from "firebase/auth";
 import { useSetRecoilState } from "recoil";
 import { loginSchema } from "./schemas";
-import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/client";
-import { getFirebaseError } from "@/firebase/errors";
 
 type LoginValues = {
   email: string;
@@ -26,8 +26,8 @@ type LoginValues = {
 const Login: React.FC = () => {
   const setAuthModalState = useSetRecoilState(authModalAtom);
 
-  const [login, user, loading, loginError] =
-    useSignInWithEmailAndPassword(auth);
+  const { mutate: login, isLoading, isError, error } = useLogin();
+  const loginError = error as AuthError;
 
   const {
     register,
@@ -42,13 +42,13 @@ const Login: React.FC = () => {
   });
 
   function onSubmit({ email, password }: LoginValues) {
-    login(email, password);
+    login({ email, password });
   }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} style={{ width: "100%" }}>
       <Flex direction="column" gap={2}>
-        {loginError && (
+        {isError && (
           <Box
             fontSize="10pt"
             display="flex"
@@ -59,7 +59,7 @@ const Login: React.FC = () => {
             mb={3}
           >
             <WarningIcon fontSize="11pt" />
-            <Text>{getFirebaseError(loginError.message)}</Text>
+            <Text>{getFirebaseError(loginError?.message)}</Text>
           </Box>
         )}
 
@@ -115,7 +115,7 @@ const Login: React.FC = () => {
           </FormErrorMessage>
         </FormControl>
 
-        <Button type="submit" height="36px" isLoading={loading}>
+        <Button type="submit" height="36px" isLoading={isLoading}>
           Log In
         </Button>
         <Flex fontSize="9pt" justify="center">
