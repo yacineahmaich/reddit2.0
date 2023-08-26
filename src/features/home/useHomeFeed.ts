@@ -1,14 +1,35 @@
-    import { firestore } from "@/firebase/client";
+import { auth, firestore } from "@/firebase/client";
 import { Post } from "@/types/database";
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import {
+  DocumentData,
+  Query,
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDirectory } from "../user/useDirectory";
 
-const getHomeFeed = async () => {
-  const homeFeedQuery = query(
-    collection(firestore, "posts"),
-    orderBy("numOfVotes", "desc"),
-    limit(10)
-  );
+const getHomeFeed = async (communityIds: string[]) => {
+  let homeFeedQuery: Query<DocumentData, DocumentData>;
+  if (communityIds.length > 0) {
+    homeFeedQuery = query(
+      collection(firestore, "posts"),
+      where("communityId", "in", communityIds),
+      orderBy("createdAt", "desc"),
+      limit(10)
+    );
+  } else {
+    homeFeedQuery = query(
+      collection(firestore, "posts"),
+      orderBy("numOfVotes", "desc"),
+      limit(10)
+    );
+  }
 
   const homeFeedDocs = await getDocs(homeFeedQuery);
 
@@ -23,8 +44,15 @@ const getHomeFeed = async () => {
   return homeFeedPosts;
 };
 
-export const useHomeFeed = () =>
-  useQuery({
-    queryKey: ["feed"],
-    queryFn: getHomeFeed,
+export const useHomeFeed = () => {
+  const [user] = useAuthState(auth);
+  const { data: snippets, isSuccess } = useDirectory(user?.uid);
+
+  const communityIds = snippets?.map((s) => s.communityId) ?? [];
+
+  return useQuery({
+    queryKey: ["feed", user?.uid ?? "public"],
+    queryFn: () => getHomeFeed(communityIds),
+    enabled: (user && isSuccess) || !user,
   });
+};

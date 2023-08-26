@@ -8,7 +8,7 @@ import CreatePostLink from "@/components/Community/CreatePostLink";
 const HomePage: NextPageWithLayout = () => {
   const { data: posts, isLoading } = useHomeFeed();
 
-  return <PostsFeed posts={posts} isLoading={isLoading} isHomeFeed />;
+  return <PostsFeed posts={posts} isLoading={isLoading} />;
 };
 
 HomePage.getLayout = (page) => (

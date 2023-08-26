@@ -18,12 +18,10 @@ export async function getUserDirectory(
   return snippets;
 }
 
-export function useDirectory() {
-  const [user] = useAuthState(auth);
-
+export function useDirectory(userId?: string) {
   return useQuery({
     queryKey: ["user", "directory"],
-    queryFn: () => getUserDirectory(user?.uid!),
-    enabled: !!user,
+    queryFn: () => getUserDirectory(userId!),
+    enabled: !!userId,
   });
 }
