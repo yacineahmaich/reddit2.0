@@ -6,7 +6,7 @@ import { useCommunity } from "@/features/communities/useCommunity";
 import React from "react";
 import CreatePostLink from "../../../components/Community/CreatePostLink";
 import { NextPageWithLayout } from "@/pages/_app";
-import { useCommunityPosts } from "@/features/posts/useCommunityPosts";
+import { useCommunityPosts } from "@/features/communities/useCommunityPosts";
 import PostsFeed from "@/components/Post/PostsFeed";
 
 const CommunityPage: NextPageWithLayout = () => {
@@ -19,7 +19,11 @@ const CommunityPage: NextPageWithLayout = () => {
   return (
     <>
       <CreatePostLink />
-      <PostsFeed posts={posts} isLoading={isCommunityPostsLoading} />
+      <PostsFeed
+        posts={posts}
+        isLoading={isCommunityPostsLoading}
+        isCommunityFeed
+      />
     </>
   );
 };

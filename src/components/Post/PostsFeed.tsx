@@ -7,9 +7,14 @@ import PostSkeleton from "./PostSkeleton";
 type PostsFeedProps = {
   posts?: Post[];
   isLoading: boolean;
+  isCommunityFeed?: boolean;
 };
 
-const PostsFeed: React.FC<PostsFeedProps> = ({ posts = [], isLoading }) => {
+const PostsFeed: React.FC<PostsFeedProps> = ({
+  posts = [],
+  isLoading,
+  isCommunityFeed,
+}) => {
   return (
     <>
       {isLoading ? (
@@ -17,7 +22,11 @@ const PostsFeed: React.FC<PostsFeedProps> = ({ posts = [], isLoading }) => {
       ) : (
         <Stack>
           {posts?.map((post) => (
-            <PostItem key={post.id} post={post!} />
+            <PostItem
+              key={post.id}
+              post={post!}
+              isCommunityFeed={isCommunityFeed}
+            />
           ))}
         </Stack>
       )}
