@@ -41,7 +41,7 @@ export enum CommunityPrivacyType {
 export type Community = {
   id: string;
   creatorId: string;
-  numMembers: number;
+  numOfMembers: number;
   privacyType: CommunityPrivacyType;
   createdAt?: Timestamp;
   imageURL?: string;

@@ -25,18 +25,18 @@ const joinOrLeaveCommunity = async ({ communityId, userId }: Vars) => {
     if (snippetDoc.exists()) {
       // delete user snippet
       transaction.delete(snippetDocRef);
-      // decrement community numMembers
+      // decrement community numOfMembers
       transaction.update(communityDocRef, {
-        numMembers: increment(-1),
+        numOfMembers: increment(-1),
       });
     } else {
       // add user snippet
       transaction.set(snippetDocRef, {
         communityId: communityId,
       });
-      // increment community numMembers
+      // increment community numOfMembers
       transaction.update(communityDocRef, {
-        numMembers: increment(1),
+        numOfMembers: increment(1),
       });
     }
   });

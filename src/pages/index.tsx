@@ -3,7 +3,10 @@ import { NextPageWithLayout } from "./_app";
 import PostsFeed from "@/components/Post/PostsFeed";
 import { useHomeFeed } from "@/features/home/useHomeFeed";
 import CreatePostLink from "@/components/Community/CreatePostLink";
-
+import TopCommunities from "@/components/Home/TopCommunities";
+import RedditPremium from "@/components/Home/RedditPremium";
+import { Stack } from "@chakra-ui/react";
+import CreateSomething from "@/components/Home/CreateSomething";
 
 const HomePage: NextPageWithLayout = () => {
   const { data: posts, isLoading } = useHomeFeed();
@@ -17,7 +20,13 @@ HomePage.getLayout = (page) => (
       <CreatePostLink />
       {page}
     </>
-    <>{/* COmuunities */}</>
+    <>
+      <Stack>
+        <TopCommunities />
+        <RedditPremium />
+        <CreateSomething />
+      </Stack>
+    </>
   </PageContent>
 );
 

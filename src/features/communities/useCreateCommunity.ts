@@ -24,7 +24,7 @@ const createNewCommunity = async ({ name, type, userId }: Vars) => {
       // create community
       transaction.set(communityDocRef, {
         creatorId: userId,
-        numMembers: 1,
+        numOfMembers: 1,
         id: name,
         privacyType: type,
         createdAt: serverTimestamp(),

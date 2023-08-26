@@ -77,13 +77,13 @@ const AboutCommunity: React.FC = () => {
         borderRadius="0px 0px 4px 4px"
       >
         {isCommunityLoading || !community ? (
-          <Spinner color="gray.300" />
+          <Spinner color="blue.400" />
         ) : (
           <Box w="full">
             <Stack spacing={2}>
               <Flex width="100%" p={2} fontWeight={600} fontSize="10pt">
                 <Flex direction="column" flexGrow={1}>
-                  <Text>{community?.numMembers?.toLocaleString()}</Text>
+                  <Text>{community?.numOfMembers?.toLocaleString()}</Text>
                   <Text>Members</Text>
                 </Flex>
                 <Flex direction="column" flexGrow={1}>
