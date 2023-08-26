@@ -67,7 +67,7 @@ export const useVotePost = () => {
 
   return useMutation({
     mutationFn: voteOnPost,
-    onMutate({ post, vote }) {
+    onMutate({ post, vote, userId }) {
       // 1) Cancel active queries
       // queryClient.cancelQueries({
       //   queryKey: ["user", "votes"],
@@ -89,6 +89,10 @@ export const useVotePost = () => {
         "community",
         post.communityId,
         "posts",
+      ]);
+      const previousFeedPosts = queryClient.getQueryData<Post[]>([
+        "feed",
+        userId,
       ]);
 
       const alreadyVoted = previousUserVotes.find(
@@ -122,6 +126,17 @@ export const useVotePost = () => {
               }
             }
           );
+          queryClient.setQueryData(["feed", userId], (posts?: Post[]) => {
+            if (posts && posts.length > 0) {
+              return posts.map((p) =>
+                p.id === post.id
+                  ? { ...p, numOfVotes: p.numOfVotes - alreadyVoted.vote }
+                  : p
+              );
+            } else {
+              return posts;
+            }
+          });
         } else {
           // toggle vote
           queryClient.setQueryData(
@@ -142,6 +157,20 @@ export const useVotePost = () => {
           });
           queryClient.setQueryData(
             ["community", post.communityId, "posts"],
+            (posts?: Post[]) => {
+              if (posts && posts.length > 0) {
+                return posts.map((p) =>
+                  p.id === post.id
+                    ? { ...p, numOfVotes: p.numOfVotes - alreadyVoted.vote * 2 }
+                    : p
+                );
+              } else {
+                return posts;
+              }
+            }
+          );
+          queryClient.setQueryData(
+            ["feed", userId],
             (posts?: Post[]) => {
               if (posts && posts.length > 0) {
                 return posts.map((p) =>
@@ -184,15 +213,28 @@ export const useVotePost = () => {
             }
           }
         );
+        queryClient.setQueryData(
+          ["feed", userId],
+          (posts?: Post[]) => {
+            if (posts && posts.length > 0) {
+              return posts.map((p) =>
+                p.id === post.id ? { ...p, numOfVotes: p.numOfVotes + vote } : p
+              );
+            } else {
+              return posts;
+            }
+          }
+        );
       }
 
       return {
         previousUserVotes,
         previousPost,
         previousPosts,
+        previousFeedPosts,
       };
     },
-    onError(_err, { post }, ctx) {
+    onError(_err, { post, userId }, ctx) {
       queryClient.setQueryData(["user", "votes"], ctx?.previousUserVotes);
 
       queryClient.setQueryData(["posts", post.id], ctx?.previousPost);
@@ -201,6 +243,7 @@ export const useVotePost = () => {
         ["community", post.communityId, "posts"],
         ctx?.previousPosts
       );
+      queryClient.setQueryData(["feed", userId], ctx?.previousFeedPosts);
     },
     // onSuccess: (_data, { post }) => {
     //   queryClient.invalidateQueries(["user", "votes"]);
