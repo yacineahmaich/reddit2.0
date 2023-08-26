@@ -39,15 +39,19 @@ const PostContent: React.FC<PostContentProps> = ({
           {imageIsLoading && (
             <Skeleton
               height={isSinglePostPage ? "250px" : "200px"}
-              my={6}
+              borderRadius={4}
               width="100%"
             />
           )}
           <Image
             src={post.imageURL}
             alt={post.title}
-            maxHeight="460px"
+            maxHeight="480px"
+            borderRadius={4}
+            w="full"
+            objectFit="cover"
             onLoad={() => setImageIsLoading(false)}
+            hidden={imageIsLoading}
           />
         </Flex>
       )}

@@ -49,7 +49,9 @@ export function useJoinLeaveCommunity() {
     mutationFn: joinOrLeaveCommunity,
     onMutate({ communityId }) {
       // 1)- Cancel queries
-      queryClient.cancelQueries(["user", "directory"]);
+      // queryClient.cancelQueries({
+      //   queryKey: ["user", "directory"],
+      // });
 
       // current directory snapshot
       const previousDirectory = queryClient.getQueryData<CommunitySnippet[]>([
@@ -87,6 +89,6 @@ export function useJoinLeaveCommunity() {
         ctx?.previousDirectory
       );
     },
-    onSuccess: () => queryClient.invalidateQueries(["user", "directory"]),
+    // onSuccess: () => queryClient.invalidateQueries(["user", "directory"]),
   });
 }

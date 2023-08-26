@@ -69,9 +69,15 @@ export const useVotePost = () => {
     mutationFn: voteOnPost,
     onMutate({ post, vote }) {
       // 1) Cancel active queries
-      queryClient.cancelQueries(["user", "votes"]);
-      queryClient.cancelQueries(["posts", post.id]);
-      queryClient.cancelQueries(["community", post.communityId, "posts"]);
+      // queryClient.cancelQueries({
+      //   queryKey: ["user", "votes"],
+      // });
+      // queryClient.cancelQueries({
+      //   queryKey: ["posts", post.id],
+      // });
+      // queryClient.cancelQueries({
+      //   queryKey: ["community", post.communityId, "posts"],
+      // });
 
       // 2) Previous user votes snapshot
       const previousUserVotes =
@@ -196,10 +202,10 @@ export const useVotePost = () => {
         ctx?.previousPosts
       );
     },
-    onSuccess: (_data, { post }) => {
-      queryClient.invalidateQueries(["user", "votes"]);
-      queryClient.invalidateQueries(["posts", post.id]);
-      queryClient.invalidateQueries(["community", post.communityId, "posts"]);
-    },
+    // onSuccess: (_data, { post }) => {
+    //   queryClient.invalidateQueries(["user", "votes"]);
+    //   queryClient.invalidateQueries(["posts", post.id]);
+    //   queryClient.invalidateQueries(["community", post.communityId, "posts"]);
+    // },
   });
 };
