@@ -1,6 +1,8 @@
 import { authModalAtom } from "@/atoms/authModalAtom";
+import { directoryMenuAtom } from "@/atoms/directoryMenuAtom";
 import { useCommunity } from "@/features/communities/useCommunity";
 import { auth } from "@/firebase/client";
+import useQueryParam from "@/hooks/useQueryParam";
 import { Flex, Icon, Input } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 import React from "react";
@@ -10,23 +12,30 @@ import { FaReddit } from "react-icons/fa";
 import { IoImageOutline } from "react-icons/io5";
 import { useSetRecoilState } from "recoil";
 
-type CreatePostProps = {};
+type CreatePostProps = {
+  isHomeFeed?: boolean;
+};
 
-const CreatePostLink: React.FC<CreatePostProps> = () => {
+const CreatePostLink: React.FC<CreatePostProps> = ({ isHomeFeed }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
+  const setDirectoryMenuState = useSetRecoilState(directoryMenuAtom);
+  const communityId = useQueryParam("communityId");
 
   const { community, isLoading } = useCommunity();
   const setAuthModalState = useSetRecoilState(authModalAtom);
 
-  const onNavigateToSubmitPage = () => {
-    // Could check for user to open auth modal before redirecting to submit
+  const handleInputClick = (e: React.MouseEvent) => {
     if (!user) {
-      setAuthModalState({ open: true, view: "login" });
-    } else {
-      // Open directory menu to select community to post to
-      router.push(`${router.asPath}/submit`);
+      return setAuthModalState({ open: true, view: "login" });
     }
+    if (isHomeFeed) {
+      // @ts-ignore
+      e.target?.blur();
+      return setDirectoryMenuState((prev) => ({ ...prev, menuOpen: true }));
+    }
+
+    router.push(`${router.asPath}/submit`);
   };
   return (
     <Flex
@@ -61,8 +70,8 @@ const CreatePostLink: React.FC<CreatePostProps> = () => {
         height="36px"
         borderRadius={4}
         mr={4}
-        onClick={onNavigateToSubmitPage}
-        isDisabled={isLoading || !community}
+        onClick={handleInputClick}
+        isDisabled={(isLoading || !community) && !!communityId}
         _disabled={{
           cursor: "auto",
         }}

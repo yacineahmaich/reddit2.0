@@ -17,7 +17,7 @@ const HomePage: NextPageWithLayout = () => {
 HomePage.getLayout = (page) => (
   <PageContent>
     <>
-      <CreatePostLink />
+      <CreatePostLink isHomeFeed />
       {page}
     </>
     <>
