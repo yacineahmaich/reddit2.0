@@ -21,7 +21,7 @@ HomePage.getLayout = (page) => (
       {page}
     </>
     <>
-      <Stack>
+      <Stack position="sticky" top="14px">
         <TopCommunities />
         <RedditPremium />
         <CreateSomething />

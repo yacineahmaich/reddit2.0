@@ -14,7 +14,7 @@ const PageContent: React.FC<PageContentProps> = ({ children }) => (
       </Flex>
 
       {/* RIGHT CONTENT */}
-      <Flex direction="column" maxW="35%" display={{ base: "none", md: "flex" }} grow={1}>
+      <Flex direction="column" maxW="35%"  display={{ base: "none", md: "flex" }} grow={1}>
         {children?.[1 as keyof typeof children]}
       </Flex>
     </Flex>

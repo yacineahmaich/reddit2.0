@@ -83,7 +83,7 @@ const AboutCommunity: React.FC = () => {
             <Stack spacing={2}>
               <Flex width="100%" p={2} fontWeight={600} fontSize="10pt">
                 <Flex direction="column" flexGrow={1}>
-                  <Text>{community?.numOfMembers?.toLocaleString()}</Text>
+                  <Text>{community?.numOfMembers?.toString()}</Text>
                   <Text>Members</Text>
                 </Flex>
                 <Flex direction="column" flexGrow={1}>

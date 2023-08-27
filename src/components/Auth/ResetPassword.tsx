@@ -1,22 +1,35 @@
 import { authModalAtom } from "@/atoms/authModalAtom";
+import { useResetPassword } from "@/features/auth/useResetPassword";
 import { auth } from "@/firebase/client";
 import { Button, Flex, Image, Input, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
+import ErrorMessage from "../ui/ErrorMessage";
+import { getFirebaseError } from "@/firebase/errors";
 
 const ResetPassword: React.FC = () => {
   const setAuthModalState = useSetRecoilState(authModalAtom);
   const [email, setEmail] = useState("");
-  const [success, setSuccess] = useState(false);
 
-  const [sendPasswordResetEmail, sending] = useSendPasswordResetEmail(auth);
+  const {
+    mutate: sendResetPasswordEmail,
+    isLoading: isSending,
+    isSuccess,
+    isError,
+    error,
+  } = useResetPassword();
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-
-    await sendPasswordResetEmail(email);
-    setSuccess(true);
+    sendResetPasswordEmail(
+      { email },
+      {
+        onError(error, variables, context) {
+          console.log(error);
+        },
+      }
+    );
   }
 
   return (
@@ -26,8 +39,7 @@ const ResetPassword: React.FC = () => {
       <Text fontWeight={700} fontSize="11pt">
         Reset Your Password
       </Text>
-
-      {success ? (
+      {isSuccess ? (
         <Text
           fontSize="10pt"
           textAlign="center"
@@ -36,7 +48,7 @@ const ResetPassword: React.FC = () => {
           borderRadius="10px"
           p={2}
         >
-          Please check your email for final step
+          We sent you a verification email at <strong>{email}</strong>
         </Text>
       ) : (
         <>
@@ -44,6 +56,9 @@ const ResetPassword: React.FC = () => {
             Enter the email associated with your account and we&apos;ll send you
             a reset link
           </Text>
+          {isError && (
+            <ErrorMessage error={getFirebaseError(error as string)} />
+          )}
           <form onSubmit={handleSubmit}>
             <Input
               name="email"
@@ -67,7 +82,7 @@ const ResetPassword: React.FC = () => {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <Button type="submit" width="100%" mt={3} isLoading={sending}>
+            <Button type="submit" width="100%" mt={3} isLoading={isSending}>
               Reset Password
             </Button>
           </form>
@@ -79,7 +94,9 @@ const ResetPassword: React.FC = () => {
           fontWeight={700}
           color="blue.500"
           cursor="pointer"
-          onClick={() => setAuthModalState((state) => ({ ...state, view: "login" }))}
+          onClick={() =>
+            setAuthModalState((state) => ({ ...state, view: "login" }))
+          }
         >
           LOGIN
         </Text>
