@@ -7,6 +7,21 @@ import { useSetRecoilState } from "recoil";
 const CreateSomething: React.FC = () => {
   const setDirectoryMenuState = useSetRecoilState(directoryMenuAtom);
 
+  const openDirectoryMenu = () => {
+    setDirectoryMenuState((prev) => ({
+      ...prev,
+      menuOpen: true,
+    }));
+    window.scrollTo({ top: 0, left: 0 });
+  };
+
+  const openCreateCommunityModal = () => {
+    setDirectoryMenuState((prev) => ({
+      ...prev,
+      createCommunityOpen: true,
+    }));
+  };
+
   return (
     <Flex direction="column" bg="white" borderRadius={4} overflow="hidden">
       <Box
@@ -26,26 +41,13 @@ const CreateSomething: React.FC = () => {
           Your personnal reddit home page, built for you
         </Text>
         <Stack mt={3}>
-          <Button
-            size="xs"
-            onClick={() =>
-              setDirectoryMenuState((prev) => ({
-                ...prev,
-                menuOpen: true,
-              }))
-            }
-          >
+          <Button size="xs" onClick={openDirectoryMenu}>
             Create Post
           </Button>
           <Button
             size="xs"
             variant="outline"
-            onClick={() =>
-              setDirectoryMenuState((prev) => ({
-                ...prev,
-                createCommunityOpen: true,
-              }))
-            }
+            onClick={openCreateCommunityModal}
           >
             Create Community
           </Button>
