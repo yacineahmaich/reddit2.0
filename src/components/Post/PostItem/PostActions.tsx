@@ -79,8 +79,9 @@ const PostActions: React.FC<PostActionsProps> = ({ post }) => {
 
           <ModalFooter>
             <Button
-              variant="outline"
+              variant="ghost"
               size="sm"
+              color="gray.500"
               px={30}
               mr={3}
               onClick={onClose}

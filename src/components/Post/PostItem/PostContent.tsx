@@ -1,7 +1,7 @@
 import Avatar from "@/components/ui/Avatar";
 import { getStorageDownloadUrl } from "@/firebase/helpers";
 import { Post } from "@/types/database";
-import { Flex, Icon, Image, Skeleton, Text } from "@chakra-ui/react";
+import { Box, Flex, Icon, Image, Skeleton, Text } from "@chakra-ui/react";
 import moment from "moment";
 import Link from "next/link";
 import React, { useState } from "react";
@@ -23,9 +23,13 @@ const PostContent: React.FC<PostContentProps> = ({
 
   return (
     <>
-      <Flex align="center">
+      <Flex
+        direction={{ base: "column", sm: "row" }}
+        align={{ base: "start", sm: "center" }}
+        gap={{base: 2 ,md:0}}
+      >
         {!isCommunityFeed && (
-          <>
+          <Flex align="center">
             <Flex align="center" gap={2}>
               <Avatar
                 source={getStorageDownloadUrl(
@@ -46,7 +50,7 @@ const PostContent: React.FC<PostContentProps> = ({
               </Text>
             </Flex>
             <Icon as={BsDot} fontSize={10} color="gray.500" />
-          </>
+          </Flex>
         )}
         <Text fontSize="9pt" color="gray.300">
           Posted by u/{post.creatorDisplayName} a {created}
