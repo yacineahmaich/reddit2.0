@@ -1,13 +1,21 @@
+import { authModalAtom } from "@/atoms/authModalAtom";
 import { directoryMenuAtom } from "@/atoms/directoryMenuAtom";
+import { auth } from "@/firebase/client";
 import { Box, Button, Flex, Icon, Stack, Text } from "@chakra-ui/react";
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { FaReddit } from "react-icons/fa";
 import { useSetRecoilState } from "recoil";
 
 const CreateSomething: React.FC = () => {
+  const [user] = useAuthState(auth);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
   const setDirectoryMenuState = useSetRecoilState(directoryMenuAtom);
 
   const openDirectoryMenu = () => {
+    if (!user) {
+      setAuthModalState({ open: true, view: "login" });
+    }
     setDirectoryMenuState((prev) => ({
       ...prev,
       menuOpen: true,
@@ -16,6 +24,9 @@ const CreateSomething: React.FC = () => {
   };
 
   const openCreateCommunityModal = () => {
+    if (!user) {
+      setAuthModalState({ open: true, view: "login" });
+    }
     setDirectoryMenuState((prev) => ({
       ...prev,
       createCommunityOpen: true,
