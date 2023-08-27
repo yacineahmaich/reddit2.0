@@ -22,7 +22,7 @@ const OpenDirectory: React.FC = () => {
     <MenuButton
       p="0 6px"
       mx={{ base: 1, md: 3 }}
-      minW="100px"
+      minW={{ base: "auto", md: "100px" }}
       borderRadius={4}
       _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
     >

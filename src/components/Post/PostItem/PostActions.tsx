@@ -38,7 +38,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post }) => {
 
   return (
     <Box position="absolute" right="10px" top="10px">
-      <Menu placement="top-end">
+      <Menu placement="top-end" isLazy>
         <MenuButton
           as={IconButton}
           aria-label="Post Actions"
