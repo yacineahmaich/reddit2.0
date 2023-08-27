@@ -3,11 +3,7 @@ import { useCreateComment } from "@/features/posts/useCreateComment";
 import { auth } from "@/firebase/client";
 import { getUserNameFromUserObj } from "@/firebase/helpers";
 import { Post } from "@/types/database";
-import {
-  Button,
-  Flex,
-  Textarea
-} from "@chakra-ui/react";
+import { Button, Flex, Textarea } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";

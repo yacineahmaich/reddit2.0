@@ -19,41 +19,36 @@ type Vars = {
 };
 
 const updatePost = async ({ post, title, body, image }: Vars) => {
-  try {
-    const batch = writeBatch(firestore);
+  const batch = writeBatch(firestore);
 
-    const postDocRef = doc(firestore, "posts", post.id!);
+  const postDocRef = doc(firestore, "posts", post.id!);
 
-    // update post data
-    batch.update(postDocRef, {
-      title,
-      body,
-    });
+  // update post data
+  batch.update(postDocRef, {
+    title,
+    body,
+  });
 
-    if (image) {
-      console.log("image", image);
-      // delete old image
-      const imageRef = ref(storage, `/posts/${post.id!}/image`);
+  if (image) {
+    // delete old image
+    const imageRef = ref(storage, `/posts/${post.id!}/image`);
 
-      if (post.imageURL) {
-        // const imageURL = await getDownloadURL(imageRef);
-        // create new image
-        await deleteObject(imageRef);
-      }
-
-      await uploadString(imageRef, image, "data_url");
-
-      const imageDownloadURL = await getDownloadURL(imageRef);
-
-      batch.update(postDocRef, {
-        imageURL: imageDownloadURL,
-      });
+    if (post.imageURL) {
+      // const imageURL = await getDownloadURL(imageRef);
+      // create new image
+      await deleteObject(imageRef);
     }
 
-    await batch.commit();
-  } catch (error) {
-    throw error;
+    await uploadString(imageRef, image, "data_url");
+
+    const imageDownloadURL = await getDownloadURL(imageRef);
+
+    batch.update(postDocRef, {
+      imageURL: imageDownloadURL,
+    });
   }
+
+  await batch.commit();
 };
 
 export function useUpdatePost() {

@@ -3,13 +3,7 @@ import { useJoinLeaveCommunity } from "@/features/communities/useJoinLeaveCommun
 import { useTopCommunities } from "@/features/home/useTopCommunities";
 import { useDirectory } from "@/features/user/useDirectory";
 import { auth } from "@/firebase/client";
-import {
-  Box,
-  Button,
-  Flex,
-  Spinner,
-  Text
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Spinner, Text } from "@chakra-ui/react";
 import Link from "next/link";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";

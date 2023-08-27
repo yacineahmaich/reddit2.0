@@ -11,7 +11,6 @@ const getPostComments = async (postId: string) => {
   );
 
   const commentDocs = await getDocs(postCommentsQuery);
-  console.log(commentDocs);
   // return commentDocs
   const comments = commentDocs.docs.map(
     (doc) =>

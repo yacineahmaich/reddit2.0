@@ -31,7 +31,9 @@ const ModeratingCommunities: React.FC<ModeratingCommunitiesProps> = ({
         >
           <Flex fontSize="11pt" align="center" gap={2}>
             <Avatar
-              source={getStorageDownloadUrl(`communities/${snippet.communityId}`)}
+              source={getStorageDownloadUrl(
+                `communities/${snippet.communityId}`
+              )}
               alt={snippet.communityId}
               size={9}
             />

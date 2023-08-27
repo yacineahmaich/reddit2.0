@@ -27,8 +27,7 @@ const getCommunityPosts = async (id: string) => {
 export const useCommunityPosts = () => {
   const queryClient = useQueryClient();
 
-  const communityId = useQueryParam("communityId")
-
+  const communityId = useQueryParam("communityId");
 
   return useQuery({
     queryKey: ["community", communityId, "posts"],

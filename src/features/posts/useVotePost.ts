@@ -16,49 +16,45 @@ type Vote = {
 };
 
 const voteOnPost = async ({ post, userId, vote }: Vars) => {
-  try {
-    await runTransaction(firestore, async (transaction) => {
-      const voteDocRef = doc(firestore, `/users/${userId}/votes`, post.id!);
+  await runTransaction(firestore, async (transaction) => {
+    const voteDocRef = doc(firestore, `/users/${userId}/votes`, post.id!);
 
-      const postDocRef = doc(firestore, "posts", post.id!);
-      const currentVoteDoc = await transaction.get(voteDocRef);
+    const postDocRef = doc(firestore, "posts", post.id!);
+    const currentVoteDoc = await transaction.get(voteDocRef);
 
-      // User already voted this post
-      if (currentVoteDoc.exists()) {
-        const { vote: currentVote } = currentVoteDoc.data();
+    // User already voted this post
+    if (currentVoteDoc.exists()) {
+      const { vote: currentVote } = currentVoteDoc.data();
 
-        // Cancel Vote
-        if (currentVote === vote) {
-          transaction.delete(voteDocRef);
+      // Cancel Vote
+      if (currentVote === vote) {
+        transaction.delete(voteDocRef);
 
-          transaction.update(postDocRef, {
-            numOfVotes: increment(-currentVote),
-          });
-        } else {
-          // Toggle Vote
-          transaction.update(voteDocRef, {
-            vote,
-          });
-          // inc/dec post numOfVotes
-          transaction.update(postDocRef, {
-            numOfVotes: increment(vote * 2),
-          });
-        }
+        transaction.update(postDocRef, {
+          numOfVotes: increment(-currentVote),
+        });
       } else {
-        // First time user vote on this post
-        transaction.set(voteDocRef, {
-          postId: post.id!,
+        // Toggle Vote
+        transaction.update(voteDocRef, {
           vote,
         });
-        // decrement post numOfVotes
+        // inc/dec post numOfVotes
         transaction.update(postDocRef, {
-          numOfVotes: increment(vote),
+          numOfVotes: increment(vote * 2),
         });
       }
-    });
-  } catch (error) {
-    console.log(error);
-  }
+    } else {
+      // First time user vote on this post
+      transaction.set(voteDocRef, {
+        postId: post.id!,
+        vote,
+      });
+      // decrement post numOfVotes
+      transaction.update(postDocRef, {
+        numOfVotes: increment(vote),
+      });
+    }
+  });
 };
 
 export const useVotePost = () => {
@@ -169,20 +165,17 @@ export const useVotePost = () => {
               }
             }
           );
-          queryClient.setQueryData(
-            ["feed", userId],
-            (posts?: Post[]) => {
-              if (posts && posts.length > 0) {
-                return posts.map((p) =>
-                  p.id === post.id
-                    ? { ...p, numOfVotes: p.numOfVotes - alreadyVoted.vote * 2 }
-                    : p
-                );
-              } else {
-                return posts;
-              }
+          queryClient.setQueryData(["feed", userId], (posts?: Post[]) => {
+            if (posts && posts.length > 0) {
+              return posts.map((p) =>
+                p.id === post.id
+                  ? { ...p, numOfVotes: p.numOfVotes - alreadyVoted.vote * 2 }
+                  : p
+              );
+            } else {
+              return posts;
             }
-          );
+          });
         }
       } else {
         // Opmtimistoc Vote
@@ -213,18 +206,15 @@ export const useVotePost = () => {
             }
           }
         );
-        queryClient.setQueryData(
-          ["feed", userId],
-          (posts?: Post[]) => {
-            if (posts && posts.length > 0) {
-              return posts.map((p) =>
-                p.id === post.id ? { ...p, numOfVotes: p.numOfVotes + vote } : p
-              );
-            } else {
-              return posts;
-            }
+        queryClient.setQueryData(["feed", userId], (posts?: Post[]) => {
+          if (posts && posts.length > 0) {
+            return posts.map((p) =>
+              p.id === post.id ? { ...p, numOfVotes: p.numOfVotes + vote } : p
+            );
+          } else {
+            return posts;
           }
-        );
+        });
       }
 
       return {

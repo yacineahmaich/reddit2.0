@@ -22,14 +22,7 @@ const ResetPassword: React.FC = () => {
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    sendResetPasswordEmail(
-      { email },
-      {
-        onError(error, variables, context) {
-          console.log(error);
-        },
-      }
-    );
+    sendResetPasswordEmail({ email });
   }
 
   return (

@@ -18,7 +18,7 @@ async function getCommunity(id: string): Promise<Community | null> {
 }
 
 export function useCommunity() {
-  const communityId = useQueryParam("communityId")
+  const communityId = useQueryParam("communityId");
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["community", communityId],

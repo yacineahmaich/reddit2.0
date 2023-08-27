@@ -37,7 +37,6 @@ const PostForm: React.FC<PostFormProps> = ({ post, image }) => {
   const [user] = useAuthState(auth);
   const communityId = useQueryParam("communityId");
 
-
   const {
     mutate: createPost,
     isLoading: isUpdatingPost,
