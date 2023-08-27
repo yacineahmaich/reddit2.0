@@ -8,6 +8,7 @@ import CreatePostLink from "../../../components/Community/CreatePostLink";
 import { NextPageWithLayout } from "@/pages/_app";
 import { useCommunityPosts } from "@/features/communities/useCommunityPosts";
 import PostsFeed from "@/components/Post/PostsFeed";
+import Head from "next/head";
 
 const CommunityPage: NextPageWithLayout = () => {
   const { community, isLoading: isCommunityLoading } = useCommunity();
@@ -18,6 +19,9 @@ const CommunityPage: NextPageWithLayout = () => {
 
   return (
     <>
+      <Head>
+        <title>r / {community?.id}</title>
+      </Head>
       <CreatePostLink />
       <PostsFeed
         posts={posts}
