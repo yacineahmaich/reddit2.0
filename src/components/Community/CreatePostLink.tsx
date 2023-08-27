@@ -66,6 +66,7 @@ const CreatePostLink: React.FC<CreatePostProps> = () => {
         _disabled={{
           cursor: "auto",
         }}
+        cursor="pointer"
       />
       <Icon
         as={IoImageOutline}

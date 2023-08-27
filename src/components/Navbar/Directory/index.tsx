@@ -5,12 +5,34 @@ import CreateCommunity from "./CreateCommunity";
 import FollowingCommunities from "./FollowingCommunities";
 import ModeratingCommunities from "./ModeratingCommunities";
 import OpenDirectory from "./OpenDirectory";
+import { useRecoilState } from "recoil";
+import { directoryMenuAtom } from "@/atoms/directoryMenuAtom";
 
 const CommunitiesDropdown: React.FC = () => {
   const { data: communitySnippets = [], isLoading } = useDirectory();
 
+  const [directoryMenuState, setDirectoryMenuState] =
+    useRecoilState(directoryMenuAtom);
+
+  function handleCloseMenu() {
+    setDirectoryMenuState((prev) => ({
+      ...prev,
+      menuOpen: false,
+    }));
+  }
+  function handleOpenMenu() {
+    setDirectoryMenuState((prev) => ({
+      ...prev,
+      menuOpen: true,
+    }));
+  }
+
   return (
-    <Menu>
+    <Menu
+      isOpen={directoryMenuState.menuOpen}
+      onClose={handleCloseMenu}
+      onOpen={handleOpenMenu}
+    >
       <OpenDirectory />
       <MenuList>
         {isLoading ? (

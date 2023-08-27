@@ -1,24 +1,40 @@
-import CreateCommunityModal from "./CreateCommunityModal";
+import { directoryMenuAtom } from "@/atoms/directoryMenuAtom";
 import { MenuItem } from "@chakra-ui/react";
-import React, { useState } from "react";
+import React from "react";
 import { FaPlus } from "react-icons/fa";
+import { useRecoilState } from "recoil";
+import CreateCommunityModal from "./CreateCommunityModal";
 
 const CreateCommunity: React.FC = () => {
-  const [modalOpen, setModalOpen] = useState(false);
+  const [directoryMenuState, setDirectoryMenuState] =
+    useRecoilState(directoryMenuAtom);
 
-  function closeModal() {
-    setModalOpen(false);
+  function closeCreateCommunityModal() {
+    setDirectoryMenuState((prev) => ({
+      ...prev,
+      createCommunityOpen: false,
+    }));
+  }
+
+  function openCreateCommunityModal() {
+    setDirectoryMenuState((prev) => ({
+      ...prev,
+      createCommunityOpen: true,
+    }));
   }
 
   return (
     <>
-      <CreateCommunityModal open={modalOpen} onClose={closeModal} />
+      <CreateCommunityModal
+        open={directoryMenuState.createCommunityOpen}
+        onClose={closeCreateCommunityModal}
+      />
 
       <MenuItem
         width="100%"
         fontSize="10pt"
         _hover={{ bg: "gray.100" }}
-        onClick={() => setModalOpen(true)}
+        onClick={openCreateCommunityModal}
         color="gray.400"
         icon={<FaPlus />}
         fontWeight={700}
