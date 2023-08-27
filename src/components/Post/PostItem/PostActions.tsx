@@ -64,7 +64,7 @@ const PostActions: React.FC<PostActionsProps> = ({ post }) => {
       {/* COnfirm Delete */}
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
-        <ModalContent>
+        <ModalContent mx={3}>
           <ModalHeader fontSize="11pt">Delete Post</ModalHeader>
           <ModalCloseButton />
           <ModalBody>

@@ -86,7 +86,7 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   return (
     <Modal isOpen={open} onClose={onClose} size="lg">
       <ModalOverlay />
-      <ModalContent>
+      <ModalContent mx={3}>
         <ModalHeader
           display="flex"
           flexDirection="column"
