@@ -53,6 +53,7 @@ const PostItem: React.FC<PostItemProps> = ({
         onClick={navigateToPost}
         position="relative"
         cursor={isSinglePostPage ? "auto" : "pointer"}
+        overflow="hidden"
       >
         {isSinglePostPage && user?.uid === post.creatorId && (
           <PostActions post={post} />
