@@ -10,7 +10,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { BsLink45Deg } from "react-icons/bs";
 import { FaReddit } from "react-icons/fa";
 import { IoImageOutline } from "react-icons/io5";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 
 type CreatePostProps = {
   isHomeFeed?: boolean;
@@ -19,7 +19,8 @@ type CreatePostProps = {
 const CreatePostLink: React.FC<CreatePostProps> = ({ isHomeFeed }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
-  const setDirectoryMenuState = useSetRecoilState(directoryMenuAtom);
+  const [directoryMenuState, setDirectoryMenuState] =
+    useRecoilState(directoryMenuAtom);
   const communityId = useQueryParam("communityId");
 
   const { community, isLoading } = useCommunity();
@@ -71,11 +72,15 @@ const CreatePostLink: React.FC<CreatePostProps> = ({ isHomeFeed }) => {
         borderRadius={4}
         mr={4}
         onClick={handleInputClick}
-        isDisabled={(isLoading || !community) && !!communityId}
+        isDisabled={
+          ((isLoading || !community) && !!communityId) ||
+          directoryMenuState.menuOpen
+        }
         _disabled={{
           cursor: "auto",
         }}
         cursor="pointer"
+        tabIndex={-1}
       />
       <Icon
         as={IoImageOutline}

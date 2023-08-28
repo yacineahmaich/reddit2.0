@@ -57,7 +57,7 @@ const PostFormHeader: React.FC<PostFormHeaderProps> = ({ isLoading }) => {
           <Flex align="center" height="20px">
             <Icon as={item.icon} />
           </Flex>
-          <Text fontSize="10pt">{item.title}</Text>
+          <Text fontSize="10pt" display={{base:"none", sm:"block"}}>{item.title}</Text>
         </Tab>
       ))}
     </TabList>
