@@ -1,14 +1,42 @@
+import { authModalAtom } from "@/atoms/authModalAtom";
+import { useSavePost } from "@/features/posts/useSavePost";
+import { useSavedCommunities } from "@/features/user/useSavedCommunities";
+import { auth } from "@/firebase/client";
 import { Post } from "@/types/database";
 import { HStack, Button } from "@chakra-ui/react";
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { BsChat } from "react-icons/bs";
-import { IoArrowRedoOutline, IoBookmarkOutline } from "react-icons/io5";
+import {
+  IoArrowRedoOutline,
+  IoBookmark,
+  IoBookmarkOutline,
+} from "react-icons/io5";
+import { useSetRecoilState } from "recoil";
 
 type PostFooterProps = {
   post: Post;
 };
 
 const PostFooter: React.FC<PostFooterProps> = ({ post }) => {
+  const [user] = useAuthState(auth);
+  const setAuthModalState = useSetRecoilState(authModalAtom);
+
+  const { data: savedCommunities } = useSavedCommunities();
+
+  const { mutate: savePost } = useSavePost();
+
+  const handleSavePost = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!user) {
+      setAuthModalState({ open: true, view: "login" });
+    }
+
+    savePost({ displayName: user?.displayName!, postId: post.id! });
+  };
+
+  const isSaved = savedCommunities?.find((s) => s.postId === post.id);
+
   return (
     <HStack ml={1} mb={0.5}>
       <Button
@@ -36,7 +64,7 @@ const PostFooter: React.FC<PostFooterProps> = ({ post }) => {
         Share
       </Button>
       <Button
-        leftIcon={<IoBookmarkOutline />}
+        leftIcon={isSaved ? <IoBookmark /> : <IoBookmarkOutline />}
         size="sm"
         _hover={{ bg: "gray.100" }}
         color="gray.500"
@@ -44,8 +72,9 @@ const PostFooter: React.FC<PostFooterProps> = ({ post }) => {
         fontWeight={400}
         variant="ghost"
         borderRadius={4}
+        onClick={handleSavePost}
       >
-        Save
+        {isSaved ? "Saved" : "Save"}
       </Button>
     </HStack>
   );

@@ -18,10 +18,14 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       if (user) {
         queryClient.prefetchQuery({
           queryKey: ["user", "votes"],
-          queryFn: () => getUserVotes(user.uid),
+          queryFn: () => getUserVotes(user),
         });
         queryClient.prefetchQuery({
           queryKey: ["user", "directory"],
+          queryFn: () => getUserDirectory(user),
+        });
+        queryClient.prefetchQuery({
+          queryKey: ["user", "saved"],
           queryFn: () => getUserDirectory(user),
         });
       }

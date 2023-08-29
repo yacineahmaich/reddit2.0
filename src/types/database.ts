@@ -46,3 +46,8 @@ export type Community = {
   createdAt?: Timestamp;
   imageURL?: string;
 };
+
+export type SavedPost = {
+  postId: string;
+  savedAt?: Timestamp;
+};
