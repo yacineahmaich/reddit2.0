@@ -1,12 +1,12 @@
 import { firestore } from "@/firebase/client";
 import { Post } from "@/types/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { User } from "firebase/auth";
 import { doc, increment, runTransaction } from "firebase/firestore";
-import { useRouter } from "next/router";
 
 type Vars = {
   post: Post;
-  userId: string;
+  user: User;
   vote: number;
 };
 
@@ -15,9 +15,13 @@ type Vote = {
   vote: number;
 };
 
-const voteOnPost = async ({ post, userId, vote }: Vars) => {
+const voteOnPost = async ({ post, user, vote }: Vars) => {
   await runTransaction(firestore, async (transaction) => {
-    const voteDocRef = doc(firestore, `/users/${userId}/votes`, post.id!);
+    const voteDocRef = doc(
+      firestore,
+      `/users/${user.displayName}/votes`,
+      post.id!
+    );
 
     const postDocRef = doc(firestore, "posts", post.id!);
     const currentVoteDoc = await transaction.get(voteDocRef);
@@ -58,12 +62,11 @@ const voteOnPost = async ({ post, userId, vote }: Vars) => {
 };
 
 export const useVotePost = () => {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: voteOnPost,
-    onMutate({ post, vote, userId }) {
+    onMutate({ post, vote, user }) {
       // 1) Cancel active queries
       // queryClient.cancelQueries({
       //   queryKey: ["user", "votes"],
@@ -88,7 +91,7 @@ export const useVotePost = () => {
       ]);
       const previousFeedPosts = queryClient.getQueryData<Post[]>([
         "feed",
-        userId,
+        user.uid,
       ]);
       const previousPersonalFeedPosts = queryClient.getQueryData<Post[]>([
         "personal-feed",
@@ -126,7 +129,7 @@ export const useVotePost = () => {
               }
             }
           );
-          queryClient.setQueryData(["feed", userId], (posts?: Post[]) => {
+          queryClient.setQueryData(["feed", user.uid], (posts?: Post[]) => {
             if (posts && posts.length > 0) {
               return posts.map((p) =>
                 p.id === post.id
@@ -183,7 +186,7 @@ export const useVotePost = () => {
               }
             }
           );
-          queryClient.setQueryData(["feed", userId], (posts?: Post[]) => {
+          queryClient.setQueryData(["feed", user.uid], (posts?: Post[]) => {
             if (posts && posts.length > 0) {
               return posts.map((p) =>
                 p.id === post.id
@@ -238,7 +241,7 @@ export const useVotePost = () => {
             }
           }
         );
-        queryClient.setQueryData(["feed", userId], (posts?: Post[]) => {
+        queryClient.setQueryData(["feed", user.uid], (posts?: Post[]) => {
           if (posts && posts.length > 0) {
             return posts.map((p) =>
               p.id === post.id ? { ...p, numOfVotes: p.numOfVotes + vote } : p
@@ -269,7 +272,7 @@ export const useVotePost = () => {
         previousPersonalFeedPosts,
       };
     },
-    onError(_err, { post, userId }, ctx) {
+    onError(_err, { post, user }, ctx) {
       queryClient.setQueryData(["user", "votes"], ctx?.previousUserVotes);
 
       queryClient.setQueryData(["posts", post.id], ctx?.previousPost);
@@ -278,9 +281,9 @@ export const useVotePost = () => {
         ["community", post.communityId, "posts"],
         ctx?.previousPosts
       );
-      queryClient.setQueryData(["feed", userId], ctx?.previousFeedPosts);
+      queryClient.setQueryData(["feed", user.uid], ctx?.previousFeedPosts);
       queryClient.setQueryData(
-        ["personal-feed", userId],
+        ["personal-feed", user.uid],
         ctx?.previousPersonalFeedPosts
       );
     },

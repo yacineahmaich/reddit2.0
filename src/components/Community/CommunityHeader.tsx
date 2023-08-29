@@ -32,7 +32,7 @@ const CommunityHeader: React.FC = () => {
 
     joinLeaveCommunity({
       communityId: community.id!,
-      userId: user?.uid,
+      user,
     });
   }
 

@@ -22,7 +22,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         });
         queryClient.prefetchQuery({
           queryKey: ["user", "directory"],
-          queryFn: () => getUserDirectory(user.uid),
+          queryFn: () => getUserDirectory(user),
         });
       }
     },

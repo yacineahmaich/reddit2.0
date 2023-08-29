@@ -3,12 +3,13 @@ import { getDocs, collection } from "firebase/firestore";
 import { useQuery } from "@tanstack/react-query";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { CommunitySnippet } from "@/types/database";
+import { User } from "firebase/auth";
 
 export async function getUserDirectory(
-  userId: string
+  user: User
 ): Promise<CommunitySnippet[]> {
   const snippetDocs = await getDocs(
-    collection(firestore, `users/${userId}/communitySnippets`)
+    collection(firestore, `users/${user.displayName}/communitySnippets`)
   );
 
   const snippets = snippetDocs.docs.map(
@@ -18,10 +19,10 @@ export async function getUserDirectory(
   return snippets;
 }
 
-export function useDirectory(userId?: string) {
+export function useDirectory(user?: User) {
   return useQuery({
     queryKey: ["user", "directory"],
-    queryFn: () => getUserDirectory(userId!),
-    enabled: !!userId,
+    queryFn: () => getUserDirectory(user!),
+    enabled: !!user,
   });
 }

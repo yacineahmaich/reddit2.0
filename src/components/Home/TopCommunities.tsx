@@ -24,7 +24,7 @@ const TopCommunities: React.FC<TopCommunitiesProps> = () => {
   const handleJoinLeaveCommunity = (communityId: string) => {
     if (!user) return setAuthModalState({ open: true, view: "login" });
 
-    joinLeaveCommunity({ communityId, userId: user?.uid! });
+    joinLeaveCommunity({ communityId, user: user! });
   };
 
   return (

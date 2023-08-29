@@ -1,19 +1,20 @@
 import { firestore } from "@/firebase/client";
 import { CommunitySnippet } from "@/types/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { User } from "firebase/auth";
 import { doc, increment, runTransaction } from "firebase/firestore";
 
 type Vars = {
   communityId: string;
-  userId: string;
+  user: User;
 };
 
-const joinOrLeaveCommunity = async ({ communityId, userId }: Vars) => {
+const joinOrLeaveCommunity = async ({ communityId, user }: Vars) => {
   await runTransaction(firestore, async (transaction) => {
     // get snippet
     const snippetDocRef = doc(
       firestore,
-      `/users/${userId}/communitySnippets`,
+      `/users/${user.displayName}/communitySnippets`,
       communityId
     );
     const snippetDoc = await transaction.get(snippetDocRef);

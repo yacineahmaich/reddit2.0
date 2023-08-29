@@ -38,7 +38,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
 
     votePost({
       post,
-      userId: user?.uid!,
+      user,
       vote,
     });
   }

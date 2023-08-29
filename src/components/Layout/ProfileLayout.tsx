@@ -2,7 +2,7 @@ import React from "react";
 import PageContent from "./PageContent";
 import Navigation from "../Profile/Navigation";
 import { Flex } from "@chakra-ui/react";
-import UserCard from "../Profile/UserCard";
+import UserCard from "../Profile/ProfileCard";
 
 type ProfileLayoutProps = {
   children: React.ReactNode;

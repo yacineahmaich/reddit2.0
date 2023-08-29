@@ -19,7 +19,7 @@ const signup = async ({ email, password }: Vars) => {
 
   // save created user in users collection
   const user = transformUser(userCred.user);
-  const userDocRef = doc(firestore, "users", user.uid);
+  const userDocRef = doc(firestore, "users", displayName);
 
   await setDoc(userDocRef, user);
 };
