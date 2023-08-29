@@ -18,7 +18,11 @@ const PostsFeed: React.FC<PostsFeedProps> = ({
   return (
     <>
       {isLoading ? (
-        <PostSkeleton isCommunityFeed={isCommunityFeed} />
+        <Stack>
+          <PostSkeleton isCommunityFeed={isCommunityFeed} />
+          <PostSkeleton isCommunityFeed={isCommunityFeed} />
+          <PostSkeleton isCommunityFeed={isCommunityFeed} />
+        </Stack>
       ) : (
         <Stack>
           {posts?.map((post) => (

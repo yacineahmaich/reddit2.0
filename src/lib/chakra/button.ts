@@ -39,6 +39,16 @@ export const Button: ComponentStyleConfig = {
         pointerEvents: "none",
       },
     },
+    brand: {
+      color: "white",
+      bgGradient: "linear-gradient(to right, brand.100, orange.300)",
+      _hover: {
+        bgGradient: "linear-gradient(to right, brand.100, orange.300)",
+      },
+      _disabled: {
+        pointerEvents: "none",
+      },
+    },
     outline: {
       color: "blue.500",
       border: "1px solid",

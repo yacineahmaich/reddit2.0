@@ -1,7 +1,7 @@
 import { auth, firestore } from "@/firebase/client";
 import { transformUser } from "@/firebase/helpers";
 import { useMutation } from "@tanstack/react-query";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { doc, setDoc } from "firebase/firestore";
 
 type Vars = {
@@ -11,6 +11,11 @@ type Vars = {
 
 const signup = async ({ email, password }: Vars) => {
   const userCred = await createUserWithEmailAndPassword(auth, email, password);
+
+  const displayName = `u_${userCred.user.email?.split("@")[0]}`;
+  await updateProfile(userCred.user, {
+    displayName,
+  });
 
   // save created user in users collection
   const user = transformUser(userCred.user);

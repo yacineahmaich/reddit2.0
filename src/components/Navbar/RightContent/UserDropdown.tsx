@@ -25,6 +25,7 @@ import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useSetRecoilState } from "recoil";
+import Link from "next/link";
 
 type UserDropdownProps = {
   user?: User | null;
@@ -85,6 +86,8 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
               fontSize="10pt"
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
+              as={Link}
+              href={`/u/${user?.uid}`}
             >
               <Flex align="center" gap={3}>
                 <Icon as={CgProfile} fontSize={20} />
