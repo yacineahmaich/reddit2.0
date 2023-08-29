@@ -90,6 +90,10 @@ export const useVotePost = () => {
         "feed",
         userId,
       ]);
+      const previousPersonalFeedPosts = queryClient.getQueryData<Post[]>([
+        "personal-feed",
+        post.creatorDisplayName,
+      ]);
 
       const alreadyVoted = previousUserVotes.find(
         (vote) => vote.postId === post.id
@@ -133,6 +137,20 @@ export const useVotePost = () => {
               return posts;
             }
           });
+          queryClient.setQueryData(
+            ["personal-feed", post.creatorDisplayName],
+            (posts?: Post[]) => {
+              if (posts && posts.length > 0) {
+                return posts.map((p) =>
+                  p.id === post.id
+                    ? { ...p, numOfVotes: p.numOfVotes - alreadyVoted.vote }
+                    : p
+                );
+              } else {
+                return posts;
+              }
+            }
+          );
         } else {
           // toggle vote
           queryClient.setQueryData(
@@ -176,6 +194,20 @@ export const useVotePost = () => {
               return posts;
             }
           });
+          queryClient.setQueryData(
+            ["personal-feed", post.creatorDisplayName],
+            (posts?: Post[]) => {
+              if (posts && posts.length > 0) {
+                return posts.map((p) =>
+                  p.id === post.id
+                    ? { ...p, numOfVotes: p.numOfVotes - alreadyVoted.vote * 2 }
+                    : p
+                );
+              } else {
+                return posts;
+              }
+            }
+          );
         }
       } else {
         // Opmtimistoc Vote
@@ -215,6 +247,18 @@ export const useVotePost = () => {
             return posts;
           }
         });
+        queryClient.setQueryData(
+          ["personal-feed", post.creatorDisplayName],
+          (posts?: Post[]) => {
+            if (posts && posts.length > 0) {
+              return posts.map((p) =>
+                p.id === post.id ? { ...p, numOfVotes: p.numOfVotes + vote } : p
+              );
+            } else {
+              return posts;
+            }
+          }
+        );
       }
 
       return {
@@ -222,6 +266,7 @@ export const useVotePost = () => {
         previousPost,
         previousPosts,
         previousFeedPosts,
+        previousPersonalFeedPosts,
       };
     },
     onError(_err, { post, userId }, ctx) {
@@ -234,6 +279,10 @@ export const useVotePost = () => {
         ctx?.previousPosts
       );
       queryClient.setQueryData(["feed", userId], ctx?.previousFeedPosts);
+      queryClient.setQueryData(
+        ["personal-feed", userId],
+        ctx?.previousPersonalFeedPosts
+      );
     },
     // onSuccess: (_data, { post }) => {
     //   queryClient.invalidateQueries(["user", "votes"]);
