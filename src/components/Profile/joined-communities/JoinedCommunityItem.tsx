@@ -9,12 +9,12 @@ import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useSetRecoilState } from "recoil";
 
-type CommunityItemProps = {
+type JoinedCommunityItemProps = {
   community: Community;
   isJoined: boolean;
 };
 
-const CommunityItem: React.FC<CommunityItemProps> = ({
+const JoinedCommunityItem: React.FC<JoinedCommunityItemProps> = ({
   community,
   isJoined,
 }) => {
@@ -65,4 +65,4 @@ const CommunityItem: React.FC<CommunityItemProps> = ({
     </Flex>
   );
 };
-export default CommunityItem;
+export default JoinedCommunityItem;

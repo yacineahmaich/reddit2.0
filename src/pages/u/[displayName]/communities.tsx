@@ -1,17 +1,18 @@
 import ProfileLayout from "@/components/Layout/ProfileLayout";
-import CommunityItem from "@/components/Profile/communities/CommunityItem";
-import CommunitySkeleton from "@/components/Profile/communities/CommunitySkeleton";
+import NoData from "@/components/Profile/NoData";
+import CommunityItem from "@/components/Profile/joined-communities/JoinedCommunityItem";
+import CommunitySkeleton from "@/components/Profile/joined-communities/JoinedCommunitySkeleton";
 import { useUserCommunities } from "@/features/profile/useUserCommunities";
 import { useDirectory } from "@/features/user/useDirectory";
 import { NextPageWithLayout } from "@/pages/_app";
 import { Stack } from "@chakra-ui/react";
 import { useRouter } from "next/router";
 
-const communities: NextPageWithLayout = () => {
+const JoinedCommunitiesPage: NextPageWithLayout = () => {
   const router = useRouter();
   const displayName = router.query.displayName as string;
 
-  const { data: communities, isLoading } = useUserCommunities(displayName);
+  const { data: communities = [], isLoading } = useUserCommunities(displayName);
   const { data: communitySnippets } = useDirectory();
 
   const isUserJoiningCommunity = (communityId: string) => {
@@ -31,6 +32,8 @@ const communities: NextPageWithLayout = () => {
           <CommunitySkeleton />
           <CommunitySkeleton />
         </>
+      ) : communities?.length === 0 ? (
+        <NoData message="No communities found" />
       ) : (
         <>
           {communities?.map((community) => {
@@ -48,8 +51,8 @@ const communities: NextPageWithLayout = () => {
   );
 };
 
-communities.getLayout = (page) => {
+JoinedCommunitiesPage.getLayout = (page) => {
   return <ProfileLayout>{page}</ProfileLayout>;
 };
 
-export default communities;
+export default JoinedCommunitiesPage;

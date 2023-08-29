@@ -1,9 +1,7 @@
-import { Flex, Skeleton, SkeletonCircle } from "@chakra-ui/react";
 import React from "react";
+import { Flex, Skeleton, SkeletonCircle } from "@chakra-ui/react";
 
-type CommunitySkeletonProps = {};
-
-const CommunitySkeleton: React.FC<CommunitySkeletonProps> = () => {
+const JoinedCommunitySkeleton: React.FC = () => {
   return (
     <Flex
       align="center"
@@ -23,4 +21,4 @@ const CommunitySkeleton: React.FC<CommunitySkeletonProps> = () => {
     </Flex>
   );
 };
-export default CommunitySkeleton;
+export default JoinedCommunitySkeleton;
