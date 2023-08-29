@@ -1,10 +1,10 @@
-import { getUserVotes } from "@/features/user/useUserVotes";
-import Navbar from "../Navbar";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/firebase/client";
-import { Flex, Spinner, Image, Text, Button } from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
 import { getUserDirectory } from "@/features/user/useDirectory";
+import { getUserVotes } from "@/features/user/useUserVotes";
+import { auth } from "@/firebase/client";
+import { Button, Flex, Image, Spinner, Text } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
+import { useAuthState } from "react-firebase-hooks/auth";
+import Navbar from "../Navbar";
 
 type LayoutProps = {
   children: React.ReactNode;

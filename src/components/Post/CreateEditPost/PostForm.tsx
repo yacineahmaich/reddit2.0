@@ -75,8 +75,7 @@ const PostForm: React.FC<PostFormProps> = ({ post, image }) => {
       const postData: Post = {
         communityId,
         creatorId: user.uid,
-        creatorDisplayName:
-          user.displayName || (user.email!.split("@").at(0) as string),
+        creatorDisplayName: user.displayName,
         title,
         body,
         createdAt: serverTimestamp() as Timestamp,

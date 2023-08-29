@@ -87,7 +87,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
               fontWeight={700}
               _hover={{ bg: "blue.500", color: "white" }}
               as={Link}
-              href={`/u/${user?.uid}`}
+              href={`/u/${user?.displayName}`}
             >
               <Flex align="center" gap={3}>
                 <Icon as={CgProfile} fontSize={20} />

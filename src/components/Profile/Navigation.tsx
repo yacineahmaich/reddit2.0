@@ -33,9 +33,10 @@ type NavigationProps = {};
 
 const Navigation: React.FC<NavigationProps> = () => {
   return (
-    <Flex bg="white" p={1} borderRadius={4} justify="space-between">
+    <Flex bg="white" p={1} borderRadius={4} justify="space-between" mb={4}>
       {profileNavigation.map(({ href, icon, label }) => (
         <Button
+          key={label}
           as={Link}
           href={href}
           leftIcon={icon}

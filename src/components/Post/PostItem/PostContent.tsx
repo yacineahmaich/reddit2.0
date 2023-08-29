@@ -26,7 +26,7 @@ const PostContent: React.FC<PostContentProps> = ({
       <Flex
         direction={{ base: "column", sm: "row" }}
         align={{ base: "start", sm: "center" }}
-        gap={{base: 2 ,md:0}}
+        gap={{ base: 2, md: 0 }}
       >
         {!isCommunityFeed && (
           <Flex align="center">
@@ -53,7 +53,20 @@ const PostContent: React.FC<PostContentProps> = ({
           </Flex>
         )}
         <Text fontSize="9pt" color="gray.300">
-          Posted by u/{post.creatorDisplayName} a {created}
+          Posted by{" "}
+          <Text
+            display="inline"
+            as={Link}
+            href={`/u/${post.creatorDisplayName}`}
+            _hover={{
+              textDecoration: "underline",
+              color: "gray.700",
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            u/{post.creatorDisplayName}
+          </Text>{" "}
+          a {created}
         </Text>
       </Flex>
       <Text fontWeight={700} fontSize="12pt">
