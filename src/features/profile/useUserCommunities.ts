@@ -31,7 +31,6 @@ const getUserCommunities = async (displayName: string) => {
     )
   );
 
-  console.log(communityDocs);
   const communities = communityDocs.docs.map(
     (doc) =>
       ({
