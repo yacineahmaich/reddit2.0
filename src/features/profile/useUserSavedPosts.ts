@@ -12,11 +12,13 @@ const getSavedPosts = async (displayName: string) => {
   );
 
   const postIds = savedPosts.map((snippet) => snippet.postId);
-console.log(postIds)
+
+  if (postIds.length === 0) return [];
+
   const postDocs = await getDocs(
     query(collection(firestore, "posts"), where("id", "in", postIds), limit(10))
   );
-    
+
   const posts = postDocs.docs
     .map(
       (doc) =>

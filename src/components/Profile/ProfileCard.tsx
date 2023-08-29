@@ -2,10 +2,17 @@ import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import React from "react";
 import { BiSolidTShirt } from "react-icons/bi";
 import Avatar from "../ui/Avatar";
+import { useRouter } from "next/router";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/firebase/client";
 
 type ProfileCardProps = {};
 
 const ProfileCard: React.FC<ProfileCardProps> = () => {
+  const router = useRouter();
+  const [user] = useAuthState(auth);
+  const displayName = router.query.displayName as string;
+
   return (
     <Flex
       direction="column"
@@ -26,18 +33,17 @@ const ProfileCard: React.FC<ProfileCardProps> = () => {
       </Flex>
       <Flex direction="column" align="center">
         <Text fontSize="16  pt" fontWeight={600}>
-          Yacine
+          {displayName}
         </Text>
         <Text fontSize="10pt" color="gray.500">
-          u/yacine
+          u/{displayName}
         </Text>
       </Flex>
-      <Button size="sm" mt={3} variant="brand" leftIcon={<BiSolidTShirt />}>
-        Update Profile
-      </Button>
-      {/* <Button size="sm" mt={3} variant="outline">
-        New Post
-      </Button> */}
+      {user?.displayName === displayName && (
+        <Button size="sm" mt={3} variant="brand" leftIcon={<BiSolidTShirt />}>
+          Update Profile
+        </Button>
+      )}
     </Flex>
   );
 };

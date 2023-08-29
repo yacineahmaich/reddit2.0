@@ -20,13 +20,13 @@ const getUserCommunities = async (displayName: string) => {
 
   const communityIds = userSnippets.map((snippet) => snippet.communityId);
 
-  console.log(communityIds);
+  if (communityIds.length === 0) return [];
 
   const communityDocs = await getDocs(
     query(
       collection(firestore, "communities"),
       where("id", "in", communityIds),
-      orderBy("numOfMembers", "desc"),
+      orderBy("numOfMembers", "desc")
       // limit(10)
     )
   );
