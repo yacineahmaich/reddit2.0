@@ -12,12 +12,14 @@ type PostItemProps = {
   post: Post;
   isSinglePostPage?: boolean;
   isCommunityFeed?: boolean;
+  isSavedPage?: boolean
 };
 
 const PostItem: React.FC<PostItemProps> = ({
   post,
   isSinglePostPage,
   isCommunityFeed,
+  isSavedPage
 }) => {
   const router = useRouter();
   const [user] = useAuthState(auth);
@@ -43,6 +45,7 @@ const PostItem: React.FC<PostItemProps> = ({
         post={post}
         isSinglePostPage={isSinglePostPage}
         user={user}
+        isSavedPage={isSavedPage}
       />
       <Flex
         grow={1}

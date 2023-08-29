@@ -5,7 +5,7 @@ import { User } from "firebase/auth";
 import { collection, getDocs } from "firebase/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
 
-export async function getSavedCommunities(user: User): Promise<SavedPost[]> {
+export async function getSaved(user: User): Promise<SavedPost[]> {
   const snippetDocs = await getDocs(
     collection(firestore, `users/${user.displayName}/saved`)
   );
@@ -17,12 +17,12 @@ export async function getSavedCommunities(user: User): Promise<SavedPost[]> {
   return snippets;
 }
 
-export function useSavedCommunities() {
+export function useSaved() {
   const [user] = useAuthState(auth);
 
   return useQuery({
     queryKey: ["user", "saved"],
-    queryFn: () => getSavedCommunities(user!),
+    queryFn: () => getSaved(user!),
     enabled: !!user,
   });
 }

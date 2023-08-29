@@ -14,6 +14,7 @@ import { useSetRecoilState } from "recoil";
 
 type PostSidebarProps = {
   isSinglePostPage?: boolean;
+  isSavedPage?: boolean;
   user?: User | null;
   post: Post;
 };
@@ -22,6 +23,7 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
   isSinglePostPage,
   user,
   post,
+  isSavedPage,
 }) => {
   const setAuthModalState = useSetRecoilState(authModalAtom);
   const { data: userVotes } = useUserVotes();
@@ -42,6 +44,18 @@ export const PostSidebar: React.FC<PostSidebarProps> = ({
       vote,
     });
   }
+
+  if (isSavedPage)
+    return (
+      <Flex
+        direction="column"
+        align="center"
+        bg={isSinglePostPage ? "white" : "gray.100"}
+        p={2}
+        width="40px"
+        borderLeftRadius={4}
+      ></Flex>
+    );
 
   return (
     <Flex

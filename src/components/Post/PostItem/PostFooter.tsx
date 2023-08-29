@@ -1,6 +1,6 @@
 import { authModalAtom } from "@/atoms/authModalAtom";
 import { useSavePost } from "@/features/posts/useSavePost";
-import { useSavedCommunities } from "@/features/user/useSavedCommunities";
+import { useSaved } from "@/features/user/useSaved";
 import { auth } from "@/firebase/client";
 import { Post } from "@/types/database";
 import { HStack, Button } from "@chakra-ui/react";
@@ -22,7 +22,7 @@ const PostFooter: React.FC<PostFooterProps> = ({ post }) => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalAtom);
 
-  const { data: savedCommunities } = useSavedCommunities();
+  const { data: savedCommunities } = useSaved();
 
   const { mutate: savePost } = useSavePost();
 
@@ -35,6 +35,7 @@ const PostFooter: React.FC<PostFooterProps> = ({ post }) => {
     savePost({ displayName: user?.displayName!, postId: post.id! });
   };
 
+  const isCreator = user?.uid === post.creatorId;
   const isSaved = savedCommunities?.find((s) => s.postId === post.id);
 
   return (
@@ -63,19 +64,21 @@ const PostFooter: React.FC<PostFooterProps> = ({ post }) => {
       >
         Share
       </Button>
-      <Button
-        leftIcon={isSaved ? <IoBookmark /> : <IoBookmarkOutline />}
-        size="sm"
-        _hover={{ bg: "gray.100" }}
-        color="gray.500"
-        fontSize="9pt"
-        fontWeight={400}
-        variant="ghost"
-        borderRadius={4}
-        onClick={handleSavePost}
-      >
-        {isSaved ? "Saved" : "Save"}
-      </Button>
+      {!isCreator && (
+        <Button
+          leftIcon={isSaved ? <IoBookmark /> : <IoBookmarkOutline />}
+          size="sm"
+          _hover={{ bg: "gray.100" }}
+          color="gray.500"
+          fontSize="9pt"
+          fontWeight={400}
+          variant="ghost"
+          borderRadius={4}
+          onClick={handleSavePost}
+        >
+          {isSaved ? "Saved" : "Save"}
+        </Button>
+      )}
     </HStack>
   );
 };

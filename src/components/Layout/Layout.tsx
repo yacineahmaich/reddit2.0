@@ -5,6 +5,7 @@ import { Button, Flex, Image, Spinner, Text } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthState } from "react-firebase-hooks/auth";
 import Navbar from "../Navbar";
+import { getSaved } from "@/features/user/useSaved";
 
 type LayoutProps = {
   children: React.ReactNode;
@@ -26,7 +27,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         });
         queryClient.prefetchQuery({
           queryKey: ["user", "saved"],
-          queryFn: () => getUserDirectory(user),
+          queryFn: () => getSaved(user),
         });
       }
     },

@@ -8,12 +8,14 @@ type PostsFeedProps = {
   posts?: Post[];
   isLoading: boolean;
   isCommunityFeed?: boolean;
+  isSavedPage?: boolean;
 };
 
 const PostsFeed: React.FC<PostsFeedProps> = ({
   posts = [],
   isLoading,
   isCommunityFeed,
+  isSavedPage,
 }) => {
   return (
     <>
@@ -30,6 +32,7 @@ const PostsFeed: React.FC<PostsFeedProps> = ({
               key={post.id}
               post={post!}
               isCommunityFeed={isCommunityFeed}
+              isSavedPage={isSavedPage}
             />
           ))}
         </Stack>
