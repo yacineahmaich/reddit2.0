@@ -1,6 +1,7 @@
 import { auth, firestore } from "@/firebase/client";
 import { CommunityPrivacyType } from "@/types/database";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { User } from "firebase/auth";
 import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { useRouter } from "next/router";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -8,10 +9,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 type Vars = {
   name: string;
   type: CommunityPrivacyType;
-  userId: string;
+  user: User;
 };
 
-const createNewCommunity = async ({ name, type, userId }: Vars) => {
+const createNewCommunity = async ({ name, type, user }: Vars) => {
   try {
     const communityDocRef = doc(firestore, "communities", name);
 
@@ -23,7 +24,7 @@ const createNewCommunity = async ({ name, type, userId }: Vars) => {
 
       // create community
       transaction.set(communityDocRef, {
-        creatorId: userId,
+        creatorId: user.uid,
         numOfMembers: 1,
         id: name,
         privacyType: type,
@@ -31,7 +32,7 @@ const createNewCommunity = async ({ name, type, userId }: Vars) => {
       });
 
       transaction.set(
-        doc(firestore, `users/${userId}/communitySnippets`, name),
+        doc(firestore, `users/${user.displayName}/communitySnippets`, name),
         {
           communityId: name,
           isModerator: true,
@@ -54,10 +55,10 @@ export const useCreateCommunity = () => {
 
   return useMutation({
     mutationFn: ({ name, type }: Pick<Vars, "name" | "type">) =>
-      createNewCommunity({ name, type, userId: user?.uid! }),
+      createNewCommunity({ name, type, user: user! }),
     onSuccess: (_, { name }) => {
       router.push(`/r/${name}`);
-      queryClient.invalidateQueries(["user", "snippets"]);
+      queryClient.invalidateQueries(["user", "directory"]);
     },
   });
 };

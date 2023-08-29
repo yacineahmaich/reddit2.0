@@ -41,7 +41,7 @@ const CommunityHeader: React.FC = () => {
   ) as CommunitySnippet | null;
 
   const isJoined = !!communitySnippet;
-
+  const isCreator = user?.uid === community.creatorId;
   return (
     <Flex direction="column" width="100%" height="146px">
       <Box height="50%" bg="blue.500" />
@@ -76,7 +76,7 @@ const CommunityHeader: React.FC = () => {
                 </>
               )}
             </Flex>
-            {!isCommunityLoading && community && (
+            {!isCommunityLoading && !isCreator && (
               <Button
                 variant={isJoined ? "outline" : "solid"}
                 height="30px"
