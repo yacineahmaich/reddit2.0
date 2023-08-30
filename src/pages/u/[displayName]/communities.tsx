@@ -40,8 +40,8 @@ const JoinedCommunitiesPage: NextPageWithLayout = () => {
             return (
               <CommunityItem
                 key={community.id}
-                isJoined={isUserJoiningCommunity(community.id)}
                 community={community}
+                isJoined={isUserJoiningCommunity(community.id)}
               />
             );
           })}

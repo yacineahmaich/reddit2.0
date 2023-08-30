@@ -28,6 +28,8 @@ const JoinedCommunityItem: React.FC<JoinedCommunityItemProps> = ({
     joinLeaveCommunity({ communityId, user: user! });
   };
 
+  const isModerator = community?.creatorId === user?.uid;
+
   return (
     <Flex
       key={community.id}
@@ -53,15 +55,17 @@ const JoinedCommunityItem: React.FC<JoinedCommunityItemProps> = ({
           <Text fontSize="9pt">{community.numOfMembers} members</Text>
         </Flex>
       </Flex>
-      <Button
-        variant={isJoined ? "outline" : "solid"}
-        size="xs"
-        px={30}
-        ml="auto"
-        onClick={() => handleJoinLeaveCommunity(community.id)}
-      >
-        {isJoined ? "Joined" : "Join"}
-      </Button>
+      {!isModerator && (
+        <Button
+          variant={isJoined ? "outline" : "solid"}
+          size="xs"
+          px={30}
+          ml="auto"
+          onClick={() => handleJoinLeaveCommunity(community.id)}
+        >
+          {isJoined ? "Joined" : "Join"}
+        </Button>
+      )}
     </Flex>
   );
 };

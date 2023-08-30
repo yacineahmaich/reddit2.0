@@ -19,6 +19,11 @@ const joinOrLeaveCommunity = async ({ communityId, user }: Vars) => {
     );
     const snippetDoc = await transaction.get(snippetDocRef);
 
+    const snippet = snippetDoc.data() as CommunitySnippet;
+
+    if (snippet?.isModerator)
+      throw new Error("Moderator cannot join or leave their ommunity");
+
     // get Community
     const communityDocRef = doc(firestore, "communities", communityId);
 
