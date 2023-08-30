@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import {
   DocumentData,
   Query,
+  QuerySnapshot,
   collection,
   getDocs,
   limit,
@@ -31,7 +32,19 @@ const getHomeFeed = async (communityIds: string[]) => {
     );
   }
 
-  const homeFeedDocs = await getDocs(homeFeedQuery);
+  let homeFeedDocs: QuerySnapshot<DocumentData, DocumentData>;
+
+  homeFeedDocs = await getDocs(homeFeedQuery);
+
+  if (communityIds.length > 0 && homeFeedDocs.size === 0) {
+    homeFeedDocs = await getDocs(
+      query(
+        collection(firestore, "posts"),
+        orderBy("numOfVotes", "desc"),
+        limit(10)
+      )
+    );
+  }
 
   const homeFeedPosts = homeFeedDocs.docs.map(
     (doc) =>
@@ -46,7 +59,7 @@ const getHomeFeed = async (communityIds: string[]) => {
 
 export const useHomeFeed = () => {
   const [user] = useAuthState(auth);
-  const { data: snippets, isSuccess } = useDirectory(user?.uid);
+  const { data: snippets, isSuccess } = useDirectory(user!);
 
   const communityIds = snippets?.map((s) => s.communityId) ?? [];
 

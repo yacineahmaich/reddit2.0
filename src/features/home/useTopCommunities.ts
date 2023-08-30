@@ -1,12 +1,22 @@
-import { firestore } from "@/firebase/client";
+import { auth, firestore } from "@/firebase/client";
 import { Community } from "@/types/database";
 import { useQuery } from "@tanstack/react-query";
-import { collection, getDocs, limit, orderBy, query } from "firebase/firestore";
+import {
+  collection,
+  getDocs,
+  limit,
+  orderBy,
+  query,
+  where,
+} from "firebase/firestore";
+import { useAuthState } from "react-firebase-hooks/auth";
 
-const getTopCommunities = async () => {
+const getTopCommunities = async (userId: string) => {
   const topCommunitiesQuery = query(
     collection(firestore, "communities"),
+    orderBy("creatorId"),
     orderBy("numOfMembers", "desc"),
+    where("creatorId", "!=", userId),
     limit(5)
   );
 
@@ -19,8 +29,12 @@ const getTopCommunities = async () => {
   return topCommunities;
 };
 
-export const useTopCommunities = () =>
-  useQuery({
+export const useTopCommunities = () => {
+  const [user] = useAuthState(auth);
+
+  return useQuery({
     queryKey: ["top-communities"],
-    queryFn: getTopCommunities,
+    queryFn: () => getTopCommunities(user?.uid!),
+    enabled: !!user?.uid,
   });
+};
