@@ -1,6 +1,6 @@
 import { auth, firestore } from "@/firebase/client";
 import { Post } from "@/types/database";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   DocumentData,
   Query,
@@ -58,6 +58,7 @@ const getHomeFeed = async (communityIds: string[]) => {
 };
 
 export const useHomeFeed = () => {
+  const queryClient = useQueryClient();
   const [user] = useAuthState(auth);
   const { data: snippets, isSuccess } = useDirectory(user!);
 
@@ -66,6 +67,12 @@ export const useHomeFeed = () => {
   return useQuery({
     queryKey: ["feed", user?.uid ?? "public"],
     queryFn: () => getHomeFeed(communityIds),
+    onSuccess: (posts) => {
+      // add post to single single doc cache
+      posts.forEach((post) =>
+        queryClient.setQueryData(["posts", post.id], post)
+      );
+    },
     enabled: (user && isSuccess) || !user,
   });
 };
