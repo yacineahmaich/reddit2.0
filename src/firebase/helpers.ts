@@ -6,7 +6,6 @@ export function transformUser(user: User) {
     uid: user.uid,
     email: user.email,
     displayName: user.displayName,
-    providerData: user.providerData,
     photoURL: user.photoURL,
   };
 }

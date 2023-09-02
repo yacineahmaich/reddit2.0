@@ -31,7 +31,7 @@ const updatePost = async ({ post, title, body, image }: Vars) => {
 
   if (image) {
     // delete old image
-    const imageRef = ref(storage, `/posts/${post.id!}/image`);
+    const imageRef = ref(storage, `/posts/${post.id!}`);
 
     if (post.imageURL) {
       // const imageURL = await getDownloadURL(imageRef);

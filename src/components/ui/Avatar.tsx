@@ -23,6 +23,7 @@ const Avatar: React.FC<AvatarProps> = ({
       bg="gray.100"
       borderRadius="full"
       overflow="hidden"
+      userSelect="none"
     >
       {source && !error ? (
         <Image src={source} alt={alt} onError={() => setError(true)} />

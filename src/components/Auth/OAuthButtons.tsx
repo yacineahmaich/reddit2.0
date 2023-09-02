@@ -1,5 +1,5 @@
 import { auth, firestore } from "@/firebase/client";
-import { transformUser } from "@/firebase/helpers";
+import { getUserNameFromUserObj, transformUser } from "@/firebase/helpers";
 import {
   AbsoluteCenter,
   Box,
@@ -33,7 +33,12 @@ const OAuthButtons: React.FC = () => {
     if (!data) return;
 
     const user = transformUser(data.user);
-    const userDocRef = doc(firestore, "users", user.uid);
+    const userDocRef = doc(
+      firestore,
+      "users",
+      user?.displayName ||
+        `_${getUserNameFromUserObj(data.user) ?? Date.now().toString()}`
+    );
 
     // create user document if not exists
     await setDoc(userDocRef, user);

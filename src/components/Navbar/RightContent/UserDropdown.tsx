@@ -19,13 +19,14 @@ import { useLogout } from "@/features/auth/useLogout";
 import { getUserNameFromUserObj } from "@/firebase/helpers";
 import { User } from "firebase/auth";
 import dynamic from "next/dynamic";
+import Link from "next/link";
 import { BsPerson } from "react-icons/bs";
 import { CgProfile } from "react-icons/cg";
 import { FaRedditSquare } from "react-icons/fa";
 import { IoSparkles } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { useSetRecoilState } from "recoil";
-import Link from "next/link";
+import Avatar from "@/components/ui/Avatar";
 
 type UserDropdownProps = {
   user?: User | null;
@@ -48,11 +49,10 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
           <Flex align="center">
             {user ? (
               <>
-                <Icon
-                  color="gray.300"
-                  as={FaRedditSquare}
-                  fontSize={24}
-                  mr={2}
+                <Avatar
+                  source={user.photoURL || ""}
+                  alt={user.displayName!}
+                  size={6}
                 />
                 <Flex
                   direction="column"
@@ -60,6 +60,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
                   display={{ base: "none", md: "flex" }}
                   fontSize="8pt"
                   shrink={0}
+                  ml={2}
                 >
                   <Text fontWeight={700}>{getUserNameFromUserObj(user)}</Text>
                   <Flex gap={1}>

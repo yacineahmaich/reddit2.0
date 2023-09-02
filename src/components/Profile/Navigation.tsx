@@ -27,8 +27,8 @@ const profileNavigation = [
     authenticated: true,
   },
   {
-    label: "Edit Profile",
-    path: "edit-profile",
+    label: "Update Profile",
+    path: "update-profile",
     icon: <LiaUserEditSolid />,
     authenticated: true,
   },
@@ -66,7 +66,6 @@ const Navigation: React.FC<NavigationProps> = () => {
             borderRadius={4}
             fontSize="9pt"
             color={isActive ? "brand.100" : ""}
-            
           >
             {label}
           </Button>
