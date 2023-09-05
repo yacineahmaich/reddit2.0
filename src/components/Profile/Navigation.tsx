@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Flex } from "@chakra-ui/react";
+import { Button, Flex, Icon, Text } from "@chakra-ui/react";
 import { ImFeed } from "react-icons/im";
 import { CgCommunity } from "react-icons/cg";
 import { IoBookmarkOutline } from "react-icons/io5";
@@ -13,23 +13,23 @@ const profileNavigation = [
   {
     label: "Personal Feed",
     path: "",
-    icon: <ImFeed />,
+    icon: ImFeed,
   },
   {
     label: "Communities",
     path: "communities",
-    icon: <CgCommunity />,
+    icon: CgCommunity,
   },
   {
     label: "My Saved",
     path: "saved",
-    icon: <IoBookmarkOutline />,
+    icon: IoBookmarkOutline,
     authenticated: true,
   },
   {
     label: "Update Profile",
     path: "update-profile",
-    icon: <LiaUserEditSolid />,
+    icon: LiaUserEditSolid,
     authenticated: true,
   },
 ];
@@ -61,13 +61,15 @@ const Navigation: React.FC<NavigationProps> = () => {
             key={label}
             as={Link}
             href={href}
-            leftIcon={icon}
             variant="ghost"
             borderRadius={4}
-            fontSize="9pt"
-            color={isActive ? "brand.100" : ""}
+            color={isActive ? "brand.100" : "gray.600"}
+            w="full"
           >
-            {label}
+          <Icon as={icon} fontSize={{base: 18, sm:14}} mr={1} />
+            <Text fontSize="9pt" display={{ base: "none", sm: "block" }}>
+              {label}
+            </Text>
           </Button>
         );
       })}

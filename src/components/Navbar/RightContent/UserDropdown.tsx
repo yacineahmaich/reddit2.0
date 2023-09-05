@@ -46,7 +46,7 @@ const UserDropdown: React.FC<UserDropdownProps> = ({ user }) => {
         _hover={{ outline: "1px solid", outlineColor: "gray.200" }}
       >
         <Flex align="center">
-          <Flex align="center">
+          <Flex align="center" shrink={0}>
             {user ? (
               <>
                 <Avatar
