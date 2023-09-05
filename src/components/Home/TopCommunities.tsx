@@ -16,7 +16,7 @@ const TopCommunities: React.FC<TopCommunitiesProps> = () => {
   const [user] = useAuthState(auth);
   const setAuthModalState = useSetRecoilState(authModalAtom);
 
-  const { data: TopCommunities, isLoading } = useTopCommunities();
+  const { data: topCommunities, isLoading } = useTopCommunities();
   const { data: communitySnippets } = useDirectory();
 
   const { mutate: joinLeaveCommunity } = useJoinLeaveCommunity();
@@ -54,7 +54,7 @@ const TopCommunities: React.FC<TopCommunitiesProps> = () => {
           <Spinner color="brand.100" />
         ) : (
           <>
-            {TopCommunities?.map((community, idx) => {
+            {topCommunities?.map((community, idx) => {
               const isJoined = communitySnippets?.find(
                 (s) => s.communityId === community.id
               );
@@ -104,9 +104,11 @@ const TopCommunities: React.FC<TopCommunitiesProps> = () => {
               );
             })}
             <Flex p={2} w="full">
-              <Button size="xs" w="full">
-                View All
-              </Button>
+              {topCommunities?.length ? (
+                <Button size="xs" w="full">
+                  View All
+                </Button>
+              ) : null}
             </Flex>
           </>
         )}

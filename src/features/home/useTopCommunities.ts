@@ -12,13 +12,23 @@ import {
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const getTopCommunities = async (userId: string) => {
-  const topCommunitiesQuery = query(
-    collection(firestore, "communities"),
-    orderBy("creatorId"),
-    orderBy("numOfMembers", "desc"),
-    where("creatorId", "!=", userId),
-    limit(5)
-  );
+  let topCommunitiesQuery;
+
+  if (userId) {
+    topCommunitiesQuery = query(
+      collection(firestore, "communities"),
+      orderBy("creatorId"),
+      orderBy("numOfMembers", "desc"),
+      where("creatorId", "!=", userId),
+      limit(5)
+    );
+  } else {
+    topCommunitiesQuery = query(
+      collection(firestore, "communities"),
+      orderBy("numOfMembers", "desc"),
+      limit(5)
+    );
+  }
 
   const topCommunitiesDocs = await getDocs(topCommunitiesQuery);
 
@@ -35,6 +45,5 @@ export const useTopCommunities = () => {
   return useQuery({
     queryKey: ["top-communities"],
     queryFn: () => getTopCommunities(user?.uid!),
-    enabled: !!user?.uid,
   });
 };
