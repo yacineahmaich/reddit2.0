@@ -7,10 +7,10 @@ import { useRouter } from "next/router";
 type Vars = {
   id: string;
   image: string;
-  userId: string;
+  displayName: string;
 };
 
-async function updateProfile({ id, image, userId }: Vars) {
+async function updateProfile({ id, image, displayName }: Vars) {
   const communityDocRef = doc(firestore, "communities", id);
   const imageRef = ref(storage, `/communities/${communityDocRef.id}`);
 
@@ -22,7 +22,7 @@ async function updateProfile({ id, image, userId }: Vars) {
     imageURL: imageDownloadURL,
   });
 
-  await updateDoc(doc(firestore, `/users/${userId}/communitySnippets`, id), {
+  await updateDoc(doc(firestore, `/users/${displayName}/communitySnippets`, id), {
     imageURL: imageDownloadURL,
   });
 }
@@ -33,6 +33,7 @@ export function useUpdateCommunityImage() {
   return useMutation({
     mutationFn: updateProfile,
     onSuccess: () => {
+      console.log("SUCCESS");
       router.reload();
     },
   });

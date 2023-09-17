@@ -40,7 +40,7 @@ const AboutCommunity: React.FC = () => {
     updateCommunityProfile({
       id: community.id,
       image: selectedImage!,
-      userId: user?.uid!,
+      displayName: user?.displayName!,
     });
   }
 
